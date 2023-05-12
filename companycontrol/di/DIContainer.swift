@@ -7,6 +7,7 @@
 
 import Swinject
 import Foundation
+import Firebase
 
 class DIContainer {
     
@@ -15,28 +16,61 @@ class DIContainer {
     
     private let container = Swinject.Container()
     
+    
     private init() {
-        // Remote data sources
+        remoteDataSourcesInjections()
+        reposotoriesInjections()
+        useCasesInjections()
+        viewModelsInjections()
+    }
+    
+    fileprivate func remoteDataSourcesInjections()  {
+        // Firebase Auth
+        container.register(Auth.self) { _ in
+            Auth.auth()
+        }
+        
+        container.register(AuthRemoteDataSource.self) { resolver in
+            AuthRemoteDataSourceImpl(auth: resolver.resolve(Auth.self)!)
+        }
+        
         container.register(ExpenseRemoteDataSource.self) { _ in
             ExpenseRemoteDataSourceImpl()
         }
-        
+    }
+    
+    fileprivate func reposotoriesInjections() {
         // Repositories
+        container.register(AuthRepository.self) { resolver in
+            AuthRepositoryImpl(remoteDataSource: resolver.resolve(AuthRemoteDataSource.self)!)
+        }
+        
         container.register(ExpenseRepository.self) { resolver in
             ExpenseRepositoryImpl(remoteDataSource: resolver.resolve(ExpenseRemoteDataSource.self)!)
         }
-        
+    }
+    
+    fileprivate func useCasesInjections() {
         // Use cases
         container.register(GetExpensesUseCase.self) { resolver in
             GetExpensesUseCaseImpl(repository: resolver.resolve(ExpenseRepository.self)!)
         }
         
+        container.register(AuthUseCase.self) { resolver in
+            AuthUseCaseImpl(repository: resolver.resolve(AuthRepository.self)!)
+        }
+    }
+    
+    fileprivate func viewModelsInjections() {
         // ViewModels
         container.register(ExpenseViewModel.self) { resolver in
             ExpenseViewModel(getExpensesUseCase: resolver.resolve(GetExpensesUseCase.self)!)
         }
+        
+        container.register(AuthViewModel.self) { resolver in
+            AuthViewModel(authUseCase: resolver.resolve(AuthUseCase.self)!)
+        }
     }
-    
     
     
     func resolve<T>(_ serviceType: T.Type) -> T {

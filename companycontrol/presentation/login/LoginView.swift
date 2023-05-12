@@ -11,13 +11,18 @@ import Firebase
 
 struct LoginView: View {
     
+    @ObservedObject var viewModel = DIContainer.shared.resolve(AuthViewModel.self)
+    
+    private let auth = DIContainer.shared.resolve(Auth.self)
+
     @State private var email = ""
     @State private var password = ""
     @State private var userIsLoggedIn = false
     
+    
     var body: some View {
         if userIsLoggedIn {
-            DogsView()
+            WorksView()
         } else {
             content
         }
@@ -97,10 +102,10 @@ struct LoginView: View {
             }
             .frame(width: 350)
             .onAppear {
-                Auth.auth().addStateDidChangeListener { Auth, user in
-                    if user != nil {
-                        userIsLoggedIn.toggle()
-                    }
+                if auth.currentUser != nil {
+                    userIsLoggedIn = true
+                } else {
+                    userIsLoggedIn = false
                 }
             }
             
@@ -110,7 +115,7 @@ struct LoginView: View {
     }
     
     func register() {
-        Auth.auth().createUser(withEmail: email, password: password) {  result, error in
+        auth.createUser(withEmail: email, password: password) {  result, error in
             if error != nil {
                 print(error!.localizedDescription)
             }
@@ -118,10 +123,21 @@ struct LoginView: View {
     }
     
     func login() {
-        Auth.auth().signIn(withEmail: email, password: password) {  result, error in
-            if error != nil {
-                print(error!.localizedDescription)
-            }
+        viewModel.auth(email: email, password: password)
+        
+        switch viewModel.networkResult {
+        case .success(_):
+            userIsLoggedIn = true
+            break
+        case .error(let message):
+             print(message)
+            break
+        case .loading:
+             ProgressView()
+            break
+        case .idle:
+           
+            break
         }
     }
 }

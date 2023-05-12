@@ -19,8 +19,7 @@ struct companycontrolApp: App {
     
     var body: some Scene {
         WindowGroup {
-            DogsView()
-                .environmentObject(dataManager)
+            LoginView()
         }
     }
 }

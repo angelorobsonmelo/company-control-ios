@@ -45,10 +45,12 @@ class DataManager: ObservableObject {
     }
     
     func addDog(dogBreed: String) {
+        let id = Utils.generateCustomID()
+        
         let db = Firestore.firestore()
-        let ref = db.collection("Dogs").document(generateCustomID())
+        let ref = db.collection("Dogs").document(id)
         ref.setData(
-            ["breed": dogBreed, "id": generateCustomID()]
+            ["breed": dogBreed, "id": id]
         ) { error in
             if let error = error {
                 print(error.localizedDescription)
@@ -57,17 +59,5 @@ class DataManager: ObservableObject {
         }
     }
     
-    func generateCustomID() -> String {
-        let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-        let idLength = 20
-        
-        var id = ""
-        for _ in 0..<idLength {
-            let randomIndex = Int.random(in: 0..<letters.count)
-            let randomCharacter = letters[letters.index(letters.startIndex, offsetBy: randomIndex)]
-            id.append(randomCharacter)
-        }
-        
-        return id
-    }
+    
 }
