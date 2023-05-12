@@ -9,24 +9,33 @@ import Foundation
 import SwiftUI
 import Firebase
 
-struct LoginView: View {
+struct AuthView: View {
     
     @ObservedObject var viewModel = DIContainer.shared.resolve(AuthViewModel.self)
     
     private let auth = DIContainer.shared.resolve(Auth.self)
-
+    
     @State private var email = ""
     @State private var password = ""
     @State private var userIsLoggedIn = false
     
+    @State private var snackBarMessage = ""
+    @State private var snackBarType: SnackbarType = .error
+    @State private var showSnackBar = false
+    
+    @State private var navigateToRegisterView = false
+    
+    
     
     var body: some View {
-        if userIsLoggedIn {
-            WorksView()
-        } else {
-            content
+        NavigationView {
+            if userIsLoggedIn {
+                WorksView()
+            } else {
+                content
+                
+            }
         }
-        
     }
     
     var content: some View {
@@ -76,9 +85,9 @@ struct LoginView: View {
                     .foregroundColor(.white)
                 
                 Button {
-                    register()
+                    login()
                 } label: {
-                    Text("Sign up")
+                    Text("Login")
                         .bold()
                         .frame(width: 200, height: 40)
                         .background(
@@ -90,15 +99,25 @@ struct LoginView: View {
                 .padding(.top)
                 .offset(y: 100)
                 
+                
+                NavigationLink(destination: RegisterView(),
+                               isActive: $navigateToRegisterView) { }
+                
                 Button {
-                    login()
+                    navigateToRegisterView = true
                 } label: {
-                    Text("Already have an account? Login")
+                    Text("Have not an account? Sign up")
                         .foregroundColor(.white)
                         .bold()
                 }
                 .padding(.top)
                 .offset(y: 110)
+                
+                
+                SnackbarView(message: snackBarMessage, snackbarType: snackBarType, isShowing: $showSnackBar)
+                    .frame(height: 40)
+                    .offset(y: 200)
+                
             }
             .frame(width: 350)
             .onAppear {
@@ -108,43 +127,36 @@ struct LoginView: View {
                     userIsLoggedIn = false
                 }
             }
-            
-        }
-        .ignoresSafeArea()
-
-    }
-    
-    func register() {
-        auth.createUser(withEmail: email, password: password) {  result, error in
-            if error != nil {
-                print(error!.localizedDescription)
+            .onChange(of: viewModel.networkResult) { newValue in
+                switch newValue {
+                case .success(let success):
+                    userIsLoggedIn = true
+                    break
+                case .error(let message):
+                    snackBarMessage =  message ?? "Error"
+                    snackBarType = .error
+                    showSnackBar = true
+                    break
+                case .loading:
+                    print("Loading")
+                    break
+                case .idle:
+                    print("Idle")
+                    break
+                }
             }
         }
+        .ignoresSafeArea()
     }
     
     func login() {
         viewModel.auth(email: email, password: password)
-        
-        switch viewModel.networkResult {
-        case .success(_):
-            userIsLoggedIn = true
-            break
-        case .error(let message):
-             print(message)
-            break
-        case .loading:
-             ProgressView()
-            break
-        case .idle:
-           
-            break
-        }
     }
 }
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView()
+        AuthView()
     }
 }
 

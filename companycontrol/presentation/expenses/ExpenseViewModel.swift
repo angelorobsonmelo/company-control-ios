@@ -9,7 +9,7 @@ import Foundation
 
 class ExpenseViewModel: ObservableObject {
     
-    @Published var networkResult: NetworkResult<User> = .idle
+//    @Published var networkResult: NetworkResult<User> = .idle
 
     private let getExpensesUseCase: GetExpensesUseCase
     
@@ -26,22 +26,22 @@ class ExpenseViewModel: ObservableObject {
     }
     
     func fetchData() {
-            networkResult = .loading // Define o estado de loading
-            
-            DispatchQueue.global().async {
-                // Simulando uma requisição com atraso
-                sleep(2)
-                
-                DispatchQueue.main.async {
-                    if Bool.random() {
-                        // Simulando uma resposta bem-sucedida
-                        self.networkResult = .success(User(name: "John Doe", email: "john@example.com"))
-                    } else {
-                        // Simulando uma resposta com erro
-                        self.networkResult = .error("Erro na requisição")
-                    }
-                }
-            }
+//            networkResult = .loading // Define o estado de loading
+//
+//            DispatchQueue.global().async {
+//                // Simulando uma requisição com atraso
+//                sleep(2)
+//
+//                DispatchQueue.main.async {
+//                    if Bool.random() {
+//                        // Simulando uma resposta bem-sucedida
+//                        self.networkResult = .success(User(name: "John Doe", email: "john@example.com"))
+//                    } else {
+//                        // Simulando uma resposta com erro
+//                        self.networkResult = .error("Erro na requisição")
+//                    }
+//                }
+//            }
         }
     
 }

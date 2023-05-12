@@ -16,7 +16,9 @@ class AuthUseCaseImpl: AuthUseCase {
     }
     
     func auth(email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        repository.auth(email: email, password: password, completion: completion)
+        let emailLowercase = email.lowercased()
+        
+        repository.auth(email: emailLowercase, password: password, completion: completion)
     }
     
     
