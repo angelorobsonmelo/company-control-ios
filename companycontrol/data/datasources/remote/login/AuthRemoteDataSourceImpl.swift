@@ -27,6 +27,16 @@ class AuthRemoteDataSourceImpl: AuthRemoteDataSource {
         }
     }
     
+    func register(email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        self.auth.createUser(withEmail: email, password: password) { result, error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
+    
     
     
 }

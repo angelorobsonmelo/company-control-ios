@@ -9,31 +9,51 @@ import Foundation
 
 class AuthViewModel: ObservableObject {
     
-    @Published var networkResult: NetworkResult<Bool> = .idle
+    @Published var loginNetworkResult: NetworkResult<Bool> = .idle
+    @Published var registerNetworkResult: NetworkResult<Bool> = .idle
     
     private let authUseCase: AuthUseCase
+    private let registerUseCase: RegisterUseCase
     
-    init(authUseCase: AuthUseCase) {
+    init(authUseCase: AuthUseCase, registerUseCase: RegisterUseCase) {
         self.authUseCase = authUseCase
+        self.registerUseCase = registerUseCase
     }
     
     func auth(email: String, password: String) {
-        networkResult = .loading
+        loginNetworkResult = .loading
         
         DispatchQueue.global().async {
             self.authUseCase.auth(email: email, password: password) { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success:
-                        self.networkResult = .success(true)
+                        self.loginNetworkResult = .success(true)
                     case .failure(let error):
-                        self.networkResult = .error(error.localizedDescription)
+                        self.loginNetworkResult = .error(error.localizedDescription)
                     }
                 }
             }
             
         }
+    }
+    
+    func register(email: String, password: String) {
+        registerNetworkResult = .loading
         
+        DispatchQueue.global().async {
+            self.registerUseCase.register(email: email, password: password) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success:
+                        self.registerNetworkResult = .success(true)
+                    case .failure(let error):
+                        self.registerNetworkResult = .error(error.localizedDescription)
+                    }
+                }
+            }
+            
+        }
     }
     
 }

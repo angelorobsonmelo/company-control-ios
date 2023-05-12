@@ -14,10 +14,17 @@ struct RegisterView: View {
     @ObservedObject var viewModel = DIContainer.shared.resolve(AuthViewModel.self)
     
     private let auth = DIContainer.shared.resolve(Auth.self)
-
+    
     @State private var email = ""
     @State private var password = ""
     @State private var userIsLoggedIn = false
+    
+    @State private var snackBarMessage = ""
+    @State private var snackBarType: SnackbarType = .error
+    @State private var showSnackBar = false
+    
+    @Environment(\.presentationMode) var presentationMode
+    
     
     
     var body: some View {
@@ -88,47 +95,47 @@ struct RegisterView: View {
                 }
                 .padding(.top)
                 .offset(y: 100)
+                
+                SnackbarView(message: snackBarMessage, snackbarType: snackBarType, isShowing: $showSnackBar) {
+                    if(snackBarType == .success) {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+                .frame(height: 40)
+                .offset(y: 200)
             }
             .frame(width: 350)
-            .onAppear {
-                if auth.currentUser != nil {
-                    userIsLoggedIn = true
-                } else {
-                    userIsLoggedIn = false
+            .onChange(of: viewModel.registerNetworkResult) { newValue in
+                switch newValue {
+                case .success(let success):
+                    snackBarMessage =  "Register Successfully"
+                    snackBarType = .success
+                    showSnackBar = true
+                    
+                    break
+                case .error(let message):
+                    snackBarMessage =  message ?? "Error"
+                    snackBarType = .error
+                    showSnackBar = true
+                    break
+                case .loading:
+                    print("Loading")
+                    break
+                case .idle:
+                    print("Idle")
+                    break
                 }
             }
             
         }
         .ignoresSafeArea()
-
+        
     }
     
     func register() {
-        auth.createUser(withEmail: email, password: password) {  result, error in
-            if error != nil {
-                print(error!.localizedDescription)
-            }
-        }
+        viewModel.register(email: email, password: password)
     }
     
-    func login() {
-        viewModel.auth(email: email, password: password)
-        
-        switch viewModel.networkResult {
-        case .success(_):
-            userIsLoggedIn = true
-            break
-        case .error(let message):
-             print(message)
-            break
-        case .loading:
-             ProgressView()
-            break
-        case .idle:
-           
-            break
-        }
-    }
 }
 
 struct RegisterView_Previews: PreviewProvider {

@@ -127,7 +127,7 @@ struct AuthView: View {
                     userIsLoggedIn = false
                 }
             }
-            .onChange(of: viewModel.networkResult) { newValue in
+            .onChange(of: viewModel.loginNetworkResult) { newValue in
                 switch newValue {
                 case .success(let success):
                     userIsLoggedIn = true

@@ -59,6 +59,10 @@ class DIContainer {
         container.register(AuthUseCase.self) { resolver in
             AuthUseCaseImpl(repository: resolver.resolve(AuthRepository.self)!)
         }
+        
+        container.register(RegisterUseCase.self) { resolver in
+            RegisterUseCaseImpl(remoteDataSource: resolver.resolve(AuthRemoteDataSource.self)!)
+        }
     }
     
     fileprivate func viewModelsInjections() {
@@ -68,13 +72,16 @@ class DIContainer {
         }
         
         container.register(AuthViewModel.self) { resolver in
-            AuthViewModel(authUseCase: resolver.resolve(AuthUseCase.self)!)
+            AuthViewModel(
+                authUseCase: resolver.resolve(AuthUseCase.self)!,
+                registerUseCase: resolver.resolve(RegisterUseCase.self)!
+            )
         }
     }
     
     
     func resolve<T>(_ serviceType: T.Type) -> T {
-            return container.resolve(serviceType)!
-        }
+        return container.resolve(serviceType)!
+    }
     
 }

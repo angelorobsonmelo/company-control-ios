@@ -11,6 +11,8 @@ struct SnackbarView: View {
     let message: String
     let snackbarType: SnackbarType
     @Binding var isShowing: Bool
+    var completion: (() -> Void)?
+
     
     var body: some View {
         VStack {
@@ -29,6 +31,7 @@ struct SnackbarView: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                             withAnimation {
                                 isShowing = false
+                                completion?()
                             }
                         }
                     }
@@ -40,6 +43,7 @@ struct SnackbarView: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                     withAnimation {
                         isShowing = false
+                        completion?()
                     }
                 }
             }
