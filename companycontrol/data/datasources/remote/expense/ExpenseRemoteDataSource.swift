@@ -9,5 +9,5 @@ import Foundation
 
 protocol ExpenseRemoteDataSource {
     
-    func teste()
+    func saveExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void)
 }

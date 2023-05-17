@@ -30,12 +30,21 @@ class DIContainer {
             Auth.auth()
         }
         
+        // FireStore
+        container.register(Firestore.self) { _ in
+            Firestore.firestore()
+        }
+        
         container.register(AuthRemoteDataSource.self) { resolver in
             AuthRemoteDataSourceImpl(auth: resolver.resolve(Auth.self)!)
         }
         
-        container.register(ExpenseRemoteDataSource.self) { _ in
-            ExpenseRemoteDataSourceImpl()
+        container.register(ExpenseRemoteDataSource.self) { resolver in
+            ExpenseRemoteDataSourceImpl(fireStore: resolver.resolve(Firestore.self)!)
+        }
+        
+        container.register(ExpenseCategoryRemoteDataSource.self) { resolver in
+            ExpenseCategoryRemoteDataSourceImpl(db: resolver.resolve(Firestore.self)!)
         }
     }
     
@@ -48,12 +57,24 @@ class DIContainer {
         container.register(ExpenseRepository.self) { resolver in
             ExpenseRepositoryImpl(remoteDataSource: resolver.resolve(ExpenseRemoteDataSource.self)!)
         }
+        
+        container.register(ExpenseCategoryRepository.self) { resolver in
+            ExpenseCategoryRepositoryImpl(dataSource: resolver.resolve(ExpenseCategoryRemoteDataSource.self)!)
+        }
     }
     
     fileprivate func useCasesInjections() {
         // Use cases
         container.register(GetExpensesUseCase.self) { resolver in
             GetExpensesUseCaseImpl(repository: resolver.resolve(ExpenseRepository.self)!)
+        }
+        
+        container.register(GetExpenseCategoriesUseCase.self) { resolver in
+            GetExpenseCategoriesUseCaseImpl(repository: resolver.resolve(ExpenseCategoryRepository.self)!)
+        }
+        
+        container.register(SaveExpenseUseCase.self) { resolver in
+            SaveExpenseUseCaseImpl(repository: resolver.resolve(ExpenseRepository.self)!)
         }
         
         container.register(AuthUseCase.self) { resolver in
@@ -68,13 +89,24 @@ class DIContainer {
     fileprivate func viewModelsInjections() {
         // ViewModels
         container.register(ExpenseViewModel.self) { resolver in
-            ExpenseViewModel(getExpensesUseCase: resolver.resolve(GetExpensesUseCase.self)!)
+            ExpenseViewModel(
+                getExpensesUseCase: resolver.resolve(GetExpensesUseCase.self)!,
+                auth: resolver.resolve(Auth.self)!,
+                saveExpenseUseCase: resolver.resolve(SaveExpenseUseCase.self)!
+            )
         }
         
         container.register(AuthViewModel.self) { resolver in
             AuthViewModel(
                 authUseCase: resolver.resolve(AuthUseCase.self)!,
                 registerUseCase: resolver.resolve(RegisterUseCase.self)!
+            )
+        }
+        
+        container.register(ExpenseCategoryViewModel.self) { resolver in
+            ExpenseCategoryViewModel(
+                getExpenseUseCase: resolver.resolve(GetExpenseCategoriesUseCase.self)!,
+                auth: resolver.resolve(Auth.self)!
             )
         }
     }

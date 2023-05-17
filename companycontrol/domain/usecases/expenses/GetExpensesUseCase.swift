@@ -8,5 +8,5 @@
 import Foundation
 
 protocol GetExpensesUseCase {
-    func test()
+    func saveExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void)
 }

@@ -1,12 +1,12 @@
 //
-//  ExpenseRepository.swift
+//  SaveExpenseUseCase.swift
 //  companycontrol
 //
-//  Created by Ângelo Melo on 10/05/2023.
+//  Created by Ângelo Melo on 17/05/2023.
 //
 
 import Foundation
 
-protocol ExpenseRepository {
+protocol SaveExpenseUseCase {
     func saveExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void)
 }
