@@ -19,6 +19,10 @@ class ExpenseCategoryRepositoryImpl: ExpenseCategoryRepository {
         dataSource.getAll(userEmail: userEmail, completion: completion)
     }
     
+    func saveCategory(request: ExpenseCategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+        dataSource.saveCategory(request: request, completion: completion)
+    }
+
     
     
 }

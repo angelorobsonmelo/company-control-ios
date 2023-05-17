@@ -19,7 +19,7 @@ class SaveExpenseUseCaseImpl: SaveExpenseUseCase {
     func saveExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         
         if(request.name.isEmpty) {
-            completion(.failure(ExpenseValidationForm.nameEmpty(reason: "Name can not be empty")))
+            completion(.failure(ValidationFormEnum.emptyField(reason: "Name can not be empty")))
         }
         
         repository.saveExpense(request: request) { result in

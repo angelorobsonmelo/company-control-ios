@@ -57,6 +57,7 @@ struct AuthView: View {
                 TextField("Email", text: $email)
                     .foregroundColor(.white)
                     .textFieldStyle(.plain)
+                    .autocapitalization(.none)
                     .placeholder(when: email.isEmpty) {
                         Text("Email")
                             .foregroundColor(.white)
@@ -71,6 +72,7 @@ struct AuthView: View {
                 SecureField("Password", text: $password)
                     .foregroundColor(.white)
                     .textFieldStyle(.plain)
+                    .autocapitalization(.none)
                     .padding(.top)
                     .placeholder(when: password.isEmpty) {
                         Text("Password")
@@ -132,7 +134,7 @@ struct AuthView: View {
                     userIsLoggedIn = true
                     break
                 case .error(let message):
-                    snackBarMessage =  message ?? "Error"
+                    snackBarMessage =  message.0 ?? "Error"
                     snackBarType = .error
                     showSnackBar = true
                     break
@@ -153,11 +155,11 @@ struct AuthView: View {
     }
 }
 
-struct LoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        AuthView()
-    }
-}
+//struct LoginView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AuthView()
+//    }
+//}
 
 extension View {
     func placeholder<Content: View>(

@@ -30,7 +30,7 @@ class AuthViewModel: ObservableObject {
                     case .success:
                         self.loginNetworkResult = .success(true)
                     case .failure(let error):
-                        self.loginNetworkResult = .error(error.localizedDescription)
+                        self.loginNetworkResult = .error(error.localizedDescription, Date())
                     }
                 }
             }
@@ -48,7 +48,7 @@ class AuthViewModel: ObservableObject {
                     case .success:
                         self.registerNetworkResult = .success(true)
                     case .failure(let error):
-                        self.registerNetworkResult = .error(error.localizedDescription)
+                        self.registerNetworkResult = .error(error.localizedDescription, Date())
                     }
                 }
             }

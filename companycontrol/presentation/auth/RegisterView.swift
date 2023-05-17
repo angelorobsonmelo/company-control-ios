@@ -114,7 +114,7 @@ struct RegisterView: View {
                     
                     break
                 case .error(let message):
-                    snackBarMessage =  message ?? "Error"
+                    snackBarMessage =  message.0 ?? "Error"
                     snackBarType = .error
                     showSnackBar = true
                     break

@@ -46,7 +46,7 @@ class ExpenseViewModel: ObservableObject {
                         case .success:
                             self.saveExpenseNetworkResult = .success(true)
                         case .failure(let error):
-                            self.saveExpenseNetworkResult = .error(error.localizedDescription)
+                            self.saveExpenseNetworkResult = .error(error.localizedDescription, Date())
                         }
                     }
                     
