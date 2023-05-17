@@ -52,15 +52,6 @@ class ExpenseCategoryViewModel: ObservableObject {
     
     func save(name: String) {
         saveCategoryNetworkResult = .loading
-        
-        if name.isEmpty {
-                DispatchQueue.main.async {
-                    self.saveCategoryNetworkResult = .idle
-                    self.saveCategoryNetworkResult = .error(ValidationFormEnum.emptyField(reason: "This field can be emtpy").localizedDescription, Date())
-                }
-                return
-            }
-
 
         DispatchQueue.global().async {
             if let email = self.auth.currentUser?.email {

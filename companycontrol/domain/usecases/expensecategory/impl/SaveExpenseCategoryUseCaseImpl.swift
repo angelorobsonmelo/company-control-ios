@@ -17,6 +17,11 @@ class SaveExpenseCategoryUseCaseImpl: SaveExpenseCategoryUseCase {
     }
     
     func saveCategory(request: ExpenseCategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+        if(request.name.isEmpty) {
+            completion(.failure(ValidationFormEnum.emptyField(reason: "Name can not be empty")))
+            return
+        }
+        
         repository.saveCategory(request: request) { result in
             switch result {
             case .success:
