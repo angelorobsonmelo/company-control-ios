@@ -9,6 +9,7 @@ import Foundation
 
 class ExpenseCategoryRepositoryImpl: ExpenseCategoryRepository {
     
+    
     let dataSource: ExpenseCategoryRemoteDataSource
     
     init(dataSource: ExpenseCategoryRemoteDataSource) {
@@ -21,6 +22,14 @@ class ExpenseCategoryRepositoryImpl: ExpenseCategoryRepository {
     
     func saveCategory(request: ExpenseCategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         dataSource.saveCategory(request: request, completion: completion)
+    }
+    
+    func update(request: ExpenseCategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+        dataSource.update(request: request, completion: completion)
+    }
+    
+    func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        dataSource.delete(id: id, completion: completion)
     }
 
     

@@ -11,6 +11,8 @@ import Firebase
 class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
     
     
+    private let collectionName = "expense_category"
+    
     let firestore: Firestore
     
     init(fireStore: Firestore) {
@@ -20,7 +22,7 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
     func saveExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         let id = Utils.generateCustomID()
 
-        let ref = firestore.collection("expense_category").document(id)
+        let ref = firestore.collection(collectionName).document(id)
         ref.setData(
             [
                 "id" : id,
@@ -38,8 +40,27 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
     
     }
     
+    func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        firestore.collection(collectionName).document(id).delete() { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
     
-    
+    func update(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+        firestore.collection(collectionName).document(request.id).updateData([
+            "name": request.name
+        ]) { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
     
     
 }

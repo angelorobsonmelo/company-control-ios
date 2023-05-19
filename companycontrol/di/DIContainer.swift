@@ -73,6 +73,14 @@ class DIContainer {
             SaveExpenseCategoryUseCaseImpl(repository: resolver.resolve(ExpenseCategoryRepository.self)!)
         }
         
+        container.register(DeleteExpenseCategoryUseCase.self) { resolver in
+            DeleteExpenseCategoryUseCaseImpl(repository: resolver.resolve(ExpenseCategoryRepository.self)!)
+        }
+        
+        container.register(UpdateExpenseCategoryUseCase.self) { resolver in
+            UpdateExpenseCategoryUseCaseImpl(repository: resolver.resolve(ExpenseCategoryRepository.self)!)
+        }
+        
         container.register(GetExpenseCategoriesUseCase.self) { resolver in
             GetExpenseCategoriesUseCaseImpl(repository: resolver.resolve(ExpenseCategoryRepository.self)!)
         }
@@ -111,7 +119,9 @@ class DIContainer {
             ExpenseCategoryViewModel(
                 getExpenseUseCase: resolver.resolve(GetExpenseCategoriesUseCase.self)!,
                 auth: resolver.resolve(Auth.self)!,
-                saveCategoryUseCase: resolver.resolve(SaveExpenseCategoryUseCase.self)!
+                saveCategoryUseCase: resolver.resolve(SaveExpenseCategoryUseCase.self)!,
+                deleteCategoryUseCase: resolver.resolve(DeleteExpenseCategoryUseCase.self)!,
+                updateCategoryUseCase: resolver.resolve(UpdateExpenseCategoryUseCase.self)!
             )
         }
     }

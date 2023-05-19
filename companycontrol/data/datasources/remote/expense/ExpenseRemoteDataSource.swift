@@ -10,4 +10,6 @@ import Foundation
 protocol ExpenseRemoteDataSource {
     
     func saveExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void)
+    func update(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void)
+    func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void)
 }

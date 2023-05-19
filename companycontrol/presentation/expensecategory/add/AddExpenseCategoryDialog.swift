@@ -12,14 +12,14 @@ struct AddExpenseCategoryDialog: View {
     
     @State private var snackBarMessage = ""
     @State private var snackBarType: SnackbarType = .error
-    @State private var showSnackBar = false
+    @State private var showAlertDialog = false
     
     
     @State private var name: String = ""
     @Binding  var showingDialog: Bool
-    @EnvironmentObject var viewModel2: ExpenseCategoryViewModel
-
-
+    @EnvironmentObject var viewModel: ExpenseCategoryViewModel
+    
+    
     
     var body: some View {
         NavigationView {
@@ -43,9 +43,9 @@ struct AddExpenseCategoryDialog: View {
                                     .cornerRadius(10)
                             })
                             .buttonStyle(PlainButtonStyle())
-                                                        
+                            
                             Button(action: {
-                                viewModel2.save(name: name)
+                                viewModel.save(name: name)
                             }, label: {
                                 Text("Save")
                                     .fontWeight(.bold)
@@ -63,24 +63,17 @@ struct AddExpenseCategoryDialog: View {
                 }
                 .padding()
                 
-                SnackbarView(message: snackBarMessage, snackbarType: snackBarType, isShowing: $showSnackBar)
-                    .frame(height: 40)
-                    .offset(y: 200)
             }
-            .onChange(of: viewModel2.saveCategoryNetworkResult) { newValue in
+            .onChange(of: viewModel.networkResult) { newValue in
                 switch newValue {
                 case .success(let success):
-                    snackBarMessage =  "Register Successfully"
-                    snackBarType = .success
-                    showSnackBar = true
+                    showAlertDialog = true
                     self.name = ""
                     print("successfully")
                     
                     break
                 case .error(let message):
-                    snackBarMessage =  message.0 ?? "Error"
-                    snackBarType = .error
-                    showSnackBar = true
+                    showAlertDialog = true
                     print("error: \(message)")
                     break
                 case .loading:
@@ -90,6 +83,13 @@ struct AddExpenseCategoryDialog: View {
                     print("Idle")
                     break
                 }
+            }
+            .alert(isPresented: $showAlertDialog) {
+                Alert(
+                    title: Text("Save Successfully"),
+                    message: Text(snackBarMessage),
+                    dismissButton: .default(Text("OK"))
+                )
             }
             .navigationBarTitle("Add Category", displayMode: .inline)
         }

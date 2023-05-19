@@ -11,20 +11,26 @@ import Firebase
 class ExpenseCategoryViewModel: ObservableObject {
     
     @Published var categoriesNetworkResult: NetworkResult<[ExpenseCategoryPresentation]> = .idle
-    @Published var saveCategoryNetworkResult: NetworkResult<Bool> = .idle
+    @Published var networkResult: NetworkResult<Bool> = .idle
     
     private let getExpenseUseCase: GetExpenseCategoriesUseCase
     private let saveCategoryUseCase: SaveExpenseCategoryUseCase
+    private let deleteCategoryUseCase: DeleteExpenseCategoryUseCase
+    private let updateCategoryUseCase: UpdateExpenseCategoryUseCase
     private let auth: Auth
     
     init(
         getExpenseUseCase: GetExpenseCategoriesUseCase,
         auth: Auth,
-        saveCategoryUseCase: SaveExpenseCategoryUseCase
+        saveCategoryUseCase: SaveExpenseCategoryUseCase,
+        deleteCategoryUseCase: DeleteExpenseCategoryUseCase,
+        updateCategoryUseCase: UpdateExpenseCategoryUseCase
     ) {
         self.getExpenseUseCase = getExpenseUseCase
         self.auth = auth
         self.saveCategoryUseCase = saveCategoryUseCase
+        self.deleteCategoryUseCase = deleteCategoryUseCase
+        self.updateCategoryUseCase = updateCategoryUseCase
     }
     
     func getCategories()  {
@@ -51,8 +57,8 @@ class ExpenseCategoryViewModel: ObservableObject {
     }
     
     func save(name: String) {
-        saveCategoryNetworkResult = .loading
-
+        networkResult = .loading
+        
         DispatchQueue.global().async {
             if let email = self.auth.currentUser?.email {
                 let id = Utils.generateCustomID()
@@ -62,13 +68,51 @@ class ExpenseCategoryViewModel: ObservableObject {
                     DispatchQueue.main.async {
                         switch result {
                         case .success:
-                            self.saveCategoryNetworkResult = .success(true)
+                            self.networkResult = .success(true)
                         case .failure(let error):
-                            self.saveCategoryNetworkResult = .error(error.localizedDescription, Date())
+                            self.networkResult = .error(error.localizedDescription, Date())
                         }
                     }
                 }
                 
+            }
+        }
+    }
+    
+    func remove(id: String) {
+        networkResult = .loading
+        
+        DispatchQueue.global().async {
+            self.deleteCategoryUseCase.delete(id: id) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success:
+                        self.networkResult = .success(true)
+                    case .failure(let error):
+                        self.networkResult = .error(error.localizedDescription, Date())
+                    }
+                }
+            }
+        }
+    }
+    
+    func update(presentionModel: ExpenseCategoryPresentation) {
+        if let email = self.auth.currentUser?.email {
+        networkResult = .loading
+        
+        let request = ExpenseCategoryRequest(id: presentionModel.id, name: presentionModel.name, userEmail: email)
+        
+            DispatchQueue.global().async {
+                self.updateCategoryUseCase.update(request: request) { result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success:
+                            self.networkResult = .success(true)
+                        case .failure(let error):
+                            self.networkResult = .error(error.localizedDescription, Date())
+                        }
+                    }
+                }
             }
         }
     }

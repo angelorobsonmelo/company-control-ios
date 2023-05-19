@@ -13,13 +13,15 @@ class ExpenseCategoryRemoteDataSourceImpl: ExpenseCategoryRemoteDataSource {
     
     
     let db: Firestore
+    private let collectionName = "expense_category"
+
     
     init(db: Firestore) {
         self.db = db
     }
     
     func getAll(userEmail: String, completion: @escaping (Result<[ExpenseCategoryResponse], Error>) -> Void) {
-        let ref = db.collection("expense_category").whereField("user_email", isEqualTo: userEmail)
+        let ref = db.collection(collectionName).whereField("user_email", isEqualTo: userEmail)
         
         ref.addSnapshotListener { snapshot, error in
             guard error == nil, let snapshot = snapshot else {
@@ -41,11 +43,11 @@ class ExpenseCategoryRemoteDataSourceImpl: ExpenseCategoryRemoteDataSource {
     }
     
     func saveCategory(request: ExpenseCategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
-        let ref = db.collection("expense_category").document(request.id)
+        let ref = db.collection(collectionName).document(request.id)
         ref.setData(
             [
                 "id" : request.id,
-                "name": request.name,
+                "name": request.name,   
                 "user_email": request.userEmail
             ]
         ) { error in
@@ -55,6 +57,28 @@ class ExpenseCategoryRemoteDataSourceImpl: ExpenseCategoryRemoteDataSource {
                 completion(.success(()))
             }
             
+        }
+    }
+    
+    func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        db.collection(collectionName).document(id).delete() { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
+    
+    func update(request: ExpenseCategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+        db.collection(collectionName).document(request.id).updateData([
+            "name": request.name
+        ]) { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
         }
     }
     
