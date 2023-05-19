@@ -7,7 +7,16 @@
 
 import Foundation
 
-struct ExpenseCategoryPresentation: Identifiable, Equatable {
+class ExpenseCategoryPresentation: Identifiable, Equatable {
     let id: String
-    let name: String
+    var name: String
+
+    init(id: String, name: String) {
+        self.id = id
+        self.name = name
+    }
+
+    static func == (lhs: ExpenseCategoryPresentation, rhs: ExpenseCategoryPresentation) -> Bool {
+        return lhs.id == rhs.id
+    }
 }

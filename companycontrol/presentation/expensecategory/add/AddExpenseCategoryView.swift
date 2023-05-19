@@ -8,10 +8,9 @@
 import Foundation
 import SwiftUI
 
-struct AddExpenseCategoryDialog: View {
+struct AddExpenseCategoryView: View {
     
-    @State private var snackBarMessage = ""
-    @State private var snackBarType: SnackbarType = .error
+  
     @State private var showAlertDialog = false
     
     
@@ -87,7 +86,7 @@ struct AddExpenseCategoryDialog: View {
             .alert(isPresented: $showAlertDialog) {
                 Alert(
                     title: Text("Save Successfully"),
-                    message: Text(snackBarMessage),
+                    message: Text(""),
                     dismissButton: .default(Text("OK"))
                 )
             }

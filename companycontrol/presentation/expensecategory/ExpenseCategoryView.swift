@@ -13,16 +13,14 @@ struct ExpenseCategoryView: View {
     @StateObject var viewModel = DIContainer.shared.resolve(ExpenseCategoryViewModel.self)
     
     @State var categories:[ExpenseCategoryPresentation] = []
-    @State private var showingDialog = false
+    @State private var showingAddDialog = false
+    @State private var showingEditDialog = false
     
-    
-    @State private var snackBarMessage = ""
-    @State private var snackBarType: SnackbarType = .error
-    @State private var showSnackBar = false
     @State private var showingDeleteConfirmation = false
     
     @State private var itemPosition: Int? = nil
-    
+    @State private var selectedCategory: ExpenseCategoryPresentation? = nil
+
     
     var body: some View {
         NavigationView {
@@ -36,7 +34,8 @@ struct ExpenseCategoryView: View {
                         .contentShape(Rectangle())
                         .background(Color.clear) // This will make the entire HStack tappable
                         .onTapGesture {
-                            print("Item tapped: \(category)")
+                            selectedCategory = category
+                            showingEditDialog = true
                         }
                     }
                     .onDelete(perform: deleteCategory)
@@ -46,7 +45,7 @@ struct ExpenseCategoryView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        self.showingDialog = true
+                        self.showingAddDialog = true
                     }) {
                         Image(systemName: "plus")
                     }
@@ -55,9 +54,19 @@ struct ExpenseCategoryView: View {
             .onAppear {
                 viewModel.getCategories()
             }
-            .sheet(isPresented: $showingDialog) {
-                AddExpenseCategoryDialog(showingDialog: $showingDialog)
+            .sheet(isPresented: $showingAddDialog) {
+                AddExpenseCategoryView(showingDialog: $showingAddDialog)
                     .environmentObject(viewModel)
+            }
+            .sheet(isPresented: $showingEditDialog) {
+                EditExpenseCategoryView(category: self.selectedCategory!, showingDialog: $showingEditDialog)
+                    .environmentObject(viewModel)
+            }
+            .onChange(of: selectedCategory) { newCategory in
+                if let newCategory = newCategory {
+                        self.selectedCategory = newCategory
+                        self.showingEditDialog = true
+                    }
             }
             .onChange(of: viewModel.categoriesNetworkResult) { newValue in
                 switch newValue {
