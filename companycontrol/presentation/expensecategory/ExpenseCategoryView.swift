@@ -20,7 +20,6 @@ struct ExpenseCategoryView: View {
     
     @State private var itemPosition: Int? = nil
     @State private var selectedCategory: ExpenseCategoryPresentation? = nil
-
     
     var body: some View {
         NavigationView {
@@ -29,10 +28,10 @@ struct ExpenseCategoryView: View {
                     ForEach(categories, id: \.id) { category in
                         HStack {
                             Text(category.name)
-                            Spacer() // This will push the Text to the left
+                            Spacer()
                         }
                         .contentShape(Rectangle())
-                        .background(Color.clear) // This will make the entire HStack tappable
+                        .background(Color.clear)
                         .onTapGesture {
                             selectedCategory = category
                             showingEditDialog = true
@@ -64,9 +63,9 @@ struct ExpenseCategoryView: View {
             }
             .onChange(of: selectedCategory) { newCategory in
                 if let newCategory = newCategory {
-                        self.selectedCategory = newCategory
-                        self.showingEditDialog = true
-                    }
+                    self.selectedCategory = newCategory
+                    self.showingEditDialog = true
+                }
             }
             .onChange(of: viewModel.categoriesNetworkResult) { newValue in
                 switch newValue {

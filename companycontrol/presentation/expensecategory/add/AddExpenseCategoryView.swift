@@ -10,15 +10,11 @@ import SwiftUI
 
 struct AddExpenseCategoryView: View {
     
-  
     @State private var showAlertDialog = false
-    
     
     @State private var name: String = ""
     @Binding  var showingDialog: Bool
     @EnvironmentObject var viewModel: ExpenseCategoryViewModel
-    
-    
     
     var body: some View {
         NavigationView {
@@ -27,7 +23,6 @@ struct AddExpenseCategoryView: View {
                     Section(header: Text("Category Name:")) {
                         TextField("Insert category name", text: $name)
                     }
-                    
                     Section {
                         HStack {
                             Button(action: {
@@ -56,12 +51,9 @@ struct AddExpenseCategoryView: View {
                             })
                             .buttonStyle(PlainButtonStyle())
                         }
-                        
                     }
-                    
                 }
                 .padding()
-                
             }
             .onChange(of: viewModel.networkResult) { newValue in
                 switch newValue {
@@ -72,7 +64,6 @@ struct AddExpenseCategoryView: View {
                     
                     break
                 case .error(let message):
-                    showAlertDialog = true
                     print("error: \(message)")
                     break
                 case .loading:

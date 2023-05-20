@@ -13,20 +13,18 @@ struct EditExpenseCategoryView: View {
     var category: ExpenseCategoryPresentation
     
     @State private var showAlertDialog = false
-    @State private var name: String = ""
+    @State private var fieldName: String = ""
     
     @Binding  var showingDialog: Bool
     
     @EnvironmentObject var viewModel: ExpenseCategoryViewModel
-    
-    
     
     var body: some View {
         NavigationView {
             VStack {
                 Form {
                     Section(header: Text("Category Name:")) {
-                        TextField("Insert category name", text: $name)
+                        TextField("Insert category name", text: $fieldName)
                     }
                     
                     Section {
@@ -45,8 +43,8 @@ struct EditExpenseCategoryView: View {
                             .buttonStyle(PlainButtonStyle())
                             
                             Button(action: {
-                                category.name = self.name
-                                    viewModel.update(presentionModel: category)
+                                category.name = self.fieldName
+                                viewModel.update(presentionModel: category)
                             }, label: {
                                 Text("Save")
                                     .fontWeight(.bold)
@@ -58,16 +56,12 @@ struct EditExpenseCategoryView: View {
                             })
                             .buttonStyle(PlainButtonStyle())
                         }
-                        
                     }
-                    
                 }
                 .padding()
-                
             }
             .onAppear {
-                self.name = category.name
-                
+                self.fieldName = category.name
             }
             .onChange(of: viewModel.networkResult) { newValue in
                 switch newValue {
