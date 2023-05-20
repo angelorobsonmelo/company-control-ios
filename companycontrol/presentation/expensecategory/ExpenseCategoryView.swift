@@ -41,6 +41,7 @@ struct ExpenseCategoryView: View {
                 }
                 
             }
+            .navigationBarTitle("Expense Category", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -96,7 +97,6 @@ struct ExpenseCategoryView: View {
                 }
             )
         }
-        .navigationBarTitle("Expense Categories", displayMode: .inline)
     }
     
     private func deleteCategory(at offsets: IndexSet) {

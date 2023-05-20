@@ -30,7 +30,7 @@ struct AuthView: View {
     var body: some View {
         NavigationView {
             if userIsLoggedIn {
-                ExpenseCategoryView()
+                MainView()
             } else {
                 content
             }
