@@ -1,18 +1,19 @@
 //
-//  ExpenseResponse.swift
+//  User.swift
 //  companycontrol
 //
-//  Created by Ângelo Melo on 17/05/2023.
+//  Created by Ângelo Melo on 11/05/2023.
 //
 
 import Foundation
 
-struct ExpenseResponse {
+
+struct ExpensePresentation: Equatable, Identifiable {
     let id: String
     let title: String
     let description: String
     let userEmail: String
     let amount: Double
     let date: Date
-    let expenseCategory: ExpenseCategoryResponse
+    let expenseCategory: ExpenseCategoryPresentation
 }

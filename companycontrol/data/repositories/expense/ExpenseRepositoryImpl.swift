@@ -8,7 +8,7 @@
 import Foundation
 
 class ExpenseRepositoryImpl: ExpenseRepository {
-   
+
     
     private let remoteDataSource: ExpenseRemoteDataSource
     
@@ -20,6 +20,9 @@ class ExpenseRepositoryImpl: ExpenseRepository {
         remoteDataSource.saveExpense(request: request, completion: completion)
     }
     
+    func getAll(userEmail: String, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void) {
+        remoteDataSource.getAll(userEmail: userEmail, completion: completion)
+    }
     
     
 }

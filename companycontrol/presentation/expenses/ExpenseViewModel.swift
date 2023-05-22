@@ -11,12 +11,13 @@ import Firebase
 class ExpenseViewModel: ObservableObject {
     
     @Published var saveExpenseNetworkResult: NetworkResult<Bool> = .idle
+    @Published var getExpensesNetworkResult: NetworkResult<[ExpensePresentation]> = .idle
     @Published var categories: [ExpenseCategoryPresentation] = []
     
     private let getExpensesUseCase: GetExpensesUseCase
     private let saveExpenseUseCase: SaveExpenseUseCase
     private let getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase
-
+    
     private let auth: Auth
     
     init(
@@ -29,12 +30,6 @@ class ExpenseViewModel: ObservableObject {
         self.auth = auth
         self.saveExpenseUseCase = saveExpenseUseCase
         self.getExpenseCategoriesUseCase = getExpenseCategoriesUseCase
-    }
-    
-    func getExpenses() {
-        DispatchQueue.global().async {
-            
-        }
     }
     
     func saveExpense(
@@ -95,23 +90,35 @@ class ExpenseViewModel: ObservableObject {
         }
     }
     
-    func fetchData() {
-        //            networkResult = .loading // Define o estado de loading
-        //
-        //            DispatchQueue.global().async {
-        //                // Simulando uma requisição com atraso
-        //                sleep(2)
-        //
-        //                DispatchQueue.main.async {
-        //                    if Bool.random() {
-        //                        // Simulando uma resposta bem-sucedida
-        //                        self.networkResult = .success(User(name: "John Doe", email: "john@example.com"))
-        //                    } else {
-        //                        // Simulando uma resposta com erro
-        //                        self.networkResult = .error("Erro na requisição")
-        //                    }
-        //                }
-        //            }
+    func getExpenses() {
+        DispatchQueue.global().async {
+            if let email = self.auth.currentUser?.email {
+                self.getExpensesUseCase.getAll(userEmail: email) { result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let items):
+                            let presentionModels = items.map { item in
+                                ExpensePresentation(
+                                    id: item.id,
+                                    title: item.title,
+                                    description: item.description,
+                                    userEmail: item.userEmail,
+                                    amount: item.amount,
+                                    date: item.date,
+                                    expenseCategory: ExpenseCategoryPresentation(
+                                        id: item.expenseCategory.id,
+                                        name: item.expenseCategory.name))
+                            }
+                            
+                            self.getExpensesNetworkResult = .success(presentionModels)
+                            
+                        case .failure(let error):
+                            self.getExpensesNetworkResult = .error(error.localizedDescription, Date())
+                        }
+                    }
+                }
+            }
+        }
     }
     
 }

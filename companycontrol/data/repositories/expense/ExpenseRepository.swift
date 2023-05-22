@@ -9,4 +9,6 @@ import Foundation
 
 protocol ExpenseRepository {
     func saveExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void)
+    func getAll(userEmail: String, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void)
+
 }
