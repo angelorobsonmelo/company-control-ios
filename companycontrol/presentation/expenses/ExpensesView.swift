@@ -10,12 +10,31 @@ import SwiftUI
 
 struct ExpensesView: View {
     
-    @ObservedObject var viewModel = DIContainer.shared.resolve(ExpenseViewModel.self)
+    @StateObject var viewModel = DIContainer.shared.resolve(ExpenseViewModel.self)
+    @State private var showingAddDialog = false
 
     
     var body: some View {
-           VStack {
-               Text("")
-           }
-       }
+        NavigationView {
+            VStack {
+                Text("expenses soon")
+            }
+            .navigationBarTitle("Expenses", displayMode: .inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        self.showingAddDialog = true
+                    }) {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingAddDialog) {
+                AddExpenseView(showingDialog: $showingAddDialog)
+                    .environmentObject(viewModel)
+            }
+        }
+       
+    }
+    
 }

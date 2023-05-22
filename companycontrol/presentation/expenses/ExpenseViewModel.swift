@@ -29,16 +29,27 @@ class ExpenseViewModel: ObservableObject {
     func getExpenses() {
         DispatchQueue.global().async {
             
-            
-            
         }
     }
     
-    func saveExpense(name: String) {
+    func saveExpense(
+        title: String,
+        description: String,
+        value: Double,
+        expenseCategoryId: String
+    ) {
         DispatchQueue.global().async {
             let id = Utils.generateCustomID()
             if let email = self.auth.currentUser?.email {
-                let request = ExpenseRequest(id: id, name: name, userEmail: email)
+                let request = ExpenseRequest(
+                    id: id,
+                    title: title,
+                    description: description,
+                    userEmail: email,
+                    value: value,
+                    expenseCategoryId: expenseCategoryId,
+                    date: Timestamp().dateValue()
+                )
                 
                 self.saveExpenseUseCase.saveExpense(request: request) { result in
                     DispatchQueue.main.async {

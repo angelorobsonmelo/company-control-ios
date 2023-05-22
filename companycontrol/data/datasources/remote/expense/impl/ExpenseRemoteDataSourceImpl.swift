@@ -11,7 +11,7 @@ import Firebase
 class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
     
     
-    private let collectionName = "expense_category"
+    private let collectionName = "expense"
     
     let firestore: Firestore
     
@@ -26,8 +26,9 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
         ref.setData(
             [
                 "id" : id,
-                "name": request.name,
-                "user_email": request.userEmail
+                "name": request.title,
+                "user_email": request.userEmail,
+                "expense_category_id": request.expenseCategoryId
             ]
         ) { error in
             if let error = error {
@@ -52,7 +53,7 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
     
     func update(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         firestore.collection(collectionName).document(request.id).updateData([
-            "name": request.name
+            "name": request.title
         ]) { error in
             if let error = error {
                 completion(.failure(error))

@@ -18,7 +18,7 @@ class GetExpensesUseCaseImpl: GetExpensesUseCase {
     
     func saveExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         
-        if(request.name.isEmpty) {
+        if(request.title.isEmpty) {
             completion(.failure(ValidationFormEnum.emptyField(reason: "Name can not be empty")))
         }
         

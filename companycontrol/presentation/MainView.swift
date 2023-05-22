@@ -6,50 +6,48 @@ struct MainView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            ExpenseCategoryView()
+            ExpensesView()
                 .tabItem {
                     Image(systemName: "1.square.fill")
-                    Text("First")
+                    Text("Expenses")
                 }
                 .tag(0)
             
             SecondTabView()
                 .tabItem {
                     Image(systemName: "2.square.fill")
-                    Text("Second")
+                    Text("Services")
                 }
                 .tag(1)
             
-            SecondTabView()
+            ExpenseCategoryView()
                 .tabItem {
-                    Image(systemName: "2.square.fill")
-                    Text("Second")
+                    Image(systemName: "3.square.fill")
+                    Text("Expense Cat.")
                 }
                 .tag(2)
             
             SecondTabView()
                 .tabItem {
-                    Image(systemName: "2.square.fill")
-                    Text("Second")
+                    Image(systemName: "4.square.fill")
+                    Text("Service Cat.")
                 }
                 .tag(3)
             
             SecondTabView()
                 .tabItem {
-                    Image(systemName: "2.square.fill")
-                    Text("Second")
+                    Image(systemName: "5.square.fill")
+                    Text("Balance")
                 }
                 .tag(4)
             
-        }
-    }
-}
-
-struct FirstTabView: View {
-    var body: some View {
-        NavigationView {
-            Text("First Tab")
-                .navigationBarTitle("First Tab", displayMode: .inline)
+            SecondTabView()
+                .tabItem {
+                    Image(systemName: "6.square.fill")
+                    Text("Logout")
+                }
+                .tag(5)
+            
         }
     }
 }

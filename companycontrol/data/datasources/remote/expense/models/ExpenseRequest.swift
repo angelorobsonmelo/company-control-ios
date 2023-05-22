@@ -9,6 +9,10 @@ import Foundation
 
 struct ExpenseRequest {
     let id: String
-    let name: String
+    let title: String
+    let description: String
     let userEmail: String
+    let value: Double
+    let expenseCategoryId: String
+    let date: Date
 }
