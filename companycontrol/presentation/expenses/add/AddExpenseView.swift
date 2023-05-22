@@ -15,17 +15,18 @@ struct AddExpenseView: View {
     @Binding  var showingDialog: Bool
     @EnvironmentObject var viewModel: ExpenseViewModel
     
-    @State private var name: String = ""
+    @State private var title: String = ""
     @State private var description: String = ""
-    @State private var nextDueDate = Date()
+    @State private var date = Date()
     @State private var amount = ""
     @State private var numericValue: Double = 0.0
+    
+    @State private var categiroryId: String = ""
     
     
     let formatter: NumberFormatter = CurrencyFormatter()
     
     @State private var selectedOption: String? = ""
-    let options = ["Option 1", "Option 2", "Option 3"]
     
     
     var body: some View {
@@ -34,7 +35,7 @@ struct AddExpenseView: View {
                 Form {
                     VStack(alignment: .leading) {
                         Text("title:")
-                        TextField("", text: $name)
+                        TextField("", text: $title)
                             .keyboardType(.default)
                             .textContentType(.oneTimeCode)
                             .toolbar {
@@ -77,7 +78,7 @@ struct AddExpenseView: View {
                                 
                             })
                             .onAppear() {
-                                amount = formatter.string(from: NSNumber(value: 0)) ?? "0,00"
+                                amount = amount.isEmpty ? formatter.string(from: NSNumber(value: 0)) ?? "" : amount
                             }
                         
                     }
@@ -86,9 +87,14 @@ struct AddExpenseView: View {
                     }
                     
                     VStack(alignment: .leading) {
-                        Text("Category:")
+                        let options = viewModel.categories.compactMap { item in
+                            item.name
+                        }
                         
+                        
+                        Text("Category:")
                         NavigationLink(destination: OptionsView(selectedOption: $selectedOption, options: options)) {
+                            
                             HStack {
                                 Text(selectedOption ?? "Select an option")
                                     .keyboardType(.default)
@@ -100,7 +106,7 @@ struct AddExpenseView: View {
                         }
                     }
                     
-                    DateSelectionView(label: "Date:", date: $nextDueDate)
+                    DateSelectionView(label: "Date:", date: $date)
                         .onTapGesture {
                             hideKeyboard()
                         }
@@ -121,7 +127,12 @@ struct AddExpenseView: View {
                             .buttonStyle(PlainButtonStyle())
                             
                             Button(action: {
-                                //                                viewModel.save(name: name)
+                                viewModel.saveExpense(
+                                    title: title,
+                                    description: description,
+                                    amount: numericValue,
+                                    expenseCategoryId: categiroryId,
+                                    date: date)
                             }, label: {
                                 Text("Save")
                                     .fontWeight(.bold)
@@ -135,7 +146,20 @@ struct AddExpenseView: View {
                         }
                     }
                 }
+                .onAppear {
+                    viewModel.getCategories()
+                }
                 .padding()
+                .onChange(of: selectedOption) { newValue in
+                    if let optionSelected = newValue {
+                        let itemSelected = self.viewModel.categories.first { item in
+                            item.name == optionSelected
+                        }
+                        
+                        self.categiroryId = itemSelected?.id ?? ""
+                        // recuperar id aqui
+                    }
+                }
                 
             }
             

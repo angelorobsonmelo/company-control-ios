@@ -104,7 +104,8 @@ class DIContainer {
             ExpenseViewModel(
                 getExpensesUseCase: resolver.resolve(GetExpensesUseCase.self)!,
                 auth: resolver.resolve(Auth.self)!,
-                saveExpenseUseCase: resolver.resolve(SaveExpenseUseCase.self)!
+                saveExpenseUseCase: resolver.resolve(SaveExpenseUseCase.self)!,
+                getExpenseCategoriesUseCase: resolver.resolve(GetExpenseCategoriesUseCase.self)!
             )
         }
         

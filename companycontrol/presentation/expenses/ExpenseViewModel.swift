@@ -11,19 +11,24 @@ import Firebase
 class ExpenseViewModel: ObservableObject {
     
     @Published var saveExpenseNetworkResult: NetworkResult<Bool> = .idle
+    @Published var categories: [ExpenseCategoryPresentation] = []
     
     private let getExpensesUseCase: GetExpensesUseCase
     private let saveExpenseUseCase: SaveExpenseUseCase
+    private let getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase
+
     private let auth: Auth
     
     init(
         getExpensesUseCase: GetExpensesUseCase,
         auth: Auth,
-        saveExpenseUseCase: SaveExpenseUseCase
+        saveExpenseUseCase: SaveExpenseUseCase,
+        getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase
     ) {
         self.getExpensesUseCase = getExpensesUseCase
         self.auth = auth
         self.saveExpenseUseCase = saveExpenseUseCase
+        self.getExpenseCategoriesUseCase = getExpenseCategoriesUseCase
     }
     
     func getExpenses() {
@@ -35,8 +40,9 @@ class ExpenseViewModel: ObservableObject {
     func saveExpense(
         title: String,
         description: String,
-        value: Double,
-        expenseCategoryId: String
+        amount: Double,
+        expenseCategoryId: String,
+        date: Date
     ) {
         DispatchQueue.global().async {
             let id = Utils.generateCustomID()
@@ -46,9 +52,9 @@ class ExpenseViewModel: ObservableObject {
                     title: title,
                     description: description,
                     userEmail: email,
-                    value: value,
+                    amount: amount,
                     expenseCategoryId: expenseCategoryId,
-                    date: Timestamp().dateValue()
+                    date: date
                 )
                 
                 self.saveExpenseUseCase.saveExpense(request: request) { result in
@@ -66,6 +72,27 @@ class ExpenseViewModel: ObservableObject {
             }
         }
         
+    }
+    
+    func getCategories()  {
+        DispatchQueue.global().async {
+            if let email = self.auth.currentUser?.email {
+                self.getExpenseCategoriesUseCase.getAll(userEmail:email) { result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let categoriesResponse):
+                            let categories = categoriesResponse.map { item in
+                                ExpenseCategoryPresentation(id: item.id, name: item.name)
+                            }
+                            
+                            self.categories = categories
+                        case .failure(let error):
+                            print(error)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func fetchData() {

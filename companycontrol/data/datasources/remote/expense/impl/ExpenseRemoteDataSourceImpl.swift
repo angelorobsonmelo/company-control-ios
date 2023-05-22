@@ -22,13 +22,18 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
     func saveExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         let id = Utils.generateCustomID()
 
+        let expenseCategoryRef = Firestore.firestore().collection("expense_category").document(request.expenseCategoryId)
+
         let ref = firestore.collection(collectionName).document(id)
         ref.setData(
             [
                 "id" : id,
-                "name": request.title,
+                "title": request.title,
+                "description": request.description,
+                "date": request.date,
                 "user_email": request.userEmail,
-                "expense_category_id": request.expenseCategoryId
+                "amount": request.amount,
+                "expense_category": expenseCategoryRef
             ]
         ) { error in
             if let error = error {
