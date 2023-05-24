@@ -14,6 +14,6 @@ struct ExpensePresentation: Equatable, Identifiable {
     let description: String
     let userEmail: String
     let amount: Double
-    let date: Date
+    let date: String
     let expenseCategory: ExpenseCategoryPresentation
 }

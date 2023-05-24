@@ -12,5 +12,5 @@ protocol ExpenseRemoteDataSource {
     func saveExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void)
     func update(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void)
     func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void)
-    func getAll(userEmail: String, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void)
+    func getAll(userEmail: String, startDate: Date, endDate: Date, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void)
 }

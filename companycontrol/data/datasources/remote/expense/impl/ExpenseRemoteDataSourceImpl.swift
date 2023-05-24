@@ -68,8 +68,21 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
         }
     }
     
-    func getAll(userEmail: String, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void) {
-        firestore.collection("expense").whereField("user_email", isEqualTo: userEmail)
+    func getAll(userEmail: String, startDate: Date, endDate: Date, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void) {
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+
+        var components = calendar.dateComponents([.year, .month, .day], from: startDate)
+        let startDate = calendar.date(from: components)!
+
+        components = calendar.dateComponents([.year, .month, .day], from: Calendar.current.date(byAdding: .day, value: 1, to: endDate)!)
+        components.second = -1
+        let endDate = calendar.date(from: components)!
+
+        firestore.collection("expense")
+            .whereField("user_email", isEqualTo: userEmail)
+            .whereField("date", isGreaterThanOrEqualTo: startDate)
+            .whereField("date", isLessThanOrEqualTo: endDate)
             .addSnapshotListener { (querySnapshot, error) in
                 guard let documents = querySnapshot?.documents else {
                     completion(.failure(error!))
@@ -82,7 +95,7 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
                 
                 for document in documents {
                     guard let expenseCategoryRef = document.data()["expense_category"] as? DocumentReference else {
-//                        completion(.failure(error?.localizedDescription))
+                        //                        completion(.failure(error?.localizedDescription))
                         return
                     }
                     
@@ -101,7 +114,7 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
                                 description: document.data()["description"] as? String ?? "",
                                 userEmail: document.data()["user_email"] as? String ?? "",
                                 amount: document.data()["amount"] as? Double ?? 0.0,
-                                date: (document.data()["date"] as? Timestamp)?.dateValue() ?? Date(),
+                                date: (document.data()["date"] as? Timestamp)?.dateValue().formaterDate() ?? "",
                                 expenseCategory: expenseCategory
                             )
                             
@@ -118,9 +131,6 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
                     completion(.success(expenses))
                 }
             }
-        
-        
-        
     }
     
     

@@ -8,5 +8,5 @@
 import Foundation
 
 protocol GetExpensesUseCase {
-    func getAll(userEmail: String, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void)
+    func getAll(userEmail: String, startDate: Date, endDate: Date, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void)
 }

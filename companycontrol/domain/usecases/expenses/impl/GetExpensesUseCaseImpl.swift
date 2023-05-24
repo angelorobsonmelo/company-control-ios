@@ -16,8 +16,8 @@ class GetExpensesUseCaseImpl: GetExpensesUseCase {
         self.repository = repository
     }
     
-    func getAll(userEmail: String, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void) {
-        repository.getAll(userEmail: userEmail, completion: completion)
+    func getAll(userEmail: String, startDate: Date, endDate: Date, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void) {
+        repository.getAll(userEmail: userEmail, startDate: startDate, endDate: endDate, completion: completion)
     }
  
     

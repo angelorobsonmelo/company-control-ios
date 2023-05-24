@@ -11,7 +11,7 @@ import Firebase
 class ExpenseViewModel: ObservableObject {
     
     @Published var saveExpenseNetworkResult: NetworkResult<Bool> = .idle
-    @Published var getExpensesNetworkResult: NetworkResult<[ExpensePresentation]> = .idle
+    @Published var getExpensesNetworkResult: NetworkResult<[String: [ExpensePresentation]]> = .idle
     @Published var categories: [ExpenseCategoryPresentation] = []
     
     private let getExpensesUseCase: GetExpensesUseCase
@@ -19,6 +19,28 @@ class ExpenseViewModel: ObservableObject {
     private let getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase
     
     private let auth: Auth
+        
+    @Published var expensesViews: [ExpensePresentation] = []
+    
+    var groupedCosts: [String: [ExpensePresentation]] {
+            Dictionary(grouping: expensesViews) { cost in
+                cost.date.formatStringDate(dateFormat: "dd/MM/yyyy", identifier: "pt-BR") ?? ""
+            }
+        }
+    
+    var sortedDates: [String] {
+        groupedCosts.keys.sorted { date1, date2 in
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.locale = Locale(identifier: "pt-BR")
+            guard let d1 = dateFormatter.date(from: date1),
+                  let d2 = dateFormatter.date(from: date2) else {
+                return false
+            }
+            return d1 > d2
+        }
+    }
+
     
     init(
         getExpensesUseCase: GetExpensesUseCase,
@@ -90,10 +112,10 @@ class ExpenseViewModel: ObservableObject {
         }
     }
     
-    func getExpenses() {
+    func getExpenses(startDate: Date, endDate: Date) {
         DispatchQueue.global().async {
             if let email = self.auth.currentUser?.email {
-                self.getExpensesUseCase.getAll(userEmail: email) { result in
+                self.getExpensesUseCase.getAll(userEmail: email, startDate: startDate, endDate: endDate) { result in
                     DispatchQueue.main.async {
                         switch result {
                         case .success(let items):
@@ -110,7 +132,26 @@ class ExpenseViewModel: ObservableObject {
                                         name: item.expenseCategory.name))
                             }
                             
-                            self.getExpensesNetworkResult = .success(presentionModels)
+                            self.expensesViews = presentionModels
+                            
+                            
+                            
+//                            var sortedDates: [String] {
+//                                expensesByDate.keys.sorted { date1, date2 in
+//                                    let dateFormatter = DateFormatter()
+//                                    dateFormatter.dateFormat = "dd/MM/yyyy"
+//                                    dateFormatter.locale = Locale(identifier: "pt-BR")
+//                                    guard let d1 = dateFormatter.date(from: date1),
+//                                          let d2 = dateFormatter.date(from: date2) else {
+//                                        return false
+//                                    }
+//                                    return d1 > d2
+//                                }
+//                            }
+                            
+                            
+                            
+//                            self.getExpensesNetworkResult = .success(groupedCosts)
                             
                         case .failure(let error):
                             self.getExpensesNetworkResult = .error(error.localizedDescription, Date())
