@@ -68,9 +68,13 @@ struct ExpensesView: View {
                                     
                                     HStack {
                                         Text(item.description)
+                                            .foregroundColor(.secondary)
                                             .font(.body)
+                                        
                                         Spacer()
+                                        
                                         Text(item.amount.formatToCurrency())
+                                            .foregroundColor(.secondary)
                                     }
                                 }
                             }
@@ -119,7 +123,9 @@ struct ExpensesView: View {
             }
         })
         .sheet(isPresented: $showingAddDialog) {
-            AddExpenseView(showingDialog: $showingAddDialog)
+            AddExpenseView(showingDialog: $showingAddDialog) {
+                self.viewModel.getExpenses(startDate: startDate, endDate: endDate)
+            }
                 .environmentObject(viewModel)
         }
         .alert(isPresented: $showingDeleteConfirmation) {

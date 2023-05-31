@@ -14,7 +14,7 @@ struct AddExpenseView: View {
     
     @Binding var showingDialog: Bool
     @EnvironmentObject var viewModel: ExpenseViewModel
-    
+    let callback: () -> Void
     
     @State private var showAlertDialog = false
     
@@ -30,7 +30,7 @@ struct AddExpenseView: View {
     @State private var numericValue: Double = 0.0
     @State private var categiroryId: String = ""
     
-    
+   
     let formatter: NumberFormatter = CurrencyFormatter()
     
     @State private var selectedOption: String? = ""
@@ -161,19 +161,22 @@ struct AddExpenseView: View {
                     switch newValue {
                     case .success(_):
                         resetFields()
-                        
+                       
                         alertTitle = "Save Successfully"
-                        alertMessage = ""
+                               alertMessage = ""
+                               alertDismissButton = .default(Text("OK")) {
+                                   callback()
+                               }
                         
                         showAlert = true
-                        
+
                         break
                     case .error(let message):
                         print("error: \(message)")
                         alertTitle = message.0
-                        alertMessage = ""
-                        alertDismissButton = .default(Text("OK"))
-                        showAlert = true
+                                alertMessage = ""
+                                alertDismissButton = .default(Text("OK"))
+                                showAlert = true
                         break
                     case .loading:
                         print("Loading")
@@ -243,7 +246,7 @@ struct AddExpenseView: View {
         self.numericValue = 0.0
         
         self.categiroryId = ""
-        
+                
         self.selectedOption = ""
     }
 }
@@ -254,6 +257,8 @@ struct LoginView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        AddExpenseView(showingDialog: self.$showingDialog)
+        AddExpenseView(showingDialog: self.$showingDialog) {
+            
+        }
     }
 }
