@@ -8,7 +8,7 @@
 import Foundation
 
 class ExpenseRepositoryImpl: ExpenseRepository {
-
+    
     
     private let remoteDataSource: ExpenseRemoteDataSource
     
@@ -24,5 +24,8 @@ class ExpenseRepositoryImpl: ExpenseRepository {
         remoteDataSource.getAll(userEmail: userEmail, startDate: startDate, endDate: endDate, completion: completion)
     }
     
+    func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        remoteDataSource.delete(id: id, completion: completion)
+    }
     
 }

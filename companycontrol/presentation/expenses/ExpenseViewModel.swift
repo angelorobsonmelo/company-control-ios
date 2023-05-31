@@ -10,15 +10,31 @@ import Firebase
 
 class ExpenseViewModel: ObservableObject {
     
-    @Published var saveExpenseNetworkResult: NetworkResult<Bool> = .idle
+    @Published var saveExpenseNetworkResult: NetworkResult<String> = .idle
     @Published var getExpensesNetworkResult: NetworkResult<[String: [ExpensePresentation]]> = .idle
     @Published var categories: [ExpenseCategoryPresentation] = []
     
     private let getExpensesUseCase: GetExpensesUseCase
     private let saveExpenseUseCase: SaveExpenseUseCase
     private let getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase
+    private let deleteExpenseUseCase: DeleteExpenseUseCase
     
     private let auth: Auth
+    
+    
+    init(
+        getExpensesUseCase: GetExpensesUseCase,
+        auth: Auth,
+        saveExpenseUseCase: SaveExpenseUseCase,
+        getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase,
+        deleteExpenseUseCase: DeleteExpenseUseCase
+    ) {
+        self.getExpensesUseCase = getExpensesUseCase
+        self.auth = auth
+        self.saveExpenseUseCase = saveExpenseUseCase
+        self.getExpenseCategoriesUseCase = getExpenseCategoriesUseCase
+        self.deleteExpenseUseCase = deleteExpenseUseCase
+    }
         
     @Published var expensesViews: [ExpensePresentation] = []
     
@@ -40,19 +56,11 @@ class ExpenseViewModel: ObservableObject {
             return d1 > d2
         }
     }
-
     
-    init(
-        getExpensesUseCase: GetExpensesUseCase,
-        auth: Auth,
-        saveExpenseUseCase: SaveExpenseUseCase,
-        getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase
-    ) {
-        self.getExpensesUseCase = getExpensesUseCase
-        self.auth = auth
-        self.saveExpenseUseCase = saveExpenseUseCase
-        self.getExpenseCategoriesUseCase = getExpenseCategoriesUseCase
+    var totalAmount: Double {
+        groupedCosts.values.flatMap { $0 }.reduce(0) { $0 + $1.amount }
     }
+
     
     func saveExpense(
         title: String,
@@ -78,7 +86,7 @@ class ExpenseViewModel: ObservableObject {
                     DispatchQueue.main.async {
                         switch result {
                         case .success:
-                            self.saveExpenseNetworkResult = .success(true)
+                            self.saveExpenseNetworkResult = .success(Utils.generateCustomID())
                         case .failure(let error):
                             self.saveExpenseNetworkResult = .error(error.localizedDescription, Date())
                         }
@@ -134,25 +142,6 @@ class ExpenseViewModel: ObservableObject {
                             
                             self.expensesViews = presentionModels
                             
-                            
-                            
-//                            var sortedDates: [String] {
-//                                expensesByDate.keys.sorted { date1, date2 in
-//                                    let dateFormatter = DateFormatter()
-//                                    dateFormatter.dateFormat = "dd/MM/yyyy"
-//                                    dateFormatter.locale = Locale(identifier: "pt-BR")
-//                                    guard let d1 = dateFormatter.date(from: date1),
-//                                          let d2 = dateFormatter.date(from: date2) else {
-//                                        return false
-//                                    }
-//                                    return d1 > d2
-//                                }
-//                            }
-                            
-                            
-                            
-//                            self.getExpensesNetworkResult = .success(groupedCosts)
-                            
                         case .failure(let error):
                             self.getExpensesNetworkResult = .error(error.localizedDescription, Date())
                         }
@@ -161,5 +150,22 @@ class ExpenseViewModel: ObservableObject {
             }
         }
     }
+    
+    func deleteExpense(at position: Int, from date: String) {
+        let itemToDelte = groupedCosts[date]![position]
+        
+        DispatchQueue.global().async {
+            self.deleteExpenseUseCase.delete(id: itemToDelte.id) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success: break
+//                        self.networkResult = .success(true)
+                    case .failure(let error): break
+//                        self.networkResult = .error(error.localizedDescription, Date())
+                    }
+                }
+            }
+        }
+       }
     
 }

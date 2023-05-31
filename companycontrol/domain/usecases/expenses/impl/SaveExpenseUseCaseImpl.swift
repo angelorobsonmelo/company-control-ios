@@ -17,20 +17,26 @@ class SaveExpenseUseCaseImpl: SaveExpenseUseCase {
     }
     
     func saveExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
-        
-        if(request.title.isEmpty) {
+        guard !request.title.isEmpty else {
             completion(.failure(ValidationFormEnum.emptyField(reason: "Title can not be empty")))
+            return
         }
         
-        if(request.description.isEmpty) {
+        guard !request.description.isEmpty else {
             completion(.failure(ValidationFormEnum.emptyField(reason: "Description can not be empty")))
+            return
         }
         
-        if(request.expenseCategoryId.isEmpty) {
+        guard request.amount > 0 else {
+            completion(.failure(ValidationFormEnum.emptyField(reason: "Amount must be greater than zero")))
+            return
+        }
+        
+        guard !request.expenseCategoryId.isEmpty else {
             completion(.failure(ValidationFormEnum.emptyField(reason: "Category can not be empty")))
+            return
         }
 
-        
         repository.saveExpense(request: request) { result in
             switch result {
             case .success:
@@ -40,6 +46,7 @@ class SaveExpenseUseCaseImpl: SaveExpenseUseCase {
             }
         }
     }
+
     
 }
 

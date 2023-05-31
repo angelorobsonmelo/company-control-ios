@@ -12,20 +12,17 @@ struct ExpensesView: View {
     
     @StateObject var viewModel = DIContainer.shared.resolve(ExpenseViewModel.self)
     @State private var showingAddDialog = false
-    
-    @State private var expenses: [String: [ExpensePresentation]] = [:]
-    
+        
     let calendar = Calendar.current
     let now = Date()
     
     @State private var startDate = Date()
     @State private var endDate =  Date()
     
+    @State private var showingDeleteConfirmation = false
+    @State private var itemPosition: Int? = nil
+    @State private var dateGroupToDelete: String = ""
     
-    
-    var totalAmount: Double {
-        expenses.values.flatMap { $0 }.reduce(0) { $0 + $1.amount }
-    }
     
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -36,7 +33,7 @@ struct ExpensesView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Total: \(formatToReal(amount: totalAmount))")
+                Text("Total: \(viewModel.totalAmount.formatToCurrency())")
                     .font(.headline)
                     .padding(.top, 16)
                 
@@ -58,7 +55,6 @@ struct ExpensesView: View {
                 
                 List {
                     ForEach(viewModel.sortedDates, id: \.self) { date in
-                    
                         Section(header: Text(date)) {
                             ForEach(viewModel.groupedCosts[date]!, id: \.id) { item in
                                 VStack {
@@ -74,13 +70,17 @@ struct ExpensesView: View {
                                         Text(item.description)
                                             .font(.body)
                                         Spacer()
-                                        Text(formatToReal(amount: item.amount))
+                                        Text(item.amount.formatToCurrency())
                                     }
                                 }
                             }
+                            .onDelete(perform: { indexSet in
+                                deleteCategory(at: indexSet, date: date)
+                            })
                         }
                     }
                 }
+
                 
             }
             .navigationBarTitle("Expenses", displayMode: .inline)
@@ -105,7 +105,7 @@ struct ExpensesView: View {
         .onChange(of: viewModel.getExpensesNetworkResult, perform: { newValue in
             switch newValue {
             case .success(let items):
-                self.expenses = items
+                
                 break
             case .error(let message):
                 
@@ -122,13 +122,27 @@ struct ExpensesView: View {
             AddExpenseView(showingDialog: $showingAddDialog)
                 .environmentObject(viewModel)
         }
+        .alert(isPresented: $showingDeleteConfirmation) {
+            Alert(
+                title: Text("Delete Category"),
+                message: Text("Are you sure you want to delete this category?"),
+                primaryButton: .destructive(Text("Delete")) {
+                   
+                    viewModel.deleteExpense(at: itemPosition!, from: dateGroupToDelete)
+                },
+                secondaryButton: .cancel {
+                    
+                }
+            )
+        }
     }
     
-    func formatToReal(amount: Double) -> String {
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .currency
-        numberFormatter.locale = Locale(identifier: "pt_BR")
-        return numberFormatter.string(from: NSNumber(value: amount)) ?? ""
+    
+    private func deleteCategory(at offsets: IndexSet, date: String) {
+        self.showingDeleteConfirmation = true
+        self.itemPosition = offsets.first!
+        self.dateGroupToDelete = date
+        
     }
     
 }

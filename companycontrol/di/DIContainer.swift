@@ -69,6 +69,10 @@ class DIContainer {
             GetExpensesUseCaseImpl(repository: resolver.resolve(ExpenseRepository.self)!)
         }
         
+        container.register(DeleteExpenseUseCase.self) { resolver in
+            DeleteExpenseUseCaseImpl(dataSource: resolver.resolve(ExpenseRepository.self)!)
+        }
+        
         container.register(SaveExpenseCategoryUseCase.self) { resolver in
             SaveExpenseCategoryUseCaseImpl(repository: resolver.resolve(ExpenseCategoryRepository.self)!)
         }
@@ -105,7 +109,8 @@ class DIContainer {
                 getExpensesUseCase: resolver.resolve(GetExpensesUseCase.self)!,
                 auth: resolver.resolve(Auth.self)!,
                 saveExpenseUseCase: resolver.resolve(SaveExpenseUseCase.self)!,
-                getExpenseCategoriesUseCase: resolver.resolve(GetExpenseCategoriesUseCase.self)!
+                getExpenseCategoriesUseCase: resolver.resolve(GetExpenseCategoriesUseCase.self)!,
+                deleteExpenseUseCase: resolver.resolve(DeleteExpenseUseCase.self)!
             )
         }
         

@@ -12,15 +12,22 @@ import SwiftUI
 
 struct AddExpenseView: View {
     
-    @Binding  var showingDialog: Bool
+    @Binding var showingDialog: Bool
     @EnvironmentObject var viewModel: ExpenseViewModel
+    
+    
+    @State private var showAlertDialog = false
+    
+    @State private var showAlert = false
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
+    @State private var alertDismissButton = Alert.Button.default(Text("OK"))
     
     @State private var title: String = ""
     @State private var description: String = ""
     @State private var date = Date()
     @State private var amount = ""
     @State private var numericValue: Double = 0.0
-    
     @State private var categiroryId: String = ""
     
     
@@ -150,6 +157,32 @@ struct AddExpenseView: View {
                     viewModel.getCategories()
                 }
                 .padding()
+                .onChange(of: viewModel.saveExpenseNetworkResult) { newValue in
+                    switch newValue {
+                    case .success(_):
+                        resetFields()
+                        
+                        alertTitle = "Save Successfully"
+                        alertMessage = ""
+                        
+                        showAlert = true
+                        
+                        break
+                    case .error(let message):
+                        print("error: \(message)")
+                        alertTitle = message.0
+                        alertMessage = ""
+                        alertDismissButton = .default(Text("OK"))
+                        showAlert = true
+                        break
+                    case .loading:
+                        print("Loading")
+                        break
+                    case .idle:
+                        print("Idle")
+                        break
+                    }
+                }
                 .onChange(of: selectedOption) { newValue in
                     if let optionSelected = newValue {
                         let itemSelected = self.viewModel.categories.first { item in
@@ -160,35 +193,14 @@ struct AddExpenseView: View {
                         // recuperar id aqui
                     }
                 }
-                
             }
-            
-            //            .onChange(of: viewModel.networkResult) { newValue in
-            //                switch newValue {
-            //                case .success(let success):
-            //                    showAlertDialog = true
-            //                    self.name = ""
-            //                    print("successfully")
-            //
-            //                    break
-            //                case .error(let message):
-            //                    print("error: \(message)")
-            //                    break
-            //                case .loading:
-            //                    print("Loading")
-            //                    break
-            //                case .idle:
-            //                    print("Idle")
-            //                    break
-            //                }
-            //            }
-            //            .alert(isPresented: $showAlertDialog) {
-            //                Alert(
-            //                    title: Text("Save Successfully"),
-            //                    message: Text(""),
-            //                    dismissButton: .default(Text("OK"))
-            //                )
-            //            }
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text(alertTitle),
+                    message: Text(alertMessage),
+                    dismissButton: alertDismissButton
+                )
+            }
             .navigationBarTitle("Add Expense", displayMode: .inline)
         }
         
@@ -221,6 +233,18 @@ struct AddExpenseView: View {
                     .labelsHidden()
             }
         }
+    }
+    
+    func resetFields() {
+        self.title  = ""
+        self.description = ""
+        self.date = Date()
+        self.amount = ""
+        self.numericValue = 0.0
+        
+        self.categiroryId = ""
+        
+        self.selectedOption = ""
     }
 }
 
