@@ -19,4 +19,10 @@ class ExpenseCategoryPresentation: Identifiable, Equatable {
     static func == (lhs: ExpenseCategoryPresentation, rhs: ExpenseCategoryPresentation) -> Bool {
         return lhs.id == rhs.id
     }
+    
+    static func onInstance() -> ExpenseCategoryPresentation {
+        return ExpenseCategoryPresentation(
+            id: Utils.generateCustomID(),
+            name: "Software")
+    }
 }

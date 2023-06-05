@@ -14,6 +14,17 @@ struct ExpensePresentation: Equatable, Identifiable {
     let description: String
     let userEmail: String
     let amount: Double
-    let date: String
+    var date: String
     let expenseCategory: ExpenseCategoryPresentation
+    
+    static func oneInstance() -> ExpensePresentation {
+        return ExpensePresentation(
+            id: Utils.generateCustomID(),
+            title: "Title",
+            description: "Description",
+            userEmail: "angelo@gmail.com",
+            amount: 100.0,
+            date: "12/12/2023",
+            expenseCategory: ExpenseCategoryPresentation.onInstance())
+    }
 }

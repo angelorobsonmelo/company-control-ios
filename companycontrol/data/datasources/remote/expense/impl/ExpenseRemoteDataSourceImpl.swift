@@ -46,8 +46,20 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
         
     }
     
-    func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        firestore.collection(collectionName).document(id).delete() { error in
+    func update(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+        let expenseCategoryRef = Firestore.firestore().collection("expense_category").document(request.expenseCategoryId)
+
+        firestore.collection(collectionName).document(request.id).updateData(
+            [
+                "id" : request.id,
+                "title": request.title,
+                "description": request.description,
+                "date": request.date,
+                "user_email": request.userEmail,
+                "amount": request.amount,
+                "expense_category": expenseCategoryRef
+            ]
+        ) { error in
             if let error = error {
                 completion(.failure(error))
             } else {
@@ -56,10 +68,8 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
         }
     }
     
-    func update(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
-        firestore.collection(collectionName).document(request.id).updateData([
-            "name": request.title
-        ]) { error in
+    func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        firestore.collection(collectionName).document(id).delete() { error in
             if let error = error {
                 completion(.failure(error))
             } else {
@@ -71,14 +81,14 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
     func getAll(userEmail: String, startDate: Date, endDate: Date, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void) {
         var calendar = Calendar.current
         calendar.timeZone = TimeZone(secondsFromGMT: 0)!
-
+        
         var components = calendar.dateComponents([.year, .month, .day], from: startDate)
         let startDate = calendar.date(from: components)!
-
+        
         components = calendar.dateComponents([.year, .month, .day], from: Calendar.current.date(byAdding: .day, value: 1, to: endDate)!)
         components.second = -1
         let endDate = calendar.date(from: components)!
-
+        
         firestore.collection("expense")
             .whereField("user_email", isEqualTo: userEmail)
             .whereField("date", isGreaterThanOrEqualTo: startDate)

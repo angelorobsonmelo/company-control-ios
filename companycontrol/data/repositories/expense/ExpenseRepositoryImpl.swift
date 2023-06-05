@@ -20,6 +20,10 @@ class ExpenseRepositoryImpl: ExpenseRepository {
         remoteDataSource.saveExpense(request: request, completion: completion)
     }
     
+    func editExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+        remoteDataSource.update(request: request, completion: completion)
+    }
+    
     func getAll(userEmail: String, startDate: Date, endDate: Date, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void) {
         remoteDataSource.getAll(userEmail: userEmail, startDate: startDate, endDate: endDate, completion: completion)
     }

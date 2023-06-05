@@ -18,31 +18,17 @@ class ExpenseViewModel: ObservableObject {
     private let saveExpenseUseCase: SaveExpenseUseCase
     private let getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase
     private let deleteExpenseUseCase: DeleteExpenseUseCase
+    private let updateExpenseUseCase: UpdateExpenseUseCase
     
     private let auth: Auth
     
-    
-    init(
-        getExpensesUseCase: GetExpensesUseCase,
-        auth: Auth,
-        saveExpenseUseCase: SaveExpenseUseCase,
-        getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase,
-        deleteExpenseUseCase: DeleteExpenseUseCase
-    ) {
-        self.getExpensesUseCase = getExpensesUseCase
-        self.auth = auth
-        self.saveExpenseUseCase = saveExpenseUseCase
-        self.getExpenseCategoriesUseCase = getExpenseCategoriesUseCase
-        self.deleteExpenseUseCase = deleteExpenseUseCase
-    }
-        
     @Published var expensesViews: [ExpensePresentation] = []
     
     var groupedCosts: [String: [ExpensePresentation]] {
-            Dictionary(grouping: expensesViews) { cost in
-                cost.date.formatStringDate(dateFormat: "dd/MM/yyyy", identifier: "pt-BR") ?? ""
-            }
+        Dictionary(grouping: expensesViews) { cost in
+            cost.date.formatStringDate(dateFormat: "dd/MM/yyyy", identifier: "pt-BR") ?? ""
         }
+    }
     
     var sortedDates: [String] {
         groupedCosts.keys.sorted { date1, date2 in
@@ -60,7 +46,24 @@ class ExpenseViewModel: ObservableObject {
     var totalAmount: Double {
         groupedCosts.values.flatMap { $0 }.reduce(0) { $0 + $1.amount }
     }
-
+    
+    
+    init(
+        getExpensesUseCase: GetExpensesUseCase,
+        auth: Auth,
+        saveExpenseUseCase: SaveExpenseUseCase,
+        getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase,
+        deleteExpenseUseCase: DeleteExpenseUseCase,
+        updateExpenseUseCase: UpdateExpenseUseCase
+    ) {
+        self.getExpensesUseCase = getExpensesUseCase
+        self.auth = auth
+        self.saveExpenseUseCase = saveExpenseUseCase
+        self.getExpenseCategoriesUseCase = getExpenseCategoriesUseCase
+        self.deleteExpenseUseCase = deleteExpenseUseCase
+        self.updateExpenseUseCase = updateExpenseUseCase
+    }
+    
     
     func saveExpense(
         title: String,
@@ -94,6 +97,43 @@ class ExpenseViewModel: ObservableObject {
                     
                 }
                 
+            }
+        }
+        
+    }
+    
+    func updateExpense(
+        id: String,
+        title: String,
+        description: String,
+        amount: String,
+        expenseCategoryId: String,
+        date: Date
+    ) {
+        DispatchQueue.global().async {
+            if let email = self.auth.currentUser?.email {
+                let amountDouble = amount.replacingOccurrences(of: "R$", with: "")
+                
+                let request = ExpenseRequest(
+                    id: id,
+                    title: title,
+                    description: description,
+                    userEmail: email,
+                    amount: Double(amountDouble) ?? 0.0,
+                    expenseCategoryId: expenseCategoryId,
+                    date: date
+                )
+                
+                self.updateExpenseUseCase.updateExpense(request: request) { result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success:
+                            self.saveExpenseNetworkResult = .success(Utils.generateCustomID())
+                        case .failure(let error):
+                            self.saveExpenseNetworkResult = .error(error.localizedDescription, Date())
+                        }
+                    }
+                }
             }
         }
         
@@ -159,13 +199,13 @@ class ExpenseViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     switch result {
                     case .success: break
-//                        self.networkResult = .success(true)
+                        //                        self.networkResult = .success(true)
                     case .failure(let error): break
-//                        self.networkResult = .error(error.localizedDescription, Date())
+                        //                        self.networkResult = .error(error.localizedDescription, Date())
                     }
                 }
             }
         }
-       }
+    }
     
 }

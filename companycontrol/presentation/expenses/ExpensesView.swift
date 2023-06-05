@@ -12,7 +12,11 @@ struct ExpensesView: View {
     
     @StateObject var viewModel = DIContainer.shared.resolve(ExpenseViewModel.self)
     @State private var showingAddDialog = false
-        
+    
+    @State private var showingEditDialog = false
+    @State private var selectedExpense: ExpensePresentation? = nil
+    
+    
     let calendar = Calendar.current
     let now = Date()
     
@@ -77,6 +81,12 @@ struct ExpensesView: View {
                                             .foregroundColor(.secondary)
                                     }
                                 }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    showingEditDialog = true
+                                    selectedExpense = item
+                                    print(item.amount)
+                                }
                             }
                             .onDelete(perform: { indexSet in
                                 deleteCategory(at: indexSet, date: date)
@@ -84,7 +94,7 @@ struct ExpensesView: View {
                         }
                     }
                 }
-
+                
                 
             }
             .navigationBarTitle("Expenses", displayMode: .inline)
@@ -126,20 +136,32 @@ struct ExpensesView: View {
             AddExpenseView(showingDialog: $showingAddDialog) {
                 self.viewModel.getExpenses(startDate: startDate, endDate: endDate)
             }
-                .environmentObject(viewModel)
+            .environmentObject(viewModel)
+        }
+        .sheet(isPresented: $showingEditDialog) {
+            EditExpenseView(showingDialog: $showingEditDialog, expense: self.selectedExpense!) {
+                
+            }
+            .environmentObject(viewModel)
         }
         .alert(isPresented: $showingDeleteConfirmation) {
             Alert(
                 title: Text("Delete Category"),
                 message: Text("Are you sure you want to delete this category?"),
                 primaryButton: .destructive(Text("Delete")) {
-                   
+                    
                     viewModel.deleteExpense(at: itemPosition!, from: dateGroupToDelete)
                 },
                 secondaryButton: .cancel {
                     
                 }
             )
+        }
+        .onChange(of: selectedExpense) { newCategory in
+            if let newExpense = selectedExpense {
+                self.selectedExpense = newExpense
+                self.showingEditDialog = true
+            }
         }
     }
     
