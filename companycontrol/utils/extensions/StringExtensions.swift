@@ -24,4 +24,15 @@ extension String {
                return nil // Retorna nil se a data não puder ser convertida
             }
         }
+    
+    func toDate(format: String = "dd/MM/yyyy") -> Date {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        if let date = dateFormatter.date(from: self) {
+            return date
+        } else {
+            print("Invalid date string")
+            return Date()
+        }
+    }
 }
