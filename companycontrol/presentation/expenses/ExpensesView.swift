@@ -112,7 +112,7 @@ struct ExpensesView: View {
         
         .onAppear {
             self.startDate = self.calendar.dateInterval(of: .month, for: now)?.start ?? Date()
-            self.endDate = self.calendar.dateInterval(of: .month, for: now)?.end ?? Date()
+            self.endDate = Date()
             
             self.viewModel.getExpenses(startDate: startDate, endDate: endDate)
         }

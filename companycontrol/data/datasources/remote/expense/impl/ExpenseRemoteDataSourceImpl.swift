@@ -104,7 +104,7 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
                 var expenses: [ExpenseResponse] = []
                 
                 for document in documents {
-                    guard let expenseCategoryRef = document.data()["category"] as? DocumentReference else {
+                    guard let expenseCategoryRef = document.data()["category_ref"] as? DocumentReference else {
                         //                        completion(.failure(error?.localizedDescription))
                         return
                     }
