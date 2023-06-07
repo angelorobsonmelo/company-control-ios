@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ExpenseCategoryPresentation: Identifiable, Equatable {
+class CategoryViewData: Identifiable, Equatable {
     let id: String
     var name: String
 
@@ -16,12 +16,12 @@ class ExpenseCategoryPresentation: Identifiable, Equatable {
         self.name = name
     }
 
-    static func == (lhs: ExpenseCategoryPresentation, rhs: ExpenseCategoryPresentation) -> Bool {
+    static func == (lhs: CategoryViewData, rhs: CategoryViewData) -> Bool {
         return lhs.id == rhs.id
     }
     
-    static func onInstance() -> ExpenseCategoryPresentation {
-        return ExpenseCategoryPresentation(
+    static func onInstance() -> CategoryViewData {
+        return CategoryViewData(
             id: Utils.generateCustomID(),
             name: "Software")
     }

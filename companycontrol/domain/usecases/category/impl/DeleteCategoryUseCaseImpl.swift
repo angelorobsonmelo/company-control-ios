@@ -7,11 +7,11 @@
 
 import Foundation
 
-class DeleteExpenseCategoryUseCaseImpl: DeleteExpenseCategoryUseCase {
+class DeleteCategoryUseCaseImpl: DeleteCategoryUseCase {
     
-    let repository: ExpenseCategoryRepository
+    let repository: CategoryRepository
     
-    init(repository: ExpenseCategoryRepository) {
+    init(repository: CategoryRepository) {
         self.repository = repository
     }
     

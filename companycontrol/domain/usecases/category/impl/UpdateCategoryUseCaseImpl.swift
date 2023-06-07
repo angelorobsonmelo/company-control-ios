@@ -7,15 +7,15 @@
 
 import Foundation
 
-class UpdateExpenseCategoryUseCaseImpl: UpdateExpenseCategoryUseCase {
+class UpdateCategoryUseCaseImpl: UpdateCategoryUseCase {
     
-    let repository: ExpenseCategoryRepository
+    let repository: CategoryRepository
     
-    init(repository: ExpenseCategoryRepository) {
+    init(repository: CategoryRepository) {
         self.repository = repository
     }
     
-    func update(request: ExpenseCategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+    func update(request: CategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         repository.update(request: request, completion: completion)
     }
     

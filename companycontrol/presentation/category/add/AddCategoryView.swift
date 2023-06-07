@@ -8,25 +8,21 @@
 import Foundation
 import SwiftUI
 
-struct EditExpenseCategoryView: View {
-    
-    var category: ExpenseCategoryPresentation
+struct AddCategoryView: View {
     
     @State private var showAlertDialog = false
-    @State private var fieldName: String = ""
     
+    @State private var name: String = ""
     @Binding  var showingDialog: Bool
-    
-    @EnvironmentObject var viewModel: ExpenseCategoryViewModel
+    @EnvironmentObject var viewModel: CategoryViewModel
     
     var body: some View {
         NavigationView {
             VStack {
                 Form {
                     Section(header: Text("Category Name:")) {
-                        TextField("Insert category name", text: $fieldName)
+                        TextField("Insert category name", text: $name)
                     }
-                    
                     Section {
                         HStack {
                             Button(action: {
@@ -43,8 +39,7 @@ struct EditExpenseCategoryView: View {
                             .buttonStyle(PlainButtonStyle())
                             
                             Button(action: {
-                                category.name = self.fieldName
-                                viewModel.update(presentionModel: category)
+                                viewModel.save(name: name)
                             }, label: {
                                 Text("Save")
                                     .fontWeight(.bold)
@@ -60,16 +55,15 @@ struct EditExpenseCategoryView: View {
                 }
                 .padding()
             }
-            .onAppear {
-                self.fieldName = category.name
-            }
             .onChange(of: viewModel.networkResult) { newValue in
                 switch newValue {
                 case .success(let success):
                     showAlertDialog = true
+                    self.name = ""
+                    print("successfully")
+                    
                     break
                 case .error(let message):
-                    showAlertDialog = true
                     print("error: \(message)")
                     break
                 case .loading:
@@ -82,12 +76,12 @@ struct EditExpenseCategoryView: View {
             }
             .alert(isPresented: $showAlertDialog) {
                 Alert(
-                    title: Text("Updated Successfully"),
+                    title: Text("Save Successfully"),
                     message: Text(""),
                     dismissButton: .default(Text("OK"))
                 )
             }
-            .navigationBarTitle("Update Category", displayMode: .inline)
+            .navigationBarTitle("Add Category", displayMode: .inline)
         }
     }
     

@@ -43,8 +43,8 @@ class DIContainer {
             ExpenseRemoteDataSourceImpl(fireStore: resolver.resolve(Firestore.self)!)
         }
         
-        container.register(ExpenseCategoryRemoteDataSource.self) { resolver in
-            ExpenseCategoryRemoteDataSourceImpl(db: resolver.resolve(Firestore.self)!)
+        container.register(CategoryRemoteDataSource.self) { resolver in
+            CategoryRemoteDataSourceImpl(db: resolver.resolve(Firestore.self)!)
         }
     }
     
@@ -58,8 +58,8 @@ class DIContainer {
             ExpenseRepositoryImpl(remoteDataSource: resolver.resolve(ExpenseRemoteDataSource.self)!)
         }
         
-        container.register(ExpenseCategoryRepository.self) { resolver in
-            ExpenseCategoryRepositoryImpl(dataSource: resolver.resolve(ExpenseCategoryRemoteDataSource.self)!)
+        container.register(CategoryRepository.self) { resolver in
+            CategoryRepositoryImpl(dataSource: resolver.resolve(CategoryRemoteDataSource.self)!)
         }
     }
     
@@ -73,24 +73,24 @@ class DIContainer {
             DeleteExpenseUseCaseImpl(dataSource: resolver.resolve(ExpenseRepository.self)!)
         }
         
-        container.register(SaveExpenseCategoryUseCase.self) { resolver in
-            SaveExpenseCategoryUseCaseImpl(repository: resolver.resolve(ExpenseCategoryRepository.self)!)
+        container.register(SaveCategoryUseCase.self) { resolver in
+            SaveCategoryUseCaseImpl(repository: resolver.resolve(CategoryRepository.self)!)
         }
         
         container.register(UpdateExpenseUseCase.self) { resolver in
             UpdateExpenseUseCaseImpl(repository: resolver.resolve(ExpenseRepository.self)!)
         }
         
-        container.register(DeleteExpenseCategoryUseCase.self) { resolver in
-            DeleteExpenseCategoryUseCaseImpl(repository: resolver.resolve(ExpenseCategoryRepository.self)!)
+        container.register(DeleteCategoryUseCase.self) { resolver in
+            DeleteCategoryUseCaseImpl(repository: resolver.resolve(CategoryRepository.self)!)
         }
         
-        container.register(UpdateExpenseCategoryUseCase.self) { resolver in
-            UpdateExpenseCategoryUseCaseImpl(repository: resolver.resolve(ExpenseCategoryRepository.self)!)
+        container.register(UpdateCategoryUseCase.self) { resolver in
+            UpdateCategoryUseCaseImpl(repository: resolver.resolve(CategoryRepository.self)!)
         }
         
-        container.register(GetExpenseCategoriesUseCase.self) { resolver in
-            GetExpenseCategoriesUseCaseImpl(repository: resolver.resolve(ExpenseCategoryRepository.self)!)
+        container.register(GetCategoriesUseCase.self) { resolver in
+            GetCategoriesUseCaseImpl(repository: resolver.resolve(CategoryRepository.self)!)
         }
         
         container.register(SaveExpenseUseCase.self) { resolver in
@@ -113,7 +113,7 @@ class DIContainer {
                 getExpensesUseCase: resolver.resolve(GetExpensesUseCase.self)!,
                 auth: resolver.resolve(Auth.self)!,
                 saveExpenseUseCase: resolver.resolve(SaveExpenseUseCase.self)!,
-                getExpenseCategoriesUseCase: resolver.resolve(GetExpenseCategoriesUseCase.self)!,
+                getExpenseCategoriesUseCase: resolver.resolve(GetCategoriesUseCase.self)!,
                 deleteExpenseUseCase: resolver.resolve(DeleteExpenseUseCase.self)!, updateExpenseUseCase: resolver.resolve(UpdateExpenseUseCase.self)!
             )
         }
@@ -125,13 +125,13 @@ class DIContainer {
             )
         }
         
-        container.register(ExpenseCategoryViewModel.self) { resolver in
-            ExpenseCategoryViewModel(
-                getExpenseUseCase: resolver.resolve(GetExpenseCategoriesUseCase.self)!,
+        container.register(CategoryViewModel.self) { resolver in
+            CategoryViewModel(
+                getExpenseUseCase: resolver.resolve(GetCategoriesUseCase.self)!,
                 auth: resolver.resolve(Auth.self)!,
-                saveCategoryUseCase: resolver.resolve(SaveExpenseCategoryUseCase.self)!,
-                deleteCategoryUseCase: resolver.resolve(DeleteExpenseCategoryUseCase.self)!,
-                updateCategoryUseCase: resolver.resolve(UpdateExpenseCategoryUseCase.self)!
+                saveCategoryUseCase: resolver.resolve(SaveCategoryUseCase.self)!,
+                deleteCategoryUseCase: resolver.resolve(DeleteCategoryUseCase.self)!,
+                updateCategoryUseCase: resolver.resolve(UpdateCategoryUseCase.self)!
             )
         }
     }

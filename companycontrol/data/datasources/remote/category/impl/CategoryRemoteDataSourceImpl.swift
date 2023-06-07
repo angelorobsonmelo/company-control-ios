@@ -9,18 +9,18 @@ import Foundation
 import Firebase
 
 
-class ExpenseCategoryRemoteDataSourceImpl: ExpenseCategoryRemoteDataSource {
+class CategoryRemoteDataSourceImpl: CategoryRemoteDataSource {
     
     
     let db: Firestore
-    private let collectionName = "expense_category"
+    private let collectionName = "category"
 
     
     init(db: Firestore) {
         self.db = db
     }
     
-    func getAll(userEmail: String, completion: @escaping (Result<[ExpenseCategoryResponse], Error>) -> Void) {
+    func getAll(userEmail: String, completion: @escaping (Result<[CategoryResponse], Error>) -> Void) {
         let ref = db.collection(collectionName).whereField("user_email", isEqualTo: userEmail)
         
         ref.addSnapshotListener { snapshot, error in
@@ -30,7 +30,7 @@ class ExpenseCategoryRemoteDataSourceImpl: ExpenseCategoryRemoteDataSource {
             }
             
             let categories = snapshot.documents.map { document in
-                ExpenseCategoryResponse(
+                CategoryResponse(
                     id: document["id"] as? String ?? "",
                     name: document["name"] as? String ?? "",
                     userEmail: document["user_email"] as? String ?? ""
@@ -42,7 +42,7 @@ class ExpenseCategoryRemoteDataSourceImpl: ExpenseCategoryRemoteDataSource {
         
     }
     
-    func saveCategory(request: ExpenseCategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+    func saveCategory(request: CategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         let ref = db.collection(collectionName).document(request.id)
         ref.setData(
             [
@@ -70,7 +70,7 @@ class ExpenseCategoryRemoteDataSourceImpl: ExpenseCategoryRemoteDataSource {
         }
     }
     
-    func update(request: ExpenseCategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+    func update(request: CategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         db.collection(collectionName).document(request.id).updateData([
             "name": request.name
         ]) { error in

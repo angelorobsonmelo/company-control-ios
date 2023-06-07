@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ExpenseCategoryRequest {
+struct CategoryRequest {
     let id: String
     let name: String
     let userEmail: String

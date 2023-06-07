@@ -22,7 +22,7 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
     func saveExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         let id = Utils.generateCustomID()
         
-        let expenseCategoryRef = Firestore.firestore().collection("expense_category").document(request.expenseCategoryId)
+        let expenseCategoryRef = Firestore.firestore().collection("category").document(request.categoryId)
         
         let ref = firestore.collection(collectionName).document(id)
         ref.setData(
@@ -33,7 +33,7 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
                 "date": request.date,
                 "user_email": request.userEmail,
                 "amount": request.amount,
-                "expense_category": expenseCategoryRef
+                "category_ref": expenseCategoryRef
             ]
         ) { error in
             if let error = error {
@@ -47,7 +47,7 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
     }
     
     func update(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
-        let expenseCategoryRef = Firestore.firestore().collection("expense_category").document(request.expenseCategoryId)
+        let expenseCategoryRef = Firestore.firestore().collection("category").document(request.categoryId)
 
         firestore.collection(collectionName).document(request.id).updateData(
             [
@@ -57,7 +57,7 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
                 "date": request.date,
                 "user_email": request.userEmail,
                 "amount": request.amount,
-                "expense_category": expenseCategoryRef
+                "category_ref": expenseCategoryRef
             ]
         ) { error in
             if let error = error {
@@ -104,7 +104,7 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
                 var expenses: [ExpenseResponse] = []
                 
                 for document in documents {
-                    guard let expenseCategoryRef = document.data()["expense_category"] as? DocumentReference else {
+                    guard let expenseCategoryRef = document.data()["category"] as? DocumentReference else {
                         //                        completion(.failure(error?.localizedDescription))
                         return
                     }
@@ -113,7 +113,7 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
                     
                     expenseCategoryRef.getDocument { (categoryDoc, error) in
                         if let categoryDoc = categoryDoc, categoryDoc.exists {
-                            let expenseCategory = ExpenseCategoryResponse(
+                            let category = CategoryResponse(
                                 id: categoryDoc.documentID,
                                 name: categoryDoc.data()?["name"] as? String ?? "",
                                 userEmail: categoryDoc.data()?["user_email"] as? String ?? "")
@@ -125,7 +125,7 @@ class ExpenseRemoteDataSourceImpl: ExpenseRemoteDataSource  {
                                 userEmail: document.data()["user_email"] as? String ?? "",
                                 amount: document.data()["amount"] as? Double ?? 0.0,
                                 date: (document.data()["date"] as? Timestamp)?.dateValue().formaterDate() ?? "",
-                                expenseCategory: expenseCategory
+                                category: category
                             )
                             
                             expenses.append(expense)

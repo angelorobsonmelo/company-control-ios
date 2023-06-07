@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol DeleteExpenseCategoryUseCase {
+protocol DeleteCategoryUseCase {
     
     func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void)
 

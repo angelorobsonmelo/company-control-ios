@@ -14,5 +14,5 @@ struct ExpenseResponse {
     let userEmail: String
     let amount: Double
     let date: String
-    let expenseCategory: ExpenseCategoryResponse
+    let category: CategoryResponse
 }

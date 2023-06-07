@@ -32,7 +32,7 @@ class SaveExpenseUseCaseImpl: SaveExpenseUseCase {
             return
         }
         
-        guard !request.expenseCategoryId.isEmpty else {
+        guard !request.categoryId.isEmpty else {
             completion(.failure(ValidationFormEnum.emptyField(reason: "Category can not be empty")))
             return
         }

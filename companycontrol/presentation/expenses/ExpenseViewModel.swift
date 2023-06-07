@@ -12,11 +12,11 @@ class ExpenseViewModel: ObservableObject {
     
     @Published var saveExpenseNetworkResult: NetworkResult<String> = .idle
     @Published var getExpensesNetworkResult: NetworkResult<[String: [ExpensePresentation]]> = .idle
-    @Published var categories: [ExpenseCategoryPresentation] = []
+    @Published var categories: [CategoryViewData] = []
     
     private let getExpensesUseCase: GetExpensesUseCase
     private let saveExpenseUseCase: SaveExpenseUseCase
-    private let getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase
+    private let getExpenseCategoriesUseCase: GetCategoriesUseCase
     private let deleteExpenseUseCase: DeleteExpenseUseCase
     private let updateExpenseUseCase: UpdateExpenseUseCase
     
@@ -52,7 +52,7 @@ class ExpenseViewModel: ObservableObject {
         getExpensesUseCase: GetExpensesUseCase,
         auth: Auth,
         saveExpenseUseCase: SaveExpenseUseCase,
-        getExpenseCategoriesUseCase: GetExpenseCategoriesUseCase,
+        getExpenseCategoriesUseCase: GetCategoriesUseCase,
         deleteExpenseUseCase: DeleteExpenseUseCase,
         updateExpenseUseCase: UpdateExpenseUseCase
     ) {
@@ -81,7 +81,7 @@ class ExpenseViewModel: ObservableObject {
                     description: description,
                     userEmail: email,
                     amount: amount,
-                    expenseCategoryId: expenseCategoryId,
+                    categoryId: expenseCategoryId,
                     date: date
                 )
                 
@@ -120,7 +120,7 @@ class ExpenseViewModel: ObservableObject {
                     description: description,
                     userEmail: email,
                     amount: Double(amountDouble) ?? 0.0,
-                    expenseCategoryId: expenseCategoryId,
+                    categoryId: expenseCategoryId,
                     date: date
                 )
                 
@@ -147,7 +147,7 @@ class ExpenseViewModel: ObservableObject {
                         switch result {
                         case .success(let categoriesResponse):
                             let categories = categoriesResponse.map { item in
-                                ExpenseCategoryPresentation(id: item.id, name: item.name)
+                                CategoryViewData(id: item.id, name: item.name)
                             }
                             
                             self.categories = categories
@@ -175,9 +175,9 @@ class ExpenseViewModel: ObservableObject {
                                     userEmail: item.userEmail,
                                     amount: item.amount,
                                     date: item.date,
-                                    expenseCategory: ExpenseCategoryPresentation(
-                                        id: item.expenseCategory.id,
-                                        name: item.expenseCategory.name))
+                                    expenseCategory: CategoryViewData(
+                                        id: item.category.id,
+                                        name: item.category.name))
                             }
                             
                             self.expensesViews = presentionModels

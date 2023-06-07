@@ -8,23 +8,23 @@
 import Foundation
 import Firebase
 
-class ExpenseCategoryViewModel: ObservableObject {
+class CategoryViewModel: ObservableObject {
     
-    @Published var categoriesNetworkResult: NetworkResult<[ExpenseCategoryPresentation]> = .idle
+    @Published var categoriesNetworkResult: NetworkResult<[CategoryViewData]> = .idle
     @Published var networkResult: NetworkResult<Bool> = .idle
     
-    private let getExpenseUseCase: GetExpenseCategoriesUseCase
-    private let saveCategoryUseCase: SaveExpenseCategoryUseCase
-    private let deleteCategoryUseCase: DeleteExpenseCategoryUseCase
-    private let updateCategoryUseCase: UpdateExpenseCategoryUseCase
+    private let getExpenseUseCase: GetCategoriesUseCase
+    private let saveCategoryUseCase: SaveCategoryUseCase
+    private let deleteCategoryUseCase: DeleteCategoryUseCase
+    private let updateCategoryUseCase: UpdateCategoryUseCase
     private let auth: Auth
     
     init(
-        getExpenseUseCase: GetExpenseCategoriesUseCase,
+        getExpenseUseCase: GetCategoriesUseCase,
         auth: Auth,
-        saveCategoryUseCase: SaveExpenseCategoryUseCase,
-        deleteCategoryUseCase: DeleteExpenseCategoryUseCase,
-        updateCategoryUseCase: UpdateExpenseCategoryUseCase
+        saveCategoryUseCase: SaveCategoryUseCase,
+        deleteCategoryUseCase: DeleteCategoryUseCase,
+        updateCategoryUseCase: UpdateCategoryUseCase
     ) {
         self.getExpenseUseCase = getExpenseUseCase
         self.auth = auth
@@ -43,7 +43,7 @@ class ExpenseCategoryViewModel: ObservableObject {
                         switch result {
                         case .success(let categoriesResponse):
                             let categories = categoriesResponse.map { item in
-                                ExpenseCategoryPresentation(id: item.id, name: item.name)
+                                CategoryViewData(id: item.id, name: item.name)
                             }
                             
                             self.categoriesNetworkResult = .success(categories)
@@ -62,7 +62,7 @@ class ExpenseCategoryViewModel: ObservableObject {
         DispatchQueue.global().async {
             if let email = self.auth.currentUser?.email {
                 let id = Utils.generateCustomID()
-                let request = ExpenseCategoryRequest(id: id, name: name, userEmail: email)
+                let request = CategoryRequest(id: id, name: name, userEmail: email)
                 
                 self.saveCategoryUseCase.saveCategory(request: request) { result in
                     DispatchQueue.main.async {
@@ -96,11 +96,11 @@ class ExpenseCategoryViewModel: ObservableObject {
         }
     }
     
-    func update(presentionModel: ExpenseCategoryPresentation) {
+    func update(presentionModel: CategoryViewData) {
         if let email = self.auth.currentUser?.email {
         networkResult = .loading
         
-        let request = ExpenseCategoryRequest(id: presentionModel.id, name: presentionModel.name, userEmail: email)
+        let request = CategoryRequest(id: presentionModel.id, name: presentionModel.name, userEmail: email)
         
             DispatchQueue.global().async {
                 self.updateCategoryUseCase.update(request: request) { result in

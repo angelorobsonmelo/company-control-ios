@@ -15,7 +15,7 @@ struct ExpensePresentation: Equatable, Identifiable {
     let userEmail: String
     let amount: Double
     var date: String
-    let expenseCategory: ExpenseCategoryPresentation
+    let expenseCategory: CategoryViewData
     
     static func oneInstance() -> ExpensePresentation {
         return ExpensePresentation(
@@ -25,6 +25,6 @@ struct ExpensePresentation: Equatable, Identifiable {
             userEmail: "angelo@gmail.com",
             amount: 100.0,
             date: "12/12/2023",
-            expenseCategory: ExpenseCategoryPresentation.onInstance())
+            expenseCategory: CategoryViewData.onInstance())
     }
 }

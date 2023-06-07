@@ -13,6 +13,6 @@ struct ExpenseRequest {
     let description: String
     let userEmail: String
     let amount: Double
-    let expenseCategoryId: String
+    let categoryId: String
     let date: Date
 }

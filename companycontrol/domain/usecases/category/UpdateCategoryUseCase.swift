@@ -7,9 +7,9 @@
 
 import Foundation
 
-protocol UpdateExpenseCategoryUseCase {
+protocol UpdateCategoryUseCase {
     
-    func update(request: ExpenseCategoryRequest, completion: @escaping (Result<Void, Error>) -> Void)
+    func update(request: CategoryRequest, completion: @escaping (Result<Void, Error>) -> Void)
     
 }
 

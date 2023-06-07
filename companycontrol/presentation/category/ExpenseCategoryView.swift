@@ -9,16 +9,16 @@ import SwiftUI
 
 struct ExpenseCategoryView: View {
     
-    @StateObject var viewModel = DIContainer.shared.resolve(ExpenseCategoryViewModel.self)
+    @StateObject var viewModel = DIContainer.shared.resolve(CategoryViewModel.self)
     
-    @State var categories:[ExpenseCategoryPresentation] = []
+    @State var categories:[CategoryViewData] = []
     @State private var showingAddDialog = false
     @State private var showingEditDialog = false
     
     @State private var showingDeleteConfirmation = false
     
     @State private var itemPosition: Int? = nil
-    @State private var selectedCategory: ExpenseCategoryPresentation? = nil
+    @State private var selectedCategory: CategoryViewData? = nil
     
     var body: some View {
         NavigationView {
@@ -40,7 +40,7 @@ struct ExpenseCategoryView: View {
                 }
                 
             }
-            .navigationBarTitle("Expense Category", displayMode: .inline)
+            .navigationBarTitle("Categories", displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -54,11 +54,11 @@ struct ExpenseCategoryView: View {
                 viewModel.getCategories()
             }
             .sheet(isPresented: $showingAddDialog) {
-                AddExpenseCategoryView(showingDialog: $showingAddDialog)
+                AddCategoryView(showingDialog: $showingAddDialog)
                     .environmentObject(viewModel)
             }
             .sheet(isPresented: $showingEditDialog) {
-                EditExpenseCategoryView(category: self.selectedCategory!, showingDialog: $showingEditDialog)
+                EditCategoryView(category: self.selectedCategory!, showingDialog: $showingEditDialog)
                     .environmentObject(viewModel)
             }
             .onChange(of: selectedCategory) { newCategory in

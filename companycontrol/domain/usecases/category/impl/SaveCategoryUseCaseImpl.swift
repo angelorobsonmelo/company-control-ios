@@ -7,16 +7,16 @@
 
 import Foundation
 
-class SaveExpenseCategoryUseCaseImpl: SaveExpenseCategoryUseCase {
+class SaveCategoryUseCaseImpl: SaveCategoryUseCase {
     
     
-    private let repository: ExpenseCategoryRepository
+    private let repository: CategoryRepository
     
-    init(repository: ExpenseCategoryRepository) {
+    init(repository: CategoryRepository) {
         self.repository = repository
     }
     
-    func saveCategory(request: ExpenseCategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+    func saveCategory(request: CategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         if(request.name.isEmpty) {
             completion(.failure(ValidationFormEnum.emptyField(reason: "Name can not be empty")))
             return

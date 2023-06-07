@@ -7,15 +7,15 @@
 
 import Foundation
 
-class GetExpenseCategoriesUseCaseImpl: GetExpenseCategoriesUseCase {
+class GetCategoriesUseCaseImpl: GetCategoriesUseCase {
     
-    let repository: ExpenseCategoryRepository
+    let repository: CategoryRepository
     
-    init(repository: ExpenseCategoryRepository) {
+    init(repository: CategoryRepository) {
         self.repository = repository
     }
     
-    func getAll(userEmail: String, completion: @escaping (Result<[ExpenseCategoryResponse], Error>) -> Void) {
+    func getAll(userEmail: String, completion: @escaping (Result<[CategoryResponse], Error>) -> Void) {
         repository.getAll(userEmail: userEmail, completion: completion)
     }
     

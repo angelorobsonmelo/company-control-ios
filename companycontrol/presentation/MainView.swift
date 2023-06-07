@@ -8,45 +8,31 @@ struct MainView: View {
         TabView(selection: $selectedTab) {
             ExpensesView()
                 .tabItem {
-                    Image(systemName: "1.square.fill")
+                    Image(systemName: "creditcard.fill")
                     Text("Expenses")
                 }
                 .tag(0)
             
             SecondTabView()
                 .tabItem {
-                    Image(systemName: "2.square.fill")
+                    Image(systemName: "dollarsign.circle.fill")
                     Text("Services")
                 }
                 .tag(1)
             
             ExpenseCategoryView()
                 .tabItem {
-                    Image(systemName: "3.square.fill")
-                    Text("Expense Cat.")
+                    Image(systemName: "square.stack")
+                    Text("Categories.")
                 }
                 .tag(2)
             
             SecondTabView()
                 .tabItem {
-                    Image(systemName: "4.square.fill")
-                    Text("Service Cat.")
-                }
-                .tag(3)
-            
-            SecondTabView()
-                .tabItem {
-                    Image(systemName: "5.square.fill")
+                    Image(systemName: "chart.bar.doc.horizontal")
                     Text("Balance")
                 }
-                .tag(4)
-            
-            SecondTabView()
-                .tabItem {
-                    Image(systemName: "6.square.fill")
-                    Text("Logout")
-                }
-                .tag(5)
+                .tag(3)
             
         }
     }
