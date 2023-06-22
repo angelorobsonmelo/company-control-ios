@@ -20,19 +20,26 @@ struct MainView: View {
                 }
                 .tag(1)
             
-            ExpenseCategoryView()
+            CategoryView()
                 .tabItem {
                     Image(systemName: "square.stack")
-                    Text("Categories.")
+                    Text("Categories")
                 }
                 .tag(2)
+            
+            CompanyView()
+                .tabItem {
+                    Image(systemName: "building.columns")
+                    Text("Companies")
+                }
+                .tag(3)
             
             SecondTabView()
                 .tabItem {
                     Image(systemName: "chart.bar.doc.horizontal")
                     Text("Balance")
                 }
-                .tag(3)
+                .tag(4)
             
         }
     }

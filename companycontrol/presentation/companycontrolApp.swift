@@ -11,7 +11,6 @@ import Firebase
 @main
 struct companycontrolApp: App {
     
-    @StateObject var dataManager = DataManager()
     
     init() {
         FirebaseApp.configure()

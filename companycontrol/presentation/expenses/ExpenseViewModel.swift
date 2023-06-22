@@ -124,7 +124,7 @@ class ExpenseViewModel: ObservableObject {
                     date: date
                 )
                 
-                self.updateExpenseUseCase.updateExpense(request: request) { result in
+                self.updateExpenseUseCase.update(request: request) { result in
                     DispatchQueue.main.async {
                         switch result {
                         case .success:

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ExpenseCategoryView: View {
+struct CategoryView: View {
     
     @StateObject var viewModel = DIContainer.shared.resolve(CategoryViewModel.self)
     

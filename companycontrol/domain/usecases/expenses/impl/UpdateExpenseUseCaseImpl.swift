@@ -15,7 +15,7 @@ class UpdateExpenseUseCaseImpl: UpdateExpenseUseCase {
         self.repository = repository
     }
     
-    func updateExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
+    func update(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         guard !request.title.isEmpty else {
             completion(.failure(ValidationFormEnum.emptyField(reason: "Title can not be empty")))
             return
