@@ -10,7 +10,6 @@ import SwiftUI
 
 struct AddCompanyView: View {
     
-    @State private var showAlertDialog = false
     
     @State private var name: String = ""
     @State private var address: String = ""
@@ -110,31 +109,20 @@ struct AddCompanyView: View {
                 }
                 
             }
-            .onChange(of: viewModel.networkResult) { newValue in
-                switch newValue {
-                case .success(let success):
-                    showAlertDialog = true
-                    self.name = ""
-                    print("successfully")
-                    
-                    break
-                case .error(let message):
-                    print("error: \(message)")
-                    break
-                case .loading:
-                    print("Loading")
-                    break
-                case .idle:
-                    print("Idle")
-                    break
-                }
-            }
-            .alert(isPresented: $showAlertDialog) {
-                Alert(
-                    title: Text("Save Successfully"),
+            .alert(isPresented: $viewModel.showAlertDialog) {
+                 Alert(
+                    title: Text(viewModel.dialogMessage),
                     message: Text(""),
                     dismissButton: .default(Text("OK"))
                 )
+            }
+            .onChange(of: viewModel.isCompanySaved) { isCompanySaved in
+                if isCompanySaved {
+                    self.name = ""
+                    self.contactNumber = ""
+                    self.address = ""
+                    viewModel.isCompanySaved = false // para reiniciar o ciclo
+                }
             }
             .navigationBarTitle("Add Company", displayMode: .inline)
         }

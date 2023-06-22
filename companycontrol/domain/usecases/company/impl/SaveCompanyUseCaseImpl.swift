@@ -16,8 +16,10 @@ class SaveCompanyUseCaseImpl: SaveCompanyUseCase {
         self.repository = repository
     }
     
+    var cancellable: AnyCancellable?
+
     func execute(request: CompanyRequest) -> AnyPublisher<Void, Error> {
-        return Future<Void, Error> { promise in
+        return Future<Void, Error> { [weak self] promise in
             guard !request.name.isEmpty else {
                 promise(.failure(ValidationFormEnum.emptyField(reason: "Name can not be empty")))
                 return
@@ -33,10 +35,25 @@ class SaveCompanyUseCaseImpl: SaveCompanyUseCase {
                 return
             }
             
-            self.repository.save(request: request)
+            let publisher = self?.repository.save(request: request)
+            
+            self?.cancellable = publisher?
+                .sink { completion in
+                    switch completion {
+                    case .failure(let error):
+                        promise(.failure(error))
+                    case .finished:
+                        promise(.success(()))
+                        self?.cancellable = nil
+                    }
+                } receiveValue: { _ in
+                    // We don't care about the value here, as we're returning Void.
+                }
         }
         .eraseToAnyPublisher()
     }
+
+
 
     
     

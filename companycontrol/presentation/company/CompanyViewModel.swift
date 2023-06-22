@@ -15,10 +15,12 @@ class CompanyViewModel: ObservableObject {
     @Published var saveNetworkResult: NetworkResult<String> = .idle
     @Published var networkResult: NetworkResult<String> = .idle
     @Published var loadingState = LoadingState<[CompanyViewData]>.idle
+    @Published var showAlertDialog = false
+    @Published var dialogMessage = ""
+    @Published var isCompanySaved = false
+
     
     private var cancellables: Set<AnyCancellable> = []
-    
-    
     
     private let saveCompanyUseCase: SaveCompanyUseCase
     private let deleteCompanyUseCase: DeleteCompanyUseCase
@@ -89,17 +91,29 @@ class CompanyViewModel: ObservableObject {
                 .sink { completion in
                     switch completion {
                     case .failure(let error):
-                        print(error)
+                        switch error {
+                        case let validationError as ValidationFormEnum:
+                            switch validationError {
+                            case .emptyField(let reason):
+                                print("Empty field error: \(reason)")
+                                self.showAlertDialog = true
+                                self.dialogMessage = reason
+                            default:
+                                print("Unhandled validation error")
+                            }
+                        default:
+                            print("Unknown error: \(error)")
+                        }
                         
                     case .finished:
-                        break
+                        self.showAlertDialog = true
+                        self.dialogMessage = "Save Successfully"
+                        self.isCompanySaved = true
                     }
                 } receiveValue: { _ in
-                    
+                
                 }
                 .store(in: &cancellables)
-            
-            
         }
     }
     
