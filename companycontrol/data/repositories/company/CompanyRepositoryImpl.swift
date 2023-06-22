@@ -23,8 +23,8 @@ class CompanyRepositoryImpl: CompanyRepository {
        return dataSource.getAll(userEmail: userEmail)
     }
     
-    func save(request: CompanyRequest, completion: @escaping (Result<Void, Error>) -> Void) {
-        dataSource.save(request: request, completion: completion)
+    func save(request: CompanyRequest) -> AnyPublisher<Void, Error> {
+        dataSource.save(request: request)
     }
     
     func update(request: CompanyRequest, completion: @escaping (Result<Void, Error>) -> Void) {

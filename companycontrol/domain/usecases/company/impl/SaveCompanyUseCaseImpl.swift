@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class SaveCompanyUseCaseImpl: SaveCompanyUseCase {
     
@@ -15,26 +16,28 @@ class SaveCompanyUseCaseImpl: SaveCompanyUseCase {
         self.repository = repository
     }
     
-    func save(request: CompanyRequest, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard !request.name.isEmpty else {
-            completion(.failure(ValidationFormEnum.emptyField(reason: "Name can not be empty")))
-            return
+    func execute(request: CompanyRequest) -> AnyPublisher<Void, Error> {
+        return Future<Void, Error> { promise in
+            guard !request.name.isEmpty else {
+                promise(.failure(ValidationFormEnum.emptyField(reason: "Name can not be empty")))
+                return
+            }
+            
+            guard !request.address.isEmpty else {
+                promise(.failure(ValidationFormEnum.emptyField(reason: "Address can not be empty")))
+                return
+            }
+            
+            guard !request.contactNumber.isEmpty else {
+                promise(.failure(ValidationFormEnum.emptyField(reason: "Contact number can not be empty")))
+                return
+            }
+            
+            self.repository.save(request: request)
         }
-        
-        guard !request.address.isEmpty else {
-            completion(.failure(ValidationFormEnum.emptyField(reason: "Address can not be empty")))
-            return
-        }
-        
-        guard !request.contactNumber.isEmpty else {
-            completion(.failure(ValidationFormEnum.emptyField(reason: "Contact number can not be empty")))
-            return
-        }
-        
-        
-        repository.save(request: request, completion: completion)
+        .eraseToAnyPublisher()
     }
-    
+
     
     
 }

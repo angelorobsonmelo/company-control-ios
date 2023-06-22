@@ -15,7 +15,7 @@ class CompanyViewModel: ObservableObject {
     @Published var saveNetworkResult: NetworkResult<String> = .idle
     @Published var networkResult: NetworkResult<String> = .idle
     @Published var loadingState = LoadingState<[CompanyViewData]>.idle
-
+    
     private var cancellables: Set<AnyCancellable> = []
     
     
@@ -27,7 +27,11 @@ class CompanyViewModel: ObservableObject {
     private let auth: Auth
     
     
-    init(saveCompanyUseCase: SaveCompanyUseCase, deleteCompanyUseCase: DeleteCompanyUseCase, updateCompanyUseCase: UpdateCompanyUseCase, getCompaniesUseCase: GetCompaniesUseCase, auth: Auth) {
+    init(saveCompanyUseCase: SaveCompanyUseCase,
+         deleteCompanyUseCase: DeleteCompanyUseCase,
+         updateCompanyUseCase: UpdateCompanyUseCase,
+         getCompaniesUseCase: GetCompaniesUseCase,
+         auth: Auth) {
         self.saveCompanyUseCase = saveCompanyUseCase
         self.deleteCompanyUseCase = deleteCompanyUseCase
         self.updateCompanyUseCase = updateCompanyUseCase
@@ -52,7 +56,7 @@ class CompanyViewModel: ObservableObject {
                     switch completion {
                     case .failure(let error):
                         self.loadingState = .failed(error)
-
+                        
                     case .finished:
                         break
                     }
@@ -69,30 +73,33 @@ class CompanyViewModel: ObservableObject {
         contactNumber: String
     ) {
         saveNetworkResult = .loading
-        
-        DispatchQueue.global().async {
-            if let email = self.auth.currentUser?.email {
-                let id = Utils.generateCustomID()
-                let request = CompanyRequest(
-                    id: id,
-                    address: address,
-                    contactNumber: contactNumber,
-                    name: name,
-                    userEmail: email
-                )
-                
-                self.saveCompanyUseCase.save(request: request) { result in
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success:
-                            self.saveNetworkResult = .success(Utils.generateCustomID())
-                        case .failure(let error):
-                            self.saveNetworkResult = .error(error.localizedDescription, Date())
-                        }
+        if let email = self.auth.currentUser?.email {
+            let id = Utils.generateCustomID()
+            let request = CompanyRequest(
+                id: id,
+                address: address,
+                contactNumber: contactNumber,
+                name: name,
+                userEmail: email
+            )
+            
+            self.saveCompanyUseCase.execute(request: request)
+                .subscribe(on: DispatchQueue.global())
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    switch completion {
+                    case .failure(let error):
+                        print(error)
+                        
+                    case .finished:
+                        break
                     }
+                } receiveValue: { _ in
+                    
                 }
-                
-            }
+                .store(in: &cancellables)
+            
+            
         }
     }
     
