@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import Combine
 
 class ExpenseViewModel: ObservableObject {
     
@@ -19,6 +20,9 @@ class ExpenseViewModel: ObservableObject {
     private let getExpenseCategoriesUseCase: GetCategoriesUseCase
     private let deleteExpenseUseCase: DeleteExpenseUseCase
     private let updateExpenseUseCase: UpdateExpenseUseCase
+    
+    private var cancellables: Set<AnyCancellable> = []
+
     
     private let auth: Auth
     
@@ -140,23 +144,27 @@ class ExpenseViewModel: ObservableObject {
     }
     
     func getCategories()  {
-        DispatchQueue.global().async {
-            if let email = self.auth.currentUser?.email {
-                self.getExpenseCategoriesUseCase.getAll(userEmail:email) { result in
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success(let categoriesResponse):
-                            let categories = categoriesResponse.map { item in
-                                CategoryViewData(id: item.id, name: item.name)
-                            }
-                            
-                            self.categories = categories
-                        case .failure(let error):
-                            print(error)
-                        }
+        if let email = self.auth.currentUser?.email {
+            getExpenseCategoriesUseCase.execute(userEmail: email)
+                .subscribe(on: DispatchQueue.global())
+                .receive(on: DispatchQueue.main)
+                .map {
+                    $0.map { item in
+                        CategoryViewData(id: item.id, name: item.name)
                     }
                 }
-            }
+                .sink { completion in
+                    switch completion {
+                    case .failure(let error):
+                        break
+                    case .finished:
+                        break
+                    }
+                    
+                } receiveValue: { categories in
+                    self.categories = categories
+                }
+                .store(in: &cancellables)
         }
     }
     

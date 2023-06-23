@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class CategoryRepositoryImpl: CategoryRepository {
     
@@ -16,8 +17,8 @@ class CategoryRepositoryImpl: CategoryRepository {
         self.dataSource = dataSource
     }
     
-    func getAll(userEmail: String, completion: @escaping (Result<[CategoryResponse], Error>) -> Void) {
-        dataSource.getAll(userEmail: userEmail, completion: completion)
+    func getAll(userEmail: String) -> AnyPublisher<[CategoryResponse], Error> {
+       return dataSource.getAll(userEmail: userEmail)
     }
     
     func saveCategory(request: CategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {

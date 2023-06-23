@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import Combine
 
 protocol CategoryRemoteDataSource {
     
-    func getAll(userEmail: String, completion: @escaping (Result<[CategoryResponse], Error>) -> Void)
+    func getAll(userEmail: String) -> AnyPublisher<[CategoryResponse], Error>
     func saveCategory(request: CategoryRequest, completion: @escaping (Result<Void, Error>) -> Void)
     func update(request: CategoryRequest, completion: @escaping (Result<Void, Error>) -> Void)
     func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void)

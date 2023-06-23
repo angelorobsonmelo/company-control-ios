@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import Combine
 
 
 class CategoryRemoteDataSourceImpl: CategoryRemoteDataSource {
@@ -20,12 +21,13 @@ class CategoryRemoteDataSourceImpl: CategoryRemoteDataSource {
         self.db = db
     }
     
-    func getAll(userEmail: String, completion: @escaping (Result<[CategoryResponse], Error>) -> Void) {
+    func getAll(userEmail: String) -> AnyPublisher<[CategoryResponse], Error> {
+        let subject = PassthroughSubject<[CategoryResponse], Error>()
         let ref = db.collection(collectionName).whereField("user_email", isEqualTo: userEmail)
         
         ref.addSnapshotListener { snapshot, error in
             guard error == nil, let snapshot = snapshot else {
-                completion(.failure(error!))
+                subject.send(completion: .failure(error!))
                 return
             }
             
@@ -37,8 +39,10 @@ class CategoryRemoteDataSourceImpl: CategoryRemoteDataSource {
                 )
             }
             
-            completion(.success(categories))
+            subject.send(categories)
         }
+        
+        return subject.eraseToAnyPublisher()
         
     }
     

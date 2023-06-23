@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class GetCategoriesUseCaseImpl: GetCategoriesUseCase {
     
@@ -15,8 +16,8 @@ class GetCategoriesUseCaseImpl: GetCategoriesUseCase {
         self.repository = repository
     }
     
-    func getAll(userEmail: String, completion: @escaping (Result<[CategoryResponse], Error>) -> Void) {
-        repository.getAll(userEmail: userEmail, completion: completion)
+    func execute(userEmail: String) -> AnyPublisher<[CategoryResponse], Error> {
+       return repository.getAll(userEmail: userEmail)
     }
     
          

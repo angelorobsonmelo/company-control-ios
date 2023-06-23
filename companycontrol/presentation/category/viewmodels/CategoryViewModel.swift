@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import Combine
 
 class CategoryViewModel: ObservableObject {
     
@@ -18,6 +19,9 @@ class CategoryViewModel: ObservableObject {
     private let deleteCategoryUseCase: DeleteCategoryUseCase
     private let updateCategoryUseCase: UpdateCategoryUseCase
     private let auth: Auth
+    
+    private var cancellables: Set<AnyCancellable> = []
+
     
     init(
         getExpenseUseCase: GetCategoriesUseCase,
@@ -34,25 +38,26 @@ class CategoryViewModel: ObservableObject {
     }
     
     func getCategories()  {
-        categoriesNetworkResult = .loading
-        
-        DispatchQueue.global().async {
-            if let email = self.auth.currentUser?.email {
-                self.getExpenseUseCase.getAll(userEmail:email) { result in
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success(let categoriesResponse):
-                            let categories = categoriesResponse.map { item in
-                                CategoryViewData(id: item.id, name: item.name)
-                            }
-                            
-                            self.categoriesNetworkResult = .success(categories)
-                        case .failure(let error):
-                            self.categoriesNetworkResult = .error(error.localizedDescription, Date())
-                        }
+        if let email = self.auth.currentUser?.email {
+            getExpenseUseCase.execute(userEmail: email)
+                .subscribe(on: DispatchQueue.global())
+                .receive(on: DispatchQueue.main)
+                .map {
+                    $0.map { item in
+                        CategoryViewData(id: item.id, name: item.name)
                     }
                 }
-            }
+                .sink { completion in
+                    switch completion {
+                    case .failure(let error):
+                        break
+                    case .finished:
+                        break
+                    }
+                    
+                } receiveValue: { categories in
+                    self.categoriesNetworkResult = .success(categories)                }
+                .store(in: &cancellables)
         }
     }
     

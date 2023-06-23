@@ -13,7 +13,7 @@ struct MainView: View {
                 }
                 .tag(0)
             
-            SecondTabView()
+            ServicesView()
                 .tabItem {
                     Image(systemName: "dollarsign.circle.fill")
                     Text("Services")

@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import Combine
 
 protocol GetCategoriesUseCase {
     
-    func getAll(userEmail: String, completion: @escaping (Result<[CategoryResponse], Error>) -> Void)
+    func execute(userEmail: String) -> AnyPublisher<[CategoryResponse], Error>
 }
