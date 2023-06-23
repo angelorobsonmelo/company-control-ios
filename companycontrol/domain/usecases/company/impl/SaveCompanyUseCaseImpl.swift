@@ -11,13 +11,12 @@ import Combine
 class SaveCompanyUseCaseImpl: SaveCompanyUseCase {
     
     let repository: CompanyRepository
-    
+    var cancellable: AnyCancellable?
+
     init(repository: CompanyRepository) {
         self.repository = repository
     }
     
-    var cancellable: AnyCancellable?
-
     func execute(request: CompanyRequest) -> AnyPublisher<Void, Error> {
         return Future<Void, Error> { [weak self] promise in
             guard !request.name.isEmpty else {

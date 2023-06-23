@@ -152,18 +152,35 @@ class CompanyViewModel: ObservableObject {
                 userEmail: email
             )
             
-            DispatchQueue.global().async {
-                self.updateCompanyUseCase.update(request: request) { result in
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success:
-                            self.networkResult = .success(Utils.generateCustomID())
-                        case .failure(let error):
-                            self.networkResult = .error(error.localizedDescription, Date())
+            self.updateCompanyUseCase.execute(request: request)
+                .subscribe(on: DispatchQueue.global())
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    switch completion {
+                    case .failure(let error):
+                        switch error {
+                        case let validationError as ValidationFormEnum:
+                            switch validationError {
+                            case .emptyField(let reason):
+                                print("Empty field error: \(reason)")
+                                self.showAlertDialog = true
+                                self.dialogMessage = reason
+                            default:
+                                print("Unhandled validation error")
+                            }
+                        default:
+                            print("Unknown error: \(error)")
                         }
+                        
+                    case .finished:
+                        self.showAlertDialog = true
+                        self.dialogMessage = "Save Successfully"
+                        self.isCompanySaved = true
                     }
+                } receiveValue: { _ in
+                
                 }
-            }
+                .store(in: &cancellables)
             
         }
         

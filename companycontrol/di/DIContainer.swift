@@ -50,6 +50,12 @@ class DIContainer {
         container.register(CompanyRemoteDataSource.self) { resolver in
             CompanyRemoteDataSourceImpl(db: resolver.resolve(Firestore.self)!)
         }
+        
+        container.register(ServiceRemoteDataSource.self) { resolver in
+            ServiceRemoteDataSourceImpl(db: resolver.resolve(Firestore.self)!)
+        }
+        
+        
     }
     
     fileprivate func reposotoriesInjections() {
@@ -69,6 +75,10 @@ class DIContainer {
         container.register(CompanyRepository.self) { resolver in
             CompanyRepositoryImpl(dataSource: resolver.resolve(CompanyRemoteDataSource.self)!)
         }
+        
+        container.register(ServiceRepository.self) { resolver in
+            ServiceRepositoryImpl(dataSource: resolver.resolve(ServiceRemoteDataSource.self)!)
+        }
     }
     
     fileprivate func useCasesInjections() {
@@ -76,6 +86,7 @@ class DIContainer {
         categoryUseCasesInjections()
         authUseCasesInjections()
         companyUseCaseInjections()
+        serviceUseCasesInjections()
     }
     
     fileprivate func viewModelsInjections() {
@@ -113,6 +124,13 @@ class DIContainer {
                 deleteCompanyUseCase: resolver.resolve(DeleteCompanyUseCase.self)!,
                 updateCompanyUseCase: resolver.resolve(UpdateCompanyUseCase.self)!,
                 getCompaniesUseCase: resolver.resolve(GetCompaniesUseCase.self)!,
+                auth: resolver.resolve(Auth.self)!
+            )
+        }
+        
+        container.register(ServiceViewModel.self) { resolver in
+            ServiceViewModel(
+                saveUseCase: resolver.resolve(SaveServiceUseCase.self)!,
                 auth: resolver.resolve(Auth.self)!
             )
         }
@@ -181,6 +199,12 @@ class DIContainer {
         
         container.register(RegisterUseCase.self) { resolver in
             RegisterUseCaseImpl(remoteDataSource: resolver.resolve(AuthRemoteDataSource.self)!)
+        }
+    }
+    
+    fileprivate func serviceUseCasesInjections() {
+        container.register(SaveServiceUseCase.self) { resolver in
+            SaveServiceUseCaseImpl(repository: resolver.resolve(ServiceRepository.self)!)
         }
     }
     

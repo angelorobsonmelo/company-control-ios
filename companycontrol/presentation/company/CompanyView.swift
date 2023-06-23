@@ -55,12 +55,13 @@ struct CompanyView: View {
                                     
                                     Spacer()
                                 }
-        
+                                
                             }
                             .contentShape(Rectangle())
                             .background(Color.clear)
                             .onTapGesture {
-                                selectedCompany = company
+                                self.selectedCompany = company
+                                self.showingEditDialog = true
                             }
                         }
                         .onDelete(perform: deleteCategory)
@@ -81,19 +82,19 @@ struct CompanyView: View {
                     AddCompanyView(showingDialog: $showingAddDialog)
                         .environmentObject(viewModel)
                 }
-                .sheet(isPresented: $showingEditDialog) {
-                    //                    EditCategoryView(
-                    //                        category: self.selectedCompany!,
-                    //                        showingDialog: $showingEditDialog)
-                    //                    .environmentObject(viewModel)
-                }
+                .sheet(isPresented: $showingEditDialog, onDismiss: {
+                       self.selectedCompany = nil
+                   }, content: {
+                       EditCompanyView(company: selectedCompany!, showingDialog: $showingEditDialog)
+                           .environmentObject(viewModel)
+                   })
                 .alert(isPresented: $showingDeleteConfirmation) {
                     Alert(
                         title: Text("Delete Company"),
                         message: Text("Are you sure you want to delete this category?"),
                         primaryButton: .destructive(Text("Delete")) {
                             viewModel.remove(id: companies[itemPosition!].id)
-                         
+                            
                         },
                         secondaryButton: .cancel {
                             

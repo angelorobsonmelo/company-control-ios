@@ -73,22 +73,26 @@ class CompanyRemoteDataSourceImpl: CompanyRemoteDataSource {
         
     }
     
-    func update(request: CompanyRequest, completion: @escaping (Result<Void, Error>) -> Void) {
-        db.collection(collectionName).document(request.id).updateData(
-            [
-                "id" : request.id,
-                "name": request.name,
-                "user_email": request.userEmail,
-                "address": request.address,
-                "contact_number": request.contactNumber
-            ]
-        ) { error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
+    func update(request: CompanyRequest) -> AnyPublisher<Void, Error> {
+        let future = Future<Void, Error> { promise in
+            self.db.collection(self.collectionName).document(request.id).updateData(
+                [
+                    "id" : request.id,
+                    "name": request.name,
+                    "user_email": request.userEmail,
+                    "address": request.address,
+                    "contact_number": request.contactNumber
+                ]
+            ) { error in
+                if let error = error {
+                    promise(.failure(error))
+                } else {
+                    promise(.success(()))
+                }
             }
         }
+        
+        return future.eraseToAnyPublisher()
     }
     
     func delete(id: String) -> AnyPublisher<Void, Error>  {

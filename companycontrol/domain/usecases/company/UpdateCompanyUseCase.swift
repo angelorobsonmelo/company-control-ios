@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import Combine
 
 protocol UpdateCompanyUseCase {
     
-    func update(request: CompanyRequest, completion: @escaping (Result<Void, Error>) -> Void)
+    func execute(request: CompanyRequest) -> AnyPublisher<Void, Error>
 }

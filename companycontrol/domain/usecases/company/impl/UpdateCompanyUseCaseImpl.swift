@@ -6,32 +6,52 @@
 //
 
 import Foundation
+import Combine
 
 class UpdateCompanyUseCaseImpl: UpdateCompanyUseCase {
+  
     
     let repository: CompanyRepository
+    var cancellable: AnyCancellable?
+
     
     init(repository: CompanyRepository) {
         self.repository = repository
     }
     
-    func update(request: CompanyRequest, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard !request.name.isEmpty else {
-            completion(.failure(ValidationFormEnum.emptyField(reason: "Name can not be empty")))
-            return
+    func execute(request: CompanyRequest) -> AnyPublisher<Void, Error> {
+        return Future<Void, Error> { [weak self] promise in
+            guard !request.name.isEmpty else {
+                promise(.failure(ValidationFormEnum.emptyField(reason: "Name can not be empty")))
+                return
+            }
+            
+            guard !request.address.isEmpty else {
+                promise(.failure(ValidationFormEnum.emptyField(reason: "Address can not be empty")))
+                return
+            }
+            
+            guard !request.contactNumber.isEmpty else {
+                promise(.failure(ValidationFormEnum.emptyField(reason: "Contact number can not be empty")))
+                return
+            }
+            
+            let publisher = self?.repository.update(request: request)
+            
+            self?.cancellable = publisher?
+                .sink { completion in
+                    switch completion {
+                    case .failure(let error):
+                        promise(.failure(error))
+                    case .finished:
+                        promise(.success(()))
+                        self?.cancellable = nil
+                    }
+                } receiveValue: { _ in
+                    // We don't care about the value here, as we're returning Void.
+                }
         }
-        
-        guard !request.address.isEmpty else {
-            completion(.failure(ValidationFormEnum.emptyField(reason: "Address can not be empty")))
-            return
-        }
-        
-        guard !request.contactNumber.isEmpty else {
-            completion(.failure(ValidationFormEnum.emptyField(reason: "Contact number can not be empty")))
-            return
-        }
-        
-        repository.update(request: request, completion: completion)
+        .eraseToAnyPublisher()
     }
     
     

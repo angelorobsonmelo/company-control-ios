@@ -25,8 +25,8 @@ class CompanyRepositoryImpl: CompanyRepository {
         dataSource.save(request: request)
     }
     
-    func update(request: CompanyRequest, completion: @escaping (Result<Void, Error>) -> Void) {
-        dataSource.update(request: request, completion: completion)
+    func update(request: CompanyRequest) -> AnyPublisher<Void, Error> {
+       return dataSource.update(request: request)
     }
     
     func delete(id: String) -> AnyPublisher<Void, Error> {

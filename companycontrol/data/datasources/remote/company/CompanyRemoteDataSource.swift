@@ -12,7 +12,7 @@ protocol CompanyRemoteDataSource {
     
     func getAll(userEmail: String) -> AnyPublisher<[CompanyResponse], Error>
     func save(request: CompanyRequest) -> AnyPublisher<Void, Error>
-    func update(request: CompanyRequest, completion: @escaping (Result<Void, Error>) -> Void)
+    func update(request: CompanyRequest) -> AnyPublisher<Void, Error>
     func delete(id: String) -> AnyPublisher<Void, Error>
     
 }
