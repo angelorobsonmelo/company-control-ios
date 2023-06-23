@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import Combine
 
 protocol DeleteCompanyUseCase {
     
-    func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void)
+    func execute(id: String) -> AnyPublisher<Void, Error>
 
 }
 

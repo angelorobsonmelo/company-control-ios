@@ -11,7 +11,7 @@ struct CompanyView: View {
     
     @StateObject var viewModel = DIContainer.shared.resolve(CompanyViewModel.self)
     
-
+    
     @State private var showingAddDialog = false
     @State private var showingEditDialog = false
     
@@ -48,7 +48,6 @@ struct CompanyView: View {
                             .background(Color.clear)
                             .onTapGesture {
                                 selectedCompany = company
-                                showingEditDialog = true
                             }
                         }
                         .onDelete(perform: deleteCategory)
@@ -70,35 +69,32 @@ struct CompanyView: View {
                         .environmentObject(viewModel)
                 }
                 .sheet(isPresented: $showingEditDialog) {
-                    //                EditCategoryView(
-                    //                    category: self.selectedCompany!,
-                    //                    showingDialog: $showingEditDialog)
-                    //                .environmentObject(viewModel)
+                    //                    EditCategoryView(
+                    //                        category: self.selectedCompany!,
+                    //                        showingDialog: $showingEditDialog)
+                    //                    .environmentObject(viewModel)
                 }
-                //            .onChange(of: selectedCompany) { newCategory in
-                //                if let newCategory = newCategory {
-                //                    self.selectedCategory = newCategory
-                //                    self.showingEditDialog = true
-                //                }
-                //            }
-                .onChange(of: viewModel.getCompaniesNetworkResult) { newValue in
-                    switch newValue {
-                    case .success(let companies):
-                        //                        self.companies = companies
-                        break
-                    case .error(let message):
-                        
-                        break
-                    case .loading:
-                        print("Loading")
-                        break
-                    case .idle:
-                        print("Idle")
-                        break
+                .alert(isPresented: $showingDeleteConfirmation) {
+                    Alert(
+                        title: Text("Delete Company"),
+                        message: Text("Are you sure you want to delete this category?"),
+                        primaryButton: .destructive(Text("Delete")) {
+                            viewModel.remove(id: companies[itemPosition!].id)
+                         
+                        },
+                        secondaryButton: .cancel {
+                            
+                        }
+                    )
+                }
+                .onChange(of: selectedCompany) { newCategory in
+                    if let newCategory = newCategory {
+                        self.selectedCompany = newCategory
+                        self.showingEditDialog = true
                     }
                 }
             }
-           
+            
         }
         .onAppear {
             viewModel.getCompanies()

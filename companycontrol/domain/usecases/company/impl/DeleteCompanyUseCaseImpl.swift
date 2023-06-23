@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class DeleteCompanyUseCaseImpl: DeleteCompanyUseCase {
     
@@ -15,8 +16,8 @@ class DeleteCompanyUseCaseImpl: DeleteCompanyUseCase {
         self.repository = repository
     }
     
-    func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        repository.delete(id: id, completion: completion)
+    func execute(id: String) -> AnyPublisher<Void, Error> {
+       return repository.delete(id: id)
     }
     
     

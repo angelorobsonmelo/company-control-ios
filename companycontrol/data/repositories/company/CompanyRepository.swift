@@ -13,6 +13,6 @@ protocol CompanyRepository {
     func getAll(userEmail: String) -> AnyPublisher<[CompanyResponse], Error>
     func save(request: CompanyRequest) -> AnyPublisher<Void, Error>
     func update(request: CompanyRequest, completion: @escaping (Result<Void, Error>) -> Void)
-    func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void)
+    func delete(id: String) -> AnyPublisher<Void, Error>
     
 }

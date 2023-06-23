@@ -73,26 +73,6 @@ class CompanyRemoteDataSourceImpl: CompanyRemoteDataSource {
         
     }
     
-    func save(request: CompanyRequest, completion: @escaping (Result<Void, Error>) -> Void) {
-        let ref = db.collection(collectionName).document(request.id)
-        ref.setData(
-            [
-                "id" : request.id,
-                "name": request.name,
-                "user_email": request.userEmail,
-                "address": request.address,
-                "contact_number": request.contactNumber
-            ]
-        ) { error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
-            }
-            
-        }
-    }
-    
     func update(request: CompanyRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         db.collection(collectionName).document(request.id).updateData(
             [
@@ -111,14 +91,18 @@ class CompanyRemoteDataSourceImpl: CompanyRemoteDataSource {
         }
     }
     
-    func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        db.collection(collectionName).document(id).delete() { error in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
+    func delete(id: String) -> AnyPublisher<Void, Error>  {
+        let future = Future<Void, Error> { promise in
+            self.db.collection(self.collectionName).document(id).delete() { error in
+                if let error = error {
+                    promise(.failure(error))
+                } else {
+                    promise(.success(()))
+                }
             }
         }
+        
+        return future.eraseToAnyPublisher()
     }
     
     

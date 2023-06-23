@@ -118,20 +118,23 @@ class CompanyViewModel: ObservableObject {
     }
     
     func remove(id: String) {
-        networkResult = .loading
-        
-        DispatchQueue.global().async {
-            self.deleteCompanyUseCase.delete(id: id) { result in
-                DispatchQueue.main.async {
-                    switch result {
-                    case .success:
-                        self.networkResult = .success(Utils.generateCustomID())
-                    case .failure(let error):
-                        self.networkResult = .error(error.localizedDescription, Date())
-                    }
+        deleteCompanyUseCase.execute(id: id)
+            .subscribe(on: DispatchQueue.global())
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    self.showAlertDialog = true
+                    self.dialogMessage = error.localizedDescription
+                case .finished:
+                    break
                 }
+                
+            } receiveValue: { _ in
+                
             }
-        }
+            .store(in: &cancellables)
+
     }
     
     func update(

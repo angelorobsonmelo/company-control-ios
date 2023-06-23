@@ -11,8 +11,6 @@ import Combine
 class CompanyRepositoryImpl: CompanyRepository {
     
     
-    
-    
     let dataSource: CompanyRemoteDataSource
     
     init(dataSource: CompanyRemoteDataSource) {
@@ -31,8 +29,8 @@ class CompanyRepositoryImpl: CompanyRepository {
         dataSource.update(request: request, completion: completion)
     }
     
-    func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        dataSource.delete(id: id, completion: completion)
+    func delete(id: String) -> AnyPublisher<Void, Error> {
+       return dataSource.delete(id: id)
     }
     
     
