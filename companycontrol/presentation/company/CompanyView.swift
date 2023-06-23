@@ -40,9 +40,22 @@ struct CompanyView: View {
                 VStack {
                     List {
                         ForEach(companies, id: \.id) { company in
-                            HStack {
-                                Text(company.name)
-                                Spacer()
+                            VStack {
+                                HStack {
+                                    Text(company.name)
+                                    Spacer()
+                                    Text(company.contactNumber)
+                                }
+                                
+                                
+                                HStack {
+                                    Text(company.address)
+                                        .foregroundColor(.secondary)
+                                        .font(.body)
+                                    
+                                    Spacer()
+                                }
+        
                             }
                             .contentShape(Rectangle())
                             .background(Color.clear)
