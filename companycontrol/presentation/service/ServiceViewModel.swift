@@ -12,18 +12,31 @@ import Firebase
 class ServiceViewModel: ObservableObject {
     
     private let saveUseCase: SaveServiceUseCase
+    private let getCategoriesUseCase: GetCategoriesUseCase
+    private let getCompaniesUseCase: GetCompaniesUseCase
     private let auth: Auth
     
     private var cancellables: Set<AnyCancellable> = []
     
+    @Published var saveExpenseNetworkResult: NetworkResult<String> = .idle
+    @Published var getExpensesNetworkResult: NetworkResult<[String: [ExpensePresentation]]> = .idle
+    
     @Published var showAlertDialog = false
     @Published var dialogMessage = ""
     @Published var isSaved = false
+    @Published var categories: [CategoryViewData] = []
+    @Published var companies: [CompanyViewData] = []
 
     
-    init(saveUseCase: SaveServiceUseCase, auth: Auth) {
+    init(saveUseCase: SaveServiceUseCase,
+         auth: Auth,
+         getCategoriesUseCase: GetCategoriesUseCase,
+         getCompaniesUseCase: GetCompaniesUseCase
+    ) {
         self.saveUseCase = saveUseCase
         self.auth = auth
+        self.getCategoriesUseCase = getCategoriesUseCase
+        self.getCompaniesUseCase = getCompaniesUseCase
     }
     
     
@@ -78,8 +91,55 @@ class ServiceViewModel: ObservableObject {
 
             
         }
-        
-        
+    }
+    
+    func getCategories()  {
+        if let email = self.auth.currentUser?.email {
+            getCategoriesUseCase.execute(userEmail: email)
+                .subscribe(on: DispatchQueue.global())
+                .receive(on: DispatchQueue.main)
+                .map {
+                    $0.map { item in
+                        CategoryViewData(id: item.id, name: item.name)
+                    }
+                }
+                .sink { completion in
+                    switch completion {
+                    case .failure(let error):
+                        break
+                    case .finished:
+                        break
+                    }
+                    
+                } receiveValue: { categories in
+                    self.categories = categories
+                }
+                .store(in: &cancellables)
+        }
+    }
+    
+    func getCompanies() {
+        if let email = self.auth.currentUser?.email {
+            self.getCompaniesUseCase.execute(userEmail: email)
+                .subscribe(on: DispatchQueue.global())
+                .receive(on: DispatchQueue.main)
+                .map {
+                    $0.map { item in
+                        CompanyViewData(id: item.id, address: item.address, contactNumber: item.contactNumber, name: item.name, userEmail: email)
+                    }
+                }
+                .sink { completion in
+                    switch completion {
+                    case .failure(let error):
+                        break
+                    case .finished:
+                        break
+                    }
+                } receiveValue: { companyViewData in
+                    self.companies = companyViewData
+                }
+                .store(in: &cancellables)
+        }
     }
     
     

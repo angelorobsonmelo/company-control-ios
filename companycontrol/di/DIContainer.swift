@@ -131,7 +131,9 @@ class DIContainer {
         container.register(ServiceViewModel.self) { resolver in
             ServiceViewModel(
                 saveUseCase: resolver.resolve(SaveServiceUseCase.self)!,
-                auth: resolver.resolve(Auth.self)!
+                auth: resolver.resolve(Auth.self)!,
+                getCategoriesUseCase: resolver.resolve(GetCategoriesUseCase.self)!,
+                getCompaniesUseCase: resolver.resolve(GetCompaniesUseCase.self)!
             )
         }
     }
