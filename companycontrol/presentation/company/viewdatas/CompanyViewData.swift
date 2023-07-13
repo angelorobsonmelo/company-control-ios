@@ -16,4 +16,14 @@ struct CompanyViewData: Identifiable, Equatable {
     let contactNumber: String
     let name: String
     let userEmail: String
+    
+    static func oneInstance() -> CompanyViewData {
+        return CompanyViewData(
+            id: Utils.generateCustomID(),
+            address: "address 1",
+            contactNumber: "contact number 1",
+            name: "name 1",
+            userEmail: "test@gmail.com"
+        )
+    }
 }

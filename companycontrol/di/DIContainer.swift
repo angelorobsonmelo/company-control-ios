@@ -133,7 +133,8 @@ class DIContainer {
                 saveUseCase: resolver.resolve(SaveServiceUseCase.self)!,
                 auth: resolver.resolve(Auth.self)!,
                 getCategoriesUseCase: resolver.resolve(GetCategoriesUseCase.self)!,
-                getCompaniesUseCase: resolver.resolve(GetCompaniesUseCase.self)!
+                getCompaniesUseCase: resolver.resolve(GetCompaniesUseCase.self)!,
+                getAllServiceUseCase: resolver.resolve(GetAllServiceUseCase.self)!
             )
         }
     }
@@ -207,6 +208,10 @@ class DIContainer {
     fileprivate func serviceUseCasesInjections() {
         container.register(SaveServiceUseCase.self) { resolver in
             SaveServiceUseCaseImpl(repository: resolver.resolve(ServiceRepository.self)!)
+        }
+        
+        container.register(GetAllServiceUseCase.self) { resolver in
+            GetAllServicesUseCaseImpl(repository: resolver.resolve(ServiceRepository.self)!)
         }
     }
     

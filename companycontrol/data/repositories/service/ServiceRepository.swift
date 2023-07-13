@@ -11,4 +11,5 @@ import Combine
 protocol ServiceRepository {
     
     func save(request: ServiceRequest) -> AnyPublisher<Void, Error>
+    func getAll(userEmail: String, startDate: Date, endDate: Date) -> AnyPublisher<[ServiceResponse], Error>
 }

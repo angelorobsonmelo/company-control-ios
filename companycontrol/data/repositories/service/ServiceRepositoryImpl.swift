@@ -10,6 +10,7 @@ import Combine
 
 class ServiceRepositoryImpl: ServiceRepository {
     
+    
     let dataSource: ServiceRemoteDataSource
     
     init(dataSource: ServiceRemoteDataSource) {
@@ -20,5 +21,8 @@ class ServiceRepositoryImpl: ServiceRepository {
         return dataSource.save(request: request)
     }
     
+    func getAll(userEmail: String, startDate: Date, endDate: Date) -> AnyPublisher<[ServiceResponse], Error> {
+        return dataSource.getAll(userEmail: userEmail, startDate: startDate, endDate: endDate)
+    }
     
 }

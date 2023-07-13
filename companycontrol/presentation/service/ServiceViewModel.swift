@@ -14,9 +14,36 @@ class ServiceViewModel: ObservableObject {
     private let saveUseCase: SaveServiceUseCase
     private let getCategoriesUseCase: GetCategoriesUseCase
     private let getCompaniesUseCase: GetCompaniesUseCase
+    private let getAllServiceUseCase: GetAllServiceUseCase
     private let auth: Auth
     
     private var cancellables: Set<AnyCancellable> = []
+    
+    @Published var expensesViews: [ServiceViewData] = []
+
+
+    var groupedCosts: [String: [ServiceViewData]] {
+        Dictionary(grouping: expensesViews) { cost in
+            cost.date.formatStringDate(dateFormat: "dd/MM/yyyy", identifier: "pt-BR") ?? ""
+        }
+    }
+
+    var sortedDates: [String] {
+        groupedCosts.keys.sorted { date1, date2 in
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd/MM/yyyy"
+            dateFormatter.locale = Locale(identifier: "pt-BR")
+            guard let d1 = dateFormatter.date(from: date1),
+                  let d2 = dateFormatter.date(from: date2) else {
+                return false
+            }
+            return d1 > d2
+        }
+    }
+
+    var totalAmount: Double {
+        groupedCosts.values.flatMap { $0 }.reduce(0) { $0 + $1.amount }
+    }
     
     @Published var saveExpenseNetworkResult: NetworkResult<String> = .idle
     @Published var getExpensesNetworkResult: NetworkResult<[String: [ExpensePresentation]]> = .idle
@@ -31,12 +58,14 @@ class ServiceViewModel: ObservableObject {
     init(saveUseCase: SaveServiceUseCase,
          auth: Auth,
          getCategoriesUseCase: GetCategoriesUseCase,
-         getCompaniesUseCase: GetCompaniesUseCase
+         getCompaniesUseCase: GetCompaniesUseCase,
+         getAllServiceUseCase: GetAllServiceUseCase
     ) {
         self.saveUseCase = saveUseCase
         self.auth = auth
         self.getCategoriesUseCase = getCategoriesUseCase
         self.getCompaniesUseCase = getCompaniesUseCase
+        self.getAllServiceUseCase = getAllServiceUseCase
     }
     
     
@@ -141,6 +170,63 @@ class ServiceViewModel: ObservableObject {
                 .store(in: &cancellables)
         }
     }
+    
+    func getServices(startDate: Date, endDate: Date) {
+        if let email = self.auth.currentUser?.email {
+            self.getAllServiceUseCase.execute(userEmail: email, startDate: startDate, endDate: endDate)
+                .subscribe(on: DispatchQueue.global())
+                .receive(on: DispatchQueue.main)
+                .map {
+                    $0.map { item in
+                        ServiceViewData(id: item.id,
+                                        title: item.title,
+                                        description: item.description,
+                                        userEmail: item.userEmail,
+                                        amount: item.amount,
+                                        date: item.date,
+                                        expenseCategory: CategoryViewData(
+                                            id: item.company.id,
+                                            name: item.company.name)
+                                        ,
+                                        company: CompanyViewData(
+                                            id: item.company.id,
+                                            address: item.company.address,
+                                            contactNumber: item.company.contactNumber,
+                                            name: item.company.name,
+                                            userEmail: item.userEmail)
+                        )
+                    }
+                }
+                .sink { completion in
+                    switch completion {
+                    case .failure(let error):
+                        break
+                    case .finished:
+                        break
+                    }
+                } receiveValue: { servicesViewData in
+                    self.expensesViews = servicesViewData
+                }
+                .store(in: &cancellables)
+        }
+    }
+    
+//    func deleteExpense(at position: Int, from date: String) {
+//        let itemToDelte = groupedCosts[date]![position]
+//
+//        DispatchQueue.global().async {
+//            self.deleteExpenseUseCase.delete(id: itemToDelte.id) { result in
+//                DispatchQueue.main.async {
+//                    switch result {
+//                    case .success: break
+//                        //                        self.networkResult = .success(true)
+//                    case .failure(let error): break
+//                        //                        self.networkResult = .error(error.localizedDescription, Date())
+//                    }
+//                }
+//            }
+//        }
+//    }
     
     
 }

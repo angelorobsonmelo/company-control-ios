@@ -1,10 +1,9 @@
 //
-//  ServiceView.swift
+//  ExpensesView.swift
 //  companycontrol
 //
-//  Created by Ângelo Melo on 23/06/2023.
+//  Created by Ângelo Melo on 11/05/2023.
 //
-
 
 import Foundation
 import SwiftUI
@@ -15,7 +14,7 @@ struct ServicesView: View {
     @State private var showingAddDialog = false
     
     @State private var showingEditDialog = false
-    @State private var selectedExpense: ExpensePresentation? = nil
+    @State private var selectedExpense: ServiceViewData? = nil
     
     
     let calendar = Calendar.current
@@ -38,7 +37,7 @@ struct ServicesView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Total: 11")
+                Text("Total: \(viewModel.totalAmount.formatToCurrency())")
                     .font(.headline)
                     .padding(.top, 16)
                 
@@ -46,57 +45,55 @@ struct ServicesView: View {
                     DatePicker("", selection: $startDate, displayedComponents: .date)
                         .labelsHidden()
                         .onChange(of: startDate) { newValue in
-//                            self.viewModel.getExpenses(startDate: startDate, endDate: endDate)
+                            self.viewModel.getServices(startDate: startDate, endDate: endDate)
                         }
                     
                     DatePicker("", selection: $endDate, displayedComponents: .date)
                         .labelsHidden()
                         .onChange(of: endDate) { newValue in
-//                            self.viewModel.getExpenses(startDate: startDate, endDate: endDate)
+                            self.viewModel.getServices(startDate: startDate, endDate: endDate)
                         }
                 }
                 .padding()
                 
                 
-//                List {
-//                    ForEach(viewModel.sortedDates, id: \.self) { date in
-//                        Section(header: Text(date)) {
-//                            ForEach(viewModel.groupedCosts[date]!, id: \.id) { item in
-//                                VStack {
-//                                    HStack {
-//                                        Text(item.title)
-//                                            .font(.headline)
-//                                        Spacer()
-//                                        Text(item.expenseCategory.name)
-//                                    }
-//                                    .padding(.bottom, 10)
-//
-//                                    HStack {
-//                                        Text(item.description)
-//                                            .foregroundColor(.secondary)
-//                                            .font(.body)
-//
-//                                        Spacer()
-//
-//                                        Text(item.amount.formatToCurrency())
-//                                            .foregroundColor(.secondary)
-//                                    }
-//                                }
-//                                .contentShape(Rectangle())
-//                                .onTapGesture {
-//                                    showingEditDialog = true
-//                                    selectedExpense = item
-//                                    print(item.amount)
-//                                }
-//                            }
-//                            .onDelete(perform: { indexSet in
-//                                deleteCategory(at: indexSet, date: date)
-//                            })
-//                        }
-//                    }
-//                }
-                
-                
+                List {
+                    ForEach(viewModel.sortedDates, id: \.self) { date in
+                        Section(header: Text(date)) {
+                            ForEach(viewModel.groupedCosts[date]!, id: \.id) { item in
+                                VStack {
+                                    HStack {
+                                        Text(item.title)
+                                            .font(.headline)
+                                        Spacer()
+                                        Text(item.expenseCategory.name)
+                                    }
+                                    .padding(.bottom, 10)
+                                    
+                                    HStack {
+                                        Text(item.description)
+                                            .foregroundColor(.secondary)
+                                            .font(.body)
+                                        
+                                        Spacer()
+                                        
+                                        Text(item.amount.formatToCurrency())
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    showingEditDialog = true
+                                    selectedExpense = item
+                                    print(item.amount)
+                                }
+                            }
+                            .onDelete(perform: { indexSet in
+                                deleteCategory(at: indexSet, date: date)
+                            })
+                        }
+                    }
+                }
             }
             .navigationBarTitle("Services", displayMode: .inline)
             .toolbar {
@@ -115,49 +112,49 @@ struct ServicesView: View {
             self.startDate = self.calendar.dateInterval(of: .month, for: now)?.start ?? Date()
             self.endDate = Date()
             
-//            self.viewModel.getExpenses(startDate: startDate, endDate: endDate)
+            self.viewModel.getServices(startDate: startDate, endDate: endDate)
         }
-//        .onChange(of: viewModel.getExpensesNetworkResult, perform: { newValue in
-//            switch newValue {
-//            case .success(let items):
-//
-//                break
-//            case .error(let message):
-//
-//                break
-//            case .loading:
-//                print("Loading")
-//                break
-//            case .idle:
-//                print("Idle")
-//                break
-//            }
-//        })
+        .onChange(of: viewModel.getExpensesNetworkResult, perform: { newValue in
+            switch newValue {
+            case .success(let items):
+                
+                break
+            case .error(let message):
+                
+                break
+            case .loading:
+                print("Loading")
+                break
+            case .idle:
+                print("Idle")
+                break
+            }
+        })
         .sheet(isPresented: $showingAddDialog) {
             AddServiceView(showingDialog: $showingAddDialog) {
-//                self.viewModel.getExpenses(startDate: startDate, endDate: endDate)
+                self.viewModel.getServices(startDate: startDate, endDate: endDate)
             }
             .environmentObject(viewModel)
         }
-        .sheet(isPresented: $showingEditDialog) {
-            EditExpenseView(showingDialog: $showingEditDialog, expense: self.selectedExpense!) {
-                
-            }
-            .environmentObject(viewModel)
-        }
-        .alert(isPresented: $showingDeleteConfirmation) {
-            Alert(
-                title: Text("Delete Category"),
-                message: Text("Are you sure you want to delete this category?"),
-                primaryButton: .destructive(Text("Delete")) {
-                    
+//        .sheet(isPresented: $showingEditDialog) {
+//            EditExpenseView(showingDialog: $showingEditDialog, expense: self.selectedExpense!) {
+//
+//            }
+//            .environmentObject(viewModel)
+//        }
+//        .alert(isPresented: $showingDeleteConfirmation) {
+//            Alert(
+//                title: Text("Delete Category"),
+//                message: Text("Are you sure you want to delete this category?"),
+//                primaryButton: .destructive(Text("Delete")) {
+//
 //                    viewModel.deleteExpense(at: itemPosition!, from: dateGroupToDelete)
-                },
-                secondaryButton: .cancel {
-                    
-                }
-            )
-        }
+//                },
+//                secondaryButton: .cancel {
+//
+//                }
+//            )
+//        }
         .onChange(of: selectedExpense) { newCategory in
             if let newExpense = selectedExpense {
                 self.selectedExpense = newExpense
@@ -175,4 +172,3 @@ struct ServicesView: View {
     }
     
 }
-
