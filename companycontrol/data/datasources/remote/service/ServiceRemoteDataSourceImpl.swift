@@ -122,6 +122,21 @@ class ServiceRemoteDataSourceImpl: ServiceRemoteDataSource {
 
         return subject.eraseToAnyPublisher()
     }
+     
+    
+    func delete(id: String) -> AnyPublisher<Void, Error>  {
+        let future = Future<Void, Error> { promise in
+            self.db.collection(self.collectionName).document(id).delete() { error in
+                if let error = error {
+                    promise(.failure(error))
+                } else {
+                    promise(.success(()))
+                }
+            }
+        }
+        
+        return future.eraseToAnyPublisher()
+    }
 }
 
 

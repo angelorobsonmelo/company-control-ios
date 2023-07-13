@@ -15,6 +15,7 @@ class ServiceViewModel: ObservableObject {
     private let getCategoriesUseCase: GetCategoriesUseCase
     private let getCompaniesUseCase: GetCompaniesUseCase
     private let getAllServiceUseCase: GetAllServiceUseCase
+    private let deleteServiceUseCase: DeleteServiceUseCase
     private let auth: Auth
     
     private var cancellables: Set<AnyCancellable> = []
@@ -59,13 +60,15 @@ class ServiceViewModel: ObservableObject {
          auth: Auth,
          getCategoriesUseCase: GetCategoriesUseCase,
          getCompaniesUseCase: GetCompaniesUseCase,
-         getAllServiceUseCase: GetAllServiceUseCase
+         getAllServiceUseCase: GetAllServiceUseCase,
+         deleteServiceUseCase: DeleteServiceUseCase
     ) {
         self.saveUseCase = saveUseCase
         self.auth = auth
         self.getCategoriesUseCase = getCategoriesUseCase
         self.getCompaniesUseCase = getCompaniesUseCase
         self.getAllServiceUseCase = getAllServiceUseCase
+        self.deleteServiceUseCase = deleteServiceUseCase
     }
     
     
@@ -211,22 +214,28 @@ class ServiceViewModel: ObservableObject {
         }
     }
     
-//    func deleteExpense(at position: Int, from date: String) {
-//        let itemToDelte = groupedCosts[date]![position]
-//
-//        DispatchQueue.global().async {
-//            self.deleteExpenseUseCase.delete(id: itemToDelte.id) { result in
-//                DispatchQueue.main.async {
-//                    switch result {
-//                    case .success: break
-//                        //                        self.networkResult = .success(true)
-//                    case .failure(let error): break
-//                        //                        self.networkResult = .error(error.localizedDescription, Date())
-//                    }
-//                }
-//            }
-//        }
-//    }
+    func remove(at position: Int, from date: String) {
+        
+        let itemToDelte = groupedCosts[date]![position]
+            
+            deleteServiceUseCase.execute(id: itemToDelte.id)
+            .subscribe(on: DispatchQueue.global())
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    self.showAlertDialog = true
+                    self.dialogMessage = error.localizedDescription
+                case .finished:
+                    break
+                }
+                
+            } receiveValue: { _ in
+                
+            }
+            .store(in: &cancellables)
+
+    }
     
     
 }

@@ -134,7 +134,8 @@ class DIContainer {
                 auth: resolver.resolve(Auth.self)!,
                 getCategoriesUseCase: resolver.resolve(GetCategoriesUseCase.self)!,
                 getCompaniesUseCase: resolver.resolve(GetCompaniesUseCase.self)!,
-                getAllServiceUseCase: resolver.resolve(GetAllServiceUseCase.self)!
+                getAllServiceUseCase: resolver.resolve(GetAllServiceUseCase.self)!,
+                deleteServiceUseCase: resolver.resolve(DeleteServiceUseCase.self)!
             )
         }
     }
@@ -212,6 +213,10 @@ class DIContainer {
         
         container.register(GetAllServiceUseCase.self) { resolver in
             GetAllServicesUseCaseImpl(repository: resolver.resolve(ServiceRepository.self)!)
+        }
+        
+        container.register(DeleteServiceUseCase.self) { resolver in
+            DeleteServiceUseCaseImpl(repository: resolver.resolve(ServiceRepository.self)!)
         }
     }
     

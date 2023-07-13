@@ -25,4 +25,9 @@ class ServiceRepositoryImpl: ServiceRepository {
         return dataSource.getAll(userEmail: userEmail, startDate: startDate, endDate: endDate)
     }
     
+    func delete(id: String) -> AnyPublisher<Void, Error> {
+        return dataSource.delete(id: id)
+    }
+
+    
 }

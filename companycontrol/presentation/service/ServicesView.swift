@@ -142,19 +142,19 @@ struct ServicesView: View {
 //            }
 //            .environmentObject(viewModel)
 //        }
-//        .alert(isPresented: $showingDeleteConfirmation) {
-//            Alert(
-//                title: Text("Delete Category"),
-//                message: Text("Are you sure you want to delete this category?"),
-//                primaryButton: .destructive(Text("Delete")) {
-//
-//                    viewModel.deleteExpense(at: itemPosition!, from: dateGroupToDelete)
-//                },
-//                secondaryButton: .cancel {
-//
-//                }
-//            )
-//        }
+        .alert(isPresented: $showingDeleteConfirmation) {
+            Alert(
+                title: Text("Delete Category"),
+                message: Text("Are you sure you want to delete this category?"),
+                primaryButton: .destructive(Text("Delete")) {
+
+                    viewModel.remove(at: itemPosition!, from: dateGroupToDelete)
+                },
+                secondaryButton: .cancel {
+
+                }
+            )
+        }
         .onChange(of: selectedExpense) { newCategory in
             if let newExpense = selectedExpense {
                 self.selectedExpense = newExpense
