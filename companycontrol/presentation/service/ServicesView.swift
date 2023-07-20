@@ -136,12 +136,12 @@ struct ServicesView: View {
             }
             .environmentObject(viewModel)
         }
-//        .sheet(isPresented: $showingEditDialog) {
-//            EditExpenseView(showingDialog: $showingEditDialog, expense: self.selectedExpense!) {
-//
-//            }
-//            .environmentObject(viewModel)
-//        }
+        .sheet(isPresented: $showingEditDialog) {
+            EditServiceView(showingDialog: $showingEditDialog, service: self.selectedExpense!) {
+
+            }
+            .environmentObject(viewModel)
+        }
         .alert(isPresented: $showingDeleteConfirmation) {
             Alert(
                 title: Text("Delete Category"),

@@ -56,6 +56,36 @@ class ServiceRemoteDataSourceImpl: ServiceRemoteDataSource {
         return future.eraseToAnyPublisher()
     }
     
+    func update(request: ServiceRequest) -> AnyPublisher<Void, Error> {
+        let future = Future<Void, Error> { promise in
+            let categoryRef = self.db.collection("category").document(request.categoryId)
+            let companyRef = self.db.collection("company").document(request.companyId)
+            
+            self.db.collection(self.collectionName)
+                .document(request.id)
+                .updateData(
+                [
+                    "id" : request.id,
+                    "title": request.title,
+                    "description": request.description,
+                    "date": request.date,
+                    "user_email": request.userEmail,
+                    "amount": request.amount,
+                    "category_ref": categoryRef,
+                    "company_ref": companyRef
+                ]
+            ) { error in
+                if let error = error {
+                    promise(.failure(error))
+                } else {
+                    promise(.success(()))
+                }
+            }
+        }
+        
+        return future.eraseToAnyPublisher()
+    }
+    
     
     func getAll(userEmail: String, startDate: Date, endDate: Date) -> AnyPublisher<[ServiceResponse], Error> {
         let query = self.db.collection(self.collectionName)

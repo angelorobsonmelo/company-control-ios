@@ -21,6 +21,10 @@ class ServiceRepositoryImpl: ServiceRepository {
         return dataSource.save(request: request)
     }
     
+    func update(request: ServiceRequest) -> AnyPublisher<Void, Error> {
+        return dataSource.update(request: request)
+    }
+    
     func getAll(userEmail: String, startDate: Date, endDate: Date) -> AnyPublisher<[ServiceResponse], Error> {
         return dataSource.getAll(userEmail: userEmail, startDate: startDate, endDate: endDate)
     }

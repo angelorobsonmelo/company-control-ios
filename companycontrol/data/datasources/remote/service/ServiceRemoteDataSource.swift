@@ -15,4 +15,6 @@ protocol ServiceRemoteDataSource {
     
     func delete(id: String) -> AnyPublisher<Void, Error>
     
+    func update(request: ServiceRequest) -> AnyPublisher<Void, Error>
+    
 }

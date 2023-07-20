@@ -16,7 +16,25 @@ class ServiceViewModel: ObservableObject {
     private let getCompaniesUseCase: GetCompaniesUseCase
     private let getAllServiceUseCase: GetAllServiceUseCase
     private let deleteServiceUseCase: DeleteServiceUseCase
+    private let editServiceUseCase: EditServiceUseCase
     private let auth: Auth
+    
+    init(saveUseCase: SaveServiceUseCase,
+         auth: Auth,
+         getCategoriesUseCase: GetCategoriesUseCase,
+         getCompaniesUseCase: GetCompaniesUseCase,
+         getAllServiceUseCase: GetAllServiceUseCase,
+         deleteServiceUseCase: DeleteServiceUseCase,
+         editServiceUseCase: EditServiceUseCase
+    ) {
+        self.saveUseCase = saveUseCase
+        self.auth = auth
+        self.getCategoriesUseCase = getCategoriesUseCase
+        self.getCompaniesUseCase = getCompaniesUseCase
+        self.getAllServiceUseCase = getAllServiceUseCase
+        self.deleteServiceUseCase = deleteServiceUseCase
+        self.editServiceUseCase = editServiceUseCase
+    }
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -56,21 +74,6 @@ class ServiceViewModel: ObservableObject {
     @Published var companies: [CompanyViewData] = []
 
     
-    init(saveUseCase: SaveServiceUseCase,
-         auth: Auth,
-         getCategoriesUseCase: GetCategoriesUseCase,
-         getCompaniesUseCase: GetCompaniesUseCase,
-         getAllServiceUseCase: GetAllServiceUseCase,
-         deleteServiceUseCase: DeleteServiceUseCase
-    ) {
-        self.saveUseCase = saveUseCase
-        self.auth = auth
-        self.getCategoriesUseCase = getCategoriesUseCase
-        self.getCompaniesUseCase = getCompaniesUseCase
-        self.getAllServiceUseCase = getAllServiceUseCase
-        self.deleteServiceUseCase = deleteServiceUseCase
-    }
-    
     
     func save(
         title: String,
@@ -94,6 +97,60 @@ class ServiceViewModel: ObservableObject {
             
            
             self.saveUseCase.execute(request: request)
+                .subscribe(on: DispatchQueue.global())
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    switch completion {
+                    case .failure(let error):
+                        switch error {
+                        case let validationError as ValidationFormEnum:
+                            switch validationError {
+                            case .emptyField(let reason):
+                                print("Empty field error: \(reason)")
+                                self.showAlertDialog = true
+                                self.dialogMessage = reason
+                            }
+                        default:
+                            print("Unknown error: \(error)")
+                        }
+                        
+                    case .finished:
+                        self.showAlertDialog = true
+                        self.dialogMessage = "Save Successfully"
+                        self.isSaved = true
+                    }
+                } receiveValue: { _ in
+                    
+                }
+                .store(in: &cancellables)
+
+            
+        }
+    }
+    
+    func update(
+        id: String,
+        title: String,
+        description: String,
+        amount: Double,
+        expenseCategoryId: String,
+        companyId: String,
+        date: Date
+    ) {
+        if let email = self.auth.currentUser?.email {
+            let request = ServiceRequest(
+                id: id,
+                title: title,
+                description: description,
+                userEmail: email,
+                amount: amount,
+                categoryId: expenseCategoryId,
+                companyId: companyId,
+                date: date
+            )
+            
+           
+            self.editServiceUseCase.execute(request: request)
                 .subscribe(on: DispatchQueue.global())
                 .receive(on: DispatchQueue.main)
                 .sink { completion in
@@ -188,8 +245,8 @@ class ServiceViewModel: ObservableObject {
                                         amount: item.amount,
                                         date: item.date,
                                         expenseCategory: CategoryViewData(
-                                            id: item.company.id,
-                                            name: item.company.name)
+                                            id: item.category.id,
+                                            name: item.category.name)
                                         ,
                                         company: CompanyViewData(
                                             id: item.company.id,
