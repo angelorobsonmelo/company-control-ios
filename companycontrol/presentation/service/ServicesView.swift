@@ -80,6 +80,18 @@ struct ServicesView: View {
                                         Text(item.amount.formatToCurrency())
                                             .foregroundColor(.secondary)
                                     }
+                                    .padding(.bottom, 10)
+                                    
+                                    HStack {
+//                                        Text(item.company.name)
+//                                            .foregroundColor(.secondary)
+//                                            .font(.body)
+                                        
+                                        Spacer()
+                                        
+                                        Text(item.company.name)
+                                            .foregroundColor(.secondary)
+                                    }
                                 }
                                 .contentShape(Rectangle())
                                 .onTapGesture {
