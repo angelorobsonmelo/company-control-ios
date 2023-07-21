@@ -6,7 +6,10 @@
 //
 
 import Foundation
+import Combine
 
 protocol GetExpensesUseCase {
-    func getAll(userEmail: String, startDate: Date, endDate: Date, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void)
+    
+    func execute(userEmail: String, startDate: Date, endDate: Date) -> AnyPublisher<[ExpenseResponse], Error>
+    
 }

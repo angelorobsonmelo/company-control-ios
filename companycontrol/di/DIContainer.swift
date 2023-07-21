@@ -87,6 +87,7 @@ class DIContainer {
         authUseCasesInjections()
         companyUseCaseInjections()
         serviceUseCasesInjections()
+        balanceUseCaseInjections()
     }
     
     fileprivate func viewModelsInjections() {
@@ -136,7 +137,7 @@ class DIContainer {
                 getCompaniesUseCase: resolver.resolve(GetCompaniesUseCase.self)!,
                 getAllServiceUseCase: resolver.resolve(GetAllServiceUseCase.self)!,
                 deleteServiceUseCase: resolver.resolve(DeleteServiceUseCase.self)!,
-                editServiceUseCase: resolver.resolve(EditServiceUseCase.self)! 
+                editServiceUseCase: resolver.resolve(EditServiceUseCase.self)!
             )
         }
     }
@@ -225,6 +226,15 @@ class DIContainer {
         }
     }
     
+    
+    fileprivate func balanceUseCaseInjections() {
+        container.register(GetBalanceUseCase.self) { resolver in
+            GetBalanceUseCaseImpl(
+                serviceRepository: resolver.resolve(ServiceRepository.self)!,
+                expenseRepository: resolver.resolve(ExpenseRepository.self)!)
+        }
+        
+    }
     
     func resolve<T>(_ serviceType: T.Type) -> T {
         return container.resolve(serviceType)!

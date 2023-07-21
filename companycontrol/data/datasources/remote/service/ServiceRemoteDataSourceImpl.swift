@@ -88,6 +88,16 @@ class ServiceRemoteDataSourceImpl: ServiceRemoteDataSource {
     
     
     func getAll(userEmail: String, startDate: Date, endDate: Date) -> AnyPublisher<[ServiceResponse], Error> {
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+
+        var components = calendar.dateComponents([.year, .month, .day], from: startDate)
+        let startDate = calendar.date(from: components)!
+
+        components = calendar.dateComponents([.year, .month, .day], from: Calendar.current.date(byAdding: .day, value: 1, to: endDate)!)
+        components.second = -1
+        let endDate = calendar.date(from: components)!
+        
         let query = self.db.collection(self.collectionName)
             .whereField("user_email", isEqualTo: userEmail)
             .whereField("date", isGreaterThanOrEqualTo: startDate)

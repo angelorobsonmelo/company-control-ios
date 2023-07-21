@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class ExpenseRepositoryImpl: ExpenseRepository {
     
@@ -24,8 +25,8 @@ class ExpenseRepositoryImpl: ExpenseRepository {
         remoteDataSource.update(request: request, completion: completion)
     }
     
-    func getAll(userEmail: String, startDate: Date, endDate: Date, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void) {
-        remoteDataSource.getAll(userEmail: userEmail, startDate: startDate, endDate: endDate, completion: completion)
+    func getAll(userEmail: String, startDate: Date, endDate: Date) -> AnyPublisher<[ExpenseResponse], Error> {
+        return remoteDataSource.getAll(userEmail: userEmail, startDate: startDate, endDate: endDate)
     }
     
     func delete(id: String, completion: @escaping (Result<Void, Error>) -> Void) {

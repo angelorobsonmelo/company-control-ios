@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class GetExpensesUseCaseImpl: GetExpensesUseCase {
     
@@ -16,8 +17,8 @@ class GetExpensesUseCaseImpl: GetExpensesUseCase {
         self.repository = repository
     }
     
-    func getAll(userEmail: String, startDate: Date, endDate: Date, completion: @escaping (Result<[ExpenseResponse], Error>) -> Void) {
-        repository.getAll(userEmail: userEmail, startDate: startDate, endDate: endDate, completion: completion)
+    func execute(userEmail: String, startDate: Date, endDate: Date) -> AnyPublisher<[ExpenseResponse], Error> {
+        return repository.getAll(userEmail: userEmail, startDate: startDate, endDate: endDate)
     }
  
     
