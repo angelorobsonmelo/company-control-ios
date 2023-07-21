@@ -10,5 +10,5 @@ import Combine
 
 protocol GetBalanceUseCase {
     
-    func execute(userEmail: String, startDate: Date, endDate: Date) -> AnyPublisher<[ServiceResponse], Error>
+    func execute(userEmail: String, startDate: Date, endDate: Date) -> AnyPublisher<(services: [ServiceResponse], expenses: [ExpenseResponse]), Error> 
 }

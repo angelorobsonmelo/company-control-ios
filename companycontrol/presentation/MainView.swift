@@ -34,7 +34,7 @@ struct MainView: View {
                 }
                 .tag(3)
             
-            SecondTabView()
+            BalanceView()
                 .tabItem {
                     Image(systemName: "chart.bar.doc.horizontal")
                     Text("Balance")

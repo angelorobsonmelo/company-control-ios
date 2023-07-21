@@ -140,6 +140,12 @@ class DIContainer {
                 editServiceUseCase: resolver.resolve(EditServiceUseCase.self)!
             )
         }
+        
+        container.register(BalanceViewModel.self) { resolver in
+            BalanceViewModel(
+                getBalanceUseCase: resolver.resolve(GetBalanceUseCase.self)! ,
+                auth: resolver.resolve(Auth.self)!)
+        }
     }
     
     fileprivate func companyUseCaseInjections() {
