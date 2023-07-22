@@ -48,7 +48,7 @@ struct AddServiceView: View {
                     item.name
                 }
                 
-                TextField("Title", text: $title)
+                TextField("TITLE".localized, text: $title)
                     .keyboardType(.default)
                     .textContentType(.oneTimeCode)
                 
@@ -59,7 +59,7 @@ struct AddServiceView: View {
                     .overlay(
                         VStack(alignment: .leading) {
                             if description.isEmpty {
-                                Text("Description")
+                                Text("DESCRIPTION".localized)
                                     .foregroundColor(Color.gray)
                                     .padding(.leading, 5)
                             }
@@ -86,7 +86,7 @@ struct AddServiceView: View {
                 NavigationLink(destination: OptionsView(selectedOption: $selectedOption, options: options)) {
                     
                     HStack {
-                        Text(selectedOption ?? "Select a category")
+                        Text(selectedOption ?? "SELECT_CATEGORY".localized)
                             .keyboardType(.default)
                             .textContentType(.oneTimeCode)
                     }
@@ -100,7 +100,7 @@ struct AddServiceView: View {
                 })) {
                     
                     HStack {
-                        Text(selectedCompanyOption ?? "Select a company")
+                        Text(selectedCompanyOption ?? "SELECT_COMPANY".localized)
                             .keyboardType(.default)
                             .textContentType(.oneTimeCode)
                     }
@@ -110,7 +110,7 @@ struct AddServiceView: View {
                 }
                 
                 
-                DateSelectionView(label: "Date:", date: $date)
+                DateSelectionView(label: "DATE".localized + ":", date: $date)
                     .onTapGesture {
                         hideKeyboard()
                     }
@@ -120,7 +120,7 @@ struct AddServiceView: View {
                 viewModel.getCategories()
                 viewModel.getCompanies()
             }
-            .navigationBarTitle("Add Service", displayMode: .inline)
+            .navigationBarTitle("ADD_SERVICE".localized, displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -175,7 +175,7 @@ struct AddServiceView: View {
                  Alert(
                     title: Text(viewModel.dialogMessage),
                     message: Text(""),
-                    dismissButton: .default(Text("OK"))
+                    dismissButton: .default(Text("OK".localized))
                 )
             }
             
@@ -188,7 +188,7 @@ func hideKeyboard() {
 
 private var placeholderView: some View {
     if description.isEmpty {
-        return AnyView(Text("Description")
+        return AnyView(Text("DESCRIPTION".localized)
             .foregroundColor(.gray)
             .padding(.top, 8)
             .padding(.leading, 5))

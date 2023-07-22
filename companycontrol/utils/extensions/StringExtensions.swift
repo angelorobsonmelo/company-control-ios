@@ -35,4 +35,9 @@ extension String {
             return Date()
         }
     }
+    
+    var localized: String {
+        let local = NSLocalizedString(self, tableName: "InfoPlist", comment: "")
+        return local
+    }
 }

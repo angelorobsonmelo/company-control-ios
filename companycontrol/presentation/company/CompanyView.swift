@@ -68,7 +68,7 @@ struct CompanyView: View {
                     }
                     
                 }
-                .navigationBarTitle("Companies", displayMode: .inline)
+                .navigationBarTitle("COMPANIES".localized, displayMode: .inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
@@ -90,9 +90,9 @@ struct CompanyView: View {
                    })
                 .alert(isPresented: $showingDeleteConfirmation) {
                     Alert(
-                        title: Text("Delete Company"),
-                        message: Text("Are you sure you want to delete this category?"),
-                        primaryButton: .destructive(Text("Delete")) {
+                        title: Text("DELETE".localized),
+                        message: Text("DELETE_ITEM_MSG".localized),
+                        primaryButton: .destructive(Text("DELETE".localized)) {
                             viewModel.remove(id: companies[itemPosition!].id)
                             
                         },

@@ -23,8 +23,8 @@ struct EditCategoryView: View {
         NavigationView {
             VStack {
                 Form {
-                    Section(header: Text("Category Name:")) {
-                        TextField("Insert category name", text: $fieldName)
+                    Section(header: Text("NAME".localized + ":")) {
+                        TextField("INSERT_NAME".localized, text: $fieldName)
                     }
                     
                     Section {
@@ -32,7 +32,7 @@ struct EditCategoryView: View {
                             Button(action: {
                                 showingDialog = false
                             }, label: {
-                                Text("Cancel")
+                                Text("CANCEL".localized)
                                     .fontWeight(.bold)
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -46,7 +46,7 @@ struct EditCategoryView: View {
                                 category.name = self.fieldName
                                 viewModel.update(presentionModel: category)
                             }, label: {
-                                Text("Save")
+                                Text("SAVE".localized)
                                     .fontWeight(.bold)
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -82,12 +82,12 @@ struct EditCategoryView: View {
             }
             .alert(isPresented: $showAlertDialog) {
                 Alert(
-                    title: Text("Updated Successfully"),
+                    title: Text("SAVE_SUCCESSFULLY".localized),
                     message: Text(""),
-                    dismissButton: .default(Text("OK"))
+                    dismissButton: .default(Text("OK".localized))
                 )
             }
-            .navigationBarTitle("Update Category", displayMode: .inline)
+            .navigationBarTitle("UPDATE_CATEGORY".localized, displayMode: .inline)
         }
     }
     

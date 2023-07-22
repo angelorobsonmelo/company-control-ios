@@ -1,0 +1,60 @@
+/* 
+  InfoPlist.strings
+  companycontrol
+
+  Created by Ângelo Melo on 21/07/2023.
+  
+*/
+
+
+"EXPENSES" = "Expenses";
+"SERVICES" = "Services";
+"CATEGORIES" = "Categories";
+"BALANCE" = "Balance";
+"WELCOME" = "Welcome";
+"EMAIL" = "E-mail";
+"PASSWORD" = "Password";
+"LOGIN" = "Login";
+"SIGN_UP_MSG" = "Have not an account? Sign up";
+"TOTAL" = "Total";
+"DELETE" = "Delete";
+"DELETE_ITEM_MSG" = "Are you sure you want to delete this item?";
+"OK" = "OK";
+"SAVE_SUCCESSFULLY" = "Save Successfully";
+"TITLE" = "Title";
+"DONE" = "Done";
+"DESCRIPTION" = "Description";
+"VALUE" = "Value";
+"CATEGORY" = "Category";
+"DATE" = "Date";
+"ADD_EXPENSIVE" = "Add Expense";
+"EDIT_EXPENSIVE" = "Edit Expense";
+"CANCEL" = "Cancel";
+"SAVE" = "Save";
+"SIGN_UP" = "Sign up";
+"REGISTER_SUCCESSFULLY" = "Register Successfully";
+"REGISTER" = "Register";
+"PASSWORD" = "Password";
+"SELECT_CATEGORY" = "Select a category";
+"SELECT_COMPANY" = "Select a company";
+"ADD_SERVICE" = "Add Service";
+"NAME" = "Name";
+"INSERT_NAME" = "Insert Name";
+"ADD_CATEGORY" = "Add Category";
+"UPDATE_CATEGORY" = "Update Category";
+"COMPANIES" = "Companies";
+"DONE" = "Done";
+"ADRESS" = "Adress";
+"CONTACT_NUMBER" = "Contact Number";
+"ADD_COMPANY" = "Add Company";
+"EDIT_COMPANY" = "Edit Company";
+"TOTAL_EXPENSES" = "Total Expenses";
+"TOTAL_SERVICES" = "Total Services";
+"BALANCE" = "Balance";
+"NAME_EMPTY_FIELD_MSG" = "Name can not be empty";
+"PROFIT" = "Profit";
+"TITLE_EMPTY_FIELD_MSG" = "Title can not be empty";
+"DESCRIPTION_EMPTY_FIELD_MSG" = "Description can not be empty";
+"AMOUNT_EMPTY_FIELD_MSG" = "Amount must be greater than zero";
+"CATEGORY_EMPTY_FIELD_MSG" = "Category can not be empty";
+"COMPANY_EMPTY_FIELD_MSG" = "Company can not be empty";

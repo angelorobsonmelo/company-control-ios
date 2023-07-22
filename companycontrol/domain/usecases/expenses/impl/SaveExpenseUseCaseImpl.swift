@@ -18,22 +18,22 @@ class SaveExpenseUseCaseImpl: SaveExpenseUseCase {
     
     func saveExpense(request: ExpenseRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         guard !request.title.isEmpty else {
-            completion(.failure(ValidationFormEnum.emptyField(reason: "Title can not be empty")))
+            completion(.failure(ValidationFormEnum.emptyField(reason: "TITLE_EMPTY_FIELD_MSG".localized)))
             return
         }
         
         guard !request.description.isEmpty else {
-            completion(.failure(ValidationFormEnum.emptyField(reason: "Description can not be empty")))
+            completion(.failure(ValidationFormEnum.emptyField(reason: "DESCRIPTION_EMPTY_FIELD_MSG".localized)))
             return
         }
         
         guard request.amount > 0 else {
-            completion(.failure(ValidationFormEnum.emptyField(reason: "Amount must be greater than zero")))
+            completion(.failure(ValidationFormEnum.emptyField(reason: "AMOUNT_EMPTY_FIELD_MSG".localized)))
             return
         }
         
         guard !request.categoryId.isEmpty else {
-            completion(.failure(ValidationFormEnum.emptyField(reason: "Category can not be empty")))
+            completion(.failure(ValidationFormEnum.emptyField(reason: "CATEGORY_EMPTY_FIELD_MSG".localized)))
             return
         }
 

@@ -22,7 +22,7 @@ struct AddCompanyView: View {
             VStack {
                 Form {
                     VStack(alignment: .leading) {
-                        Text("Name:")
+                        Text("NAME".localized + ":")
                         TextField("", text: $name)
                             .keyboardType(.default)
                             .textContentType(.oneTimeCode)
@@ -30,7 +30,7 @@ struct AddCompanyView: View {
                                 ToolbarItem(placement: .keyboard) {
                                     HStack {
                                         Spacer()
-                                        Button("Done") {
+                                        Button("DONE".localized) {
                                             hideKeyboard()
                                         }
                                     }
@@ -42,7 +42,7 @@ struct AddCompanyView: View {
                     }
                     
                     VStack(alignment: .leading)  {
-                        Text("Address:")
+                        Text("ADRESS".localized + ":")
                         
                         TextEditor(text: $address)
                             .frame(height: 80)
@@ -53,7 +53,7 @@ struct AddCompanyView: View {
                     }
                     
                     VStack(alignment: .leading) {
-                        Text("Contact Number:")
+                        Text("CONTACT_NUMBER".localized + ":")
                         TextField("", text: $contactNumber)
                             .keyboardType(.default)
                             .textContentType(.oneTimeCode)
@@ -61,7 +61,7 @@ struct AddCompanyView: View {
                                 ToolbarItem(placement: .keyboard) {
                                     HStack {
                                         Spacer()
-                                        Button("Done") {
+                                        Button("DONE".localized) {
                                             hideKeyboard()
                                         }
                                     }
@@ -77,7 +77,7 @@ struct AddCompanyView: View {
                             Button(action: {
                                 showingDialog = false
                             }, label: {
-                                Text("Cancel")
+                                Text("CANCEL".localized)
                                     .fontWeight(.bold)
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -93,7 +93,7 @@ struct AddCompanyView: View {
                                     address: address,
                                     contactNumber: contactNumber)
                             }, label: {
-                                Text("Save")
+                                Text("SAVE".localized)
                                     .fontWeight(.bold)
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -124,7 +124,7 @@ struct AddCompanyView: View {
                     viewModel.isCompanySaved = false // para reiniciar o ciclo
                 }
             }
-            .navigationBarTitle("Add Company", displayMode: .inline)
+            .navigationBarTitle("ADD_COMPANY".localized, displayMode: .inline)
         }
         
     }

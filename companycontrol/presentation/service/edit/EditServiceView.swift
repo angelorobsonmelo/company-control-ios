@@ -53,7 +53,7 @@ struct EditServiceView: View {
                     item.name
                 }
                 
-                TextField("Title", text: $title)
+                TextField("TITLE".localized, text: $title)
                     .keyboardType(.default)
                     .textContentType(.oneTimeCode)
                 
@@ -64,7 +64,7 @@ struct EditServiceView: View {
                     .overlay(
                         VStack(alignment: .leading) {
                             if description.isEmpty {
-                                Text("Description")
+                                Text("DESCRIPTION".localized)
                                     .foregroundColor(Color.gray)
                                     .padding(.leading, 5)
                             }
@@ -91,7 +91,7 @@ struct EditServiceView: View {
                 NavigationLink(destination: OptionsView(selectedOption: $selectedOption, options: options)) {
                     
                     HStack {
-                        Text(selectedOption ?? "Select a category")
+                        Text(selectedOption ?? "SSELECT_CATEGORY".localized)
                             .keyboardType(.default)
                             .textContentType(.oneTimeCode)
                     }
@@ -105,7 +105,7 @@ struct EditServiceView: View {
                 })) {
                     
                     HStack {
-                        Text(selectedCompanyOption ?? "Select a company")
+                        Text(selectedCompanyOption ?? "SELECT_COMPANY".localized)
                             .keyboardType(.default)
                             .textContentType(.oneTimeCode)
                     }
@@ -115,7 +115,7 @@ struct EditServiceView: View {
                 }
                 
                 
-                DateSelectionView(label: "Date:", date: $date)
+                DateSelectionView(label: "Date".localized + ":", date: $date)
                     .onTapGesture {
                         hideKeyboard()
                     }

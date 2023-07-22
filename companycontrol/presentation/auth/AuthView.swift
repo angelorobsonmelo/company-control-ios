@@ -49,17 +49,17 @@ struct AuthView: View {
             
             
             VStack {
-                Text("Welcome")
+                Text("WELCOME".localized)
                     .foregroundColor(.white)
                     .font(.system(size: 40, weight: .bold, design: .rounded))
                     .offset(x: -100, y: -100)
                 
-                TextField("Email", text: $email)
+                TextField("EMAIL".localized, text: $email)
                     .foregroundColor(.white)
                     .textFieldStyle(.plain)
                     .autocapitalization(.none)
                     .placeholder(when: email.isEmpty) {
-                        Text("Email")
+                        Text("EMAIL".localized)
                             .foregroundColor(.white)
                             .bold()
                     }
@@ -69,13 +69,13 @@ struct AuthView: View {
                     .foregroundColor(.white)
                 
                 
-                SecureField("Password", text: $password)
+                SecureField("PASSWORD".localized, text: $password)
                     .foregroundColor(.white)
                     .textFieldStyle(.plain)
                     .autocapitalization(.none)
                     .padding(.top)
                     .placeholder(when: password.isEmpty) {
-                        Text("Password")
+                        Text("PASSWORD".localized)
                             .foregroundColor(.white)
                             .bold()
                             .padding(.top)
@@ -88,7 +88,7 @@ struct AuthView: View {
                 Button {
                     login()
                 } label: {
-                    Text("Login")
+                    Text("LOGIN".localized)
                         .bold()
                         .frame(width: 200, height: 40)
                         .background(
@@ -107,7 +107,7 @@ struct AuthView: View {
                 Button {
                     navigateToRegisterView = true
                 } label: {
-                    Text("Have not an account? Sign up")
+                    Text("SIGN_UP_MSG".localized)
                         .foregroundColor(.white)
                         .bold()
                 }
@@ -154,12 +154,6 @@ struct AuthView: View {
         viewModel.auth(email: email, password: password)
     }
 }
-
-//struct LoginView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AuthView()
-//    }
-//}
 
 extension View {
     func placeholder<Content: View>(

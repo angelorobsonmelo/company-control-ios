@@ -21,7 +21,7 @@ struct AddExpenseView: View {
     @State private var showAlert = false
     @State private var alertTitle = ""
     @State private var alertMessage = ""
-    @State private var alertDismissButton = Alert.Button.default(Text("OK"))
+    @State private var alertDismissButton = Alert.Button.default(Text("OK".localized))
     
     @State private var title: String = ""
     @State private var description: String = ""
@@ -41,7 +41,7 @@ struct AddExpenseView: View {
             VStack {
                 Form {
                     VStack(alignment: .leading) {
-                        Text("title:")
+                        Text("TITLE".localized + ":")
                         TextField("", text: $title)
                             .keyboardType(.default)
                             .textContentType(.oneTimeCode)
@@ -61,8 +61,8 @@ struct AddExpenseView: View {
                     }
                     
                     VStack(alignment: .leading)  {
-                        Text("Description:")
-                        
+                        Text("DESCRIPTION".localized + ":")
+
                         TextEditor(text: $description)
                             .frame(height: 80)
                             .padding(10)
@@ -72,7 +72,7 @@ struct AddExpenseView: View {
                     }
                     
                     VStack(alignment: .leading) {
-                        Text("Value:")
+                        Text("VALUE".localized + ":")
                         TextField("0,00", text: $amount)
                             .keyboardType(.decimalPad)
                             .padding()
@@ -99,7 +99,7 @@ struct AddExpenseView: View {
                         }
                         
                         
-                        Text("Category:")
+                        Text("CATEGORY".localized + ":")
                         NavigationLink(destination: OptionsView(selectedOption: $selectedOption, options: options)) {
                             
                             HStack {
@@ -113,7 +113,7 @@ struct AddExpenseView: View {
                         }
                     }
                     
-                    DateSelectionView(label: "Date:", date: $date)
+                    DateSelectionView(label: "DATE".localized + ":", date: $date)
                         .onTapGesture {
                             hideKeyboard()
                         }
@@ -123,7 +123,7 @@ struct AddExpenseView: View {
                             Button(action: {
                                 showingDialog = false
                             }, label: {
-                                Text("Cancel")
+                                Text("CANCEL".localized)
                                     .fontWeight(.bold)
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -141,7 +141,7 @@ struct AddExpenseView: View {
                                     expenseCategoryId: categiroryId,
                                     date: date)
                             }, label: {
-                                Text("Save")
+                                Text("SAVE".localized)
                                     .fontWeight(.bold)
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -162,9 +162,9 @@ struct AddExpenseView: View {
                     case .success(_):
                         resetFields()
                        
-                        alertTitle = "Save Successfully"
+                        alertTitle = "SAVE_SUCCESSFULLY".localized
                                alertMessage = ""
-                               alertDismissButton = .default(Text("OK")) {
+                        alertDismissButton = .default(Text("OK".localized)) {
                                    callback()
                                }
                         
@@ -175,7 +175,7 @@ struct AddExpenseView: View {
                         print("error: \(message)")
                         alertTitle = message.0
                                 alertMessage = ""
-                                alertDismissButton = .default(Text("OK"))
+                        alertDismissButton = .default(Text("OK".localized))
                                 showAlert = true
                         break
                     case .loading:
@@ -204,7 +204,7 @@ struct AddExpenseView: View {
                     dismissButton: alertDismissButton
                 )
             }
-            .navigationBarTitle("Add Expense", displayMode: .inline)
+            .navigationBarTitle("ADD_EXPENSIVE".localized, displayMode: .inline)
         }
         
     }
@@ -215,7 +215,7 @@ struct AddExpenseView: View {
     
     private var placeholderView: some View {
         if description.isEmpty {
-            return AnyView(Text("Description")
+            return AnyView(Text("DESCRIPTION".localized)
                 .foregroundColor(.gray)
                 .padding(.top, 8)
                 .padding(.leading, 5))
@@ -251,14 +251,14 @@ struct AddExpenseView: View {
     }
 }
 
-struct LoginView_Previews: PreviewProvider {
-    
-    @State static var showingDialog = true
-    
-    static var previews: some View {
-        
-        AddExpenseView(showingDialog: self.$showingDialog) {
-            
-        }
-    }
-}
+//struct LoginView_Previews: PreviewProvider {
+//
+//    @State static var showingDialog = true
+//
+//    static var previews: some View {
+//
+//        AddExpenseView(showingDialog: self.$showingDialog) {
+//
+//        }
+//    }
+//}

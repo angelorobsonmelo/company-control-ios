@@ -18,7 +18,7 @@ class SaveCategoryUseCaseImpl: SaveCategoryUseCase {
     
     func saveCategory(request: CategoryRequest, completion: @escaping (Result<Void, Error>) -> Void) {
         if(request.name.isEmpty) {
-            completion(.failure(ValidationFormEnum.emptyField(reason: "Name can not be empty")))
+            completion(.failure(ValidationFormEnum.emptyField(reason: "NAME_EMPTY_FIELD_MSG".localized)))
             return
         }
         

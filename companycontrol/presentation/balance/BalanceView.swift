@@ -32,7 +32,7 @@ struct BalanceView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Total: \(self.viewModel.balanceViews?.total.formatToCurrency() ?? "")")
+                Text("PROFIT".localized + ":" + " \(self.viewModel.balanceViews?.total.formatToCurrency() ?? "")")
                     .font(.headline)
                     .padding(.top, 16)
                 
@@ -55,7 +55,7 @@ struct BalanceView: View {
                 List {
                     VStack {
                         HStack {
-                            Text("Total expenses:")
+                            Text("TOTAL_EXPENSES".localized + ":")
                                 .font(.headline)
                             Spacer()
                             Text(viewModel.balanceViews?.totalExpenses.formatToCurrency() ?? "")
@@ -63,7 +63,7 @@ struct BalanceView: View {
                         .padding(.bottom, 10)
                         
                         HStack {
-                            Text("Total Services:")
+                            Text("TOTAL_SERVICES".localized + ":")
                                 .foregroundColor(.secondary)
                                 .font(.body)
                             
@@ -77,7 +77,7 @@ struct BalanceView: View {
                     }
                     .contentShape(Rectangle())
                 }
-                .navigationBarTitle("Balance", displayMode: .inline)
+                .navigationBarTitle("BALANCE".localized, displayMode: .inline)
     
             }
             

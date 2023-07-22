@@ -1,0 +1,21 @@
+/* 
+  InfoPlist.strings
+  companycontrol
+
+  Created by Ângelo Melo on 21/07/2023.
+  
+*/
+
+
+"EXPENSES" = "Expenses";
+"SERVICES" = "Services";
+"CATEGORIES" = "Categories";
+"BALANCE" = "Balance";
+"WELCOME" = "Welcome";
+"EMAIL" = "Email";
+"PASSWORD" = "Password";
+"LOGIN" = "Login";
+"SIGN_UP_MSG" = "Have not an account? Sign up";
+"TOTAL" = "Total";
+"DELETE" = "Delete";
+"DELETE_ITEM_MSG" = "Are you sure you want to delete this item?";

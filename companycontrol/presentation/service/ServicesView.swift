@@ -37,7 +37,7 @@ struct ServicesView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Total: \(viewModel.totalAmount.formatToCurrency())")
+                Text("TOTAL".localized + ": \(viewModel.totalAmount.formatToCurrency())")
                     .font(.headline)
                     .padding(.top, 16)
                 
@@ -107,7 +107,7 @@ struct ServicesView: View {
                     }
                 }
             }
-            .navigationBarTitle("Services", displayMode: .inline)
+            .navigationBarTitle("SERVICES".localized, displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -156,9 +156,9 @@ struct ServicesView: View {
         }
         .alert(isPresented: $showingDeleteConfirmation) {
             Alert(
-                title: Text("Delete Category"),
-                message: Text("Are you sure you want to delete this category?"),
-                primaryButton: .destructive(Text("Delete")) {
+                title: Text("DELETE".localized),
+                message: Text("DELETE_ITEM_MSG".localized),
+                primaryButton: .destructive(Text("DELETE".localized)) {
 
                     viewModel.remove(at: itemPosition!, from: dateGroupToDelete)
                 },

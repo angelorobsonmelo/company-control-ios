@@ -23,7 +23,7 @@ struct EditCompanyView: View {
             VStack {
                 Form {
                     VStack(alignment: .leading) {
-                        Text("Name:")
+                        Text("NAME".localized + ":")
                         TextField("", text: $name)
                             .keyboardType(.default)
                             .textContentType(.oneTimeCode)
@@ -43,7 +43,7 @@ struct EditCompanyView: View {
                     }
                     
                     VStack(alignment: .leading)  {
-                        Text("Address:")
+                        Text("ADRESS".localized + ":")
                         
                         TextEditor(text: $address)
                             .frame(height: 80)
@@ -54,7 +54,7 @@ struct EditCompanyView: View {
                     }
                     
                     VStack(alignment: .leading) {
-                        Text("Contact Number:")
+                        Text("CONTACT_NUMBER".localized + ":")
                         TextField("", text: $contactNumber)
                             .keyboardType(.default)
                             .textContentType(.oneTimeCode)
@@ -62,7 +62,7 @@ struct EditCompanyView: View {
                                 ToolbarItem(placement: .keyboard) {
                                     HStack {
                                         Spacer()
-                                        Button("Done") {
+                                        Button("DONE".localized) {
                                             hideKeyboard()
                                         }
                                     }
@@ -78,7 +78,7 @@ struct EditCompanyView: View {
                             Button(action: {
                                 showingDialog = false
                             }, label: {
-                                Text("Cancel")
+                                Text("CANCEL".localized)
                                     .fontWeight(.bold)
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -95,7 +95,7 @@ struct EditCompanyView: View {
                                     address: address,
                                     contactNumber: contactNumber)
                             }, label: {
-                                Text("Save")
+                                Text("SAVE".localized)
                                     .fontWeight(.bold)
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -118,7 +118,7 @@ struct EditCompanyView: View {
                  Alert(
                     title: Text(viewModel.dialogMessage),
                     message: Text(""),
-                    dismissButton: .default(Text("OK"))
+                    dismissButton: .default(Text("OK".localized))
                 )
             }
             .onChange(of: viewModel.isCompanySaved) { isCompanySaved in
@@ -126,7 +126,7 @@ struct EditCompanyView: View {
                     viewModel.isCompanySaved = false // para reiniciar o ciclo
                 }
             }
-            .navigationBarTitle("Edit Company", displayMode: .inline)
+            .navigationBarTitle("EDIT_COMPANY".localized, displayMode: .inline)
         }
         
     }

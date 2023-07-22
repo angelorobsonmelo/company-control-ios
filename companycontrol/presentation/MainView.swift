@@ -9,47 +9,38 @@ struct MainView: View {
             ExpensesView()
                 .tabItem {
                     Image(systemName: "creditcard.fill")
-                    Text("Expenses")
+                    Text("EXPENSES".localized)
                 }
                 .tag(0)
             
             ServicesView()
                 .tabItem {
                     Image(systemName: "dollarsign.circle.fill")
-                    Text("Services")
+                    Text("SERVICES".localized)
                 }
                 .tag(1)
             
             CategoryView()
                 .tabItem {
                     Image(systemName: "square.stack")
-                    Text("Categories")
+                    Text("CATEGORIES".localized)
                 }
                 .tag(2)
             
             CompanyView()
                 .tabItem {
                     Image(systemName: "building.columns")
-                    Text("Companies")
+                    Text("COMPANIES".localized)
                 }
                 .tag(3)
             
             BalanceView()
                 .tabItem {
                     Image(systemName: "chart.bar.doc.horizontal")
-                    Text("Balance")
+                    Text("BALANCE".localized)
                 }
                 .tag(4)
             
-        }
-    }
-}
-
-struct SecondTabView: View {
-    var body: some View {
-        NavigationView {
-            Text("Second Tab")
-                .navigationBarTitle("Second Tab", displayMode: .inline)
         }
     }
 }

@@ -20,15 +20,15 @@ struct AddCategoryView: View {
         NavigationView {
             VStack {
                 Form {
-                    Section(header: Text("Category Name:")) {
-                        TextField("Insert category name", text: $name)
+                    Section(header: Text("NAME".localized + ":")) {
+                        TextField("INSERT_NAME".localized, text: $name)
                     }
                     Section {
                         HStack {
                             Button(action: {
                                 showingDialog = false
                             }, label: {
-                                Text("Cancel")
+                                Text("CANCEL".localized)
                                     .fontWeight(.bold)
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -41,7 +41,7 @@ struct AddCategoryView: View {
                             Button(action: {
                                 viewModel.save(name: name)
                             }, label: {
-                                Text("Save")
+                                Text("SAVE".localized)
                                     .fontWeight(.bold)
                                     .frame(maxWidth: .infinity)
                                     .padding()
@@ -60,28 +60,24 @@ struct AddCategoryView: View {
                 case .success(let success):
                     showAlertDialog = true
                     self.name = ""
-                    print("successfully")
                     
                     break
                 case .error(let message):
-                    print("error: \(message)")
                     break
                 case .loading:
-                    print("Loading")
                     break
                 case .idle:
-                    print("Idle")
                     break
                 }
             }
             .alert(isPresented: $showAlertDialog) {
                 Alert(
-                    title: Text("Save Successfully"),
+                    title: Text("SAVE_SUCCESSFULLY".localized),
                     message: Text(""),
-                    dismissButton: .default(Text("OK"))
+                    dismissButton: .default(Text("OK".localized))
                 )
             }
-            .navigationBarTitle("Add Category", displayMode: .inline)
+            .navigationBarTitle("ADD_CATEGORY".localized, displayMode: .inline)
         }
     }
     

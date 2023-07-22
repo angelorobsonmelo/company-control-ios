@@ -20,27 +20,27 @@ class EditServiceUseCaseImpl: EditServiceUseCase {
     func execute(request: ServiceRequest) -> AnyPublisher<Void, Error> {
         return Future<Void, Error> { [weak self] promise in
             guard !request.title.isEmpty else {
-                promise(.failure(ValidationFormEnum.emptyField(reason: "Title can not be empty")))
+                promise(.failure(ValidationFormEnum.emptyField(reason: "TITLE_EMPTY_FIELD_MSG".localized)))
                 return
             }
             
             guard !request.description.isEmpty else {
-                promise(.failure(ValidationFormEnum.emptyField(reason: "Description can not be empty")))
+                promise(.failure(ValidationFormEnum.emptyField(reason: "DESCRIPTION_EMPTY_FIELD_MSG".localized)))
                 return
             }
             
             guard request.amount > 0 else {
-                promise(.failure(ValidationFormEnum.emptyField(reason: "Amount must be greater than zero")))
+                promise(.failure(ValidationFormEnum.emptyField(reason: "AMOUNT_EMPTY_FIELD_MSG".localized)))
                 return
             }
             
             guard !request.categoryId.isEmpty else {
-                promise(.failure(ValidationFormEnum.emptyField(reason: "Category can not be empty")))
+                promise(.failure(ValidationFormEnum.emptyField(reason: "CATEGORY_EMPTY_FIELD_MSG".localized)))
                 return
             }
             
             guard !request.companyId.isEmpty else {
-                promise(.failure(ValidationFormEnum.emptyField(reason: "Company can not be empty")))
+                promise(.failure(ValidationFormEnum.emptyField(reason: "COMPANY_EMPTY_FIELD_MSG".localized)))
                 return
             }
             

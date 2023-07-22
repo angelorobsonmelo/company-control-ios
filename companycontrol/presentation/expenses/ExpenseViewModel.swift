@@ -168,37 +168,6 @@ class ExpenseViewModel: ObservableObject {
         }
     }
     
-//    func getExpenses(startDate: Date, endDate: Date) {
-//        DispatchQueue.global().async {
-//            if let email = self.auth.currentUser?.email {
-//                self.getExpensesUseCase.getAll(userEmail: email, startDate: startDate, endDate: endDate) { result in
-//                    DispatchQueue.main.async {
-//                        switch result {
-//                        case .success(let items):
-//                            let presentionModels = items.map { item in
-//                                ExpensePresentation(
-//                                    id: item.id,
-//                                    title: item.title,
-//                                    description: item.description,
-//                                    userEmail: item.userEmail,
-//                                    amount: item.amount,
-//                                    date: item.date,
-//                                    expenseCategory: CategoryViewData(
-//                                        id: item.category.id,
-//                                        name: item.category.name))
-//                            }
-//
-//                            self.expensesViews = presentionModels
-//
-//                        case .failure(let error):
-//                            self.getExpensesNetworkResult = .error(error.localizedDescription, Date())
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-    
     func getExpenses(startDate: Date, endDate: Date) {
         if let email = self.auth.currentUser?.email {
             self.getExpensesUseCase.execute(userEmail: email, startDate: startDate, endDate: endDate)

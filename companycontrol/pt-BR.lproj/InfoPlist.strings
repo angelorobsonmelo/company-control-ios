@@ -1,0 +1,57 @@
+/* 
+  InfoPlist.strings
+  companycontrol
+
+  Created by Ângelo Melo on 21/07/2023.
+  
+*/
+
+"EXPENSES" = "Despesas";
+"SERVICES" = "Serviços";
+"CATEGORIES" = "Categorias";
+"BALANCE" = "Balanço";
+"WELCOME" = "BEM-VINDO";
+"EMAIL" = "E-mail";
+"PASSWORD" = "Senha";
+"LOGIN" = "Login";
+"SIGN_UP_MSG" = "Não tem uma conta? Cadastrar-se";
+"TOTAL" = "Total";
+"DELETE" = "Deletar";
+"DELETE_ITEM_MSG" = "Tem certeza que quer deletar este item?";
+"OK" = "OK";
+"SAVE_SUCCESSFULLY" = "Salvo com sucesso";
+"TITLE" = "Título";
+"DONE" = "Done";
+"DESCRIPTION" = "Descrição";
+"VALUE" = "Valor";
+"CATEGORY" = "Categoria";
+"DATE" = "Data";
+"ADD_EXPENSIVE" = "Adicionar Despesa";
+"EDIT_EXPENSIVE" = "Editar Despesa";
+"CANCEL" = "Cancelar";
+"SAVE" = "Salvar";
+"SIGN_UP" = "Cadastrar-se";
+"REGISTER_SUCCESSFULLY" = "Registrado com sucesso";
+"REGISTER" = "Registrar";
+"SELECT_CATEGORY" = "Selecione a categoria";
+"SELECT_COMPANY" = "Selecione a empresa";
+"ADD_SERVICE" = "Adicionar Servicço";
+"NAME" = "Nome";
+"INSERT_NAME" = "Inserir Nome";
+"ADD_CATEGORY" = "Adicionar Categoria";
+"UPDATE_CATEGORY" = "Atualizar Categoria";
+"COMPANIES" = "Empresas";
+"DONE" = "Done";
+"ADRESS" = "Endereço";
+"CONTACT_NUMBER" = "Número de Contato";
+"ADD_COMPANY" = "Adicionar Empresa";
+"EDIT_COMPANY" = "Editar Empresa";
+"TOTAL_EXPENSES" = "Total de Despesas";
+"TOTAL_SERVICES" = "Total de Serviços";
+"NAME_EMPTY_FIELD_MSG" = "Nome não pode ser vazio";
+"PROFIT" = "Lucro";
+"TITLE_EMPTY_FIELD_MSG" = "Título não pode ser vazio";
+"DESCRIPTION_EMPTY_FIELD_MSG" = "Descrição não pode ser vazio";
+"AMOUNT_EMPTY_FIELD_MSG" = "O valor deve ser maior que zero";
+"CATEGORY_EMPTY_FIELD_MSG" = "Categoria não pode ser vazia";
+"COMPANY_EMPTY_FIELD_MSG" = "Empresa não pode ser vazia";

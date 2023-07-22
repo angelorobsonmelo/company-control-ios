@@ -47,16 +47,16 @@ struct RegisterView: View {
             
             
             VStack {
-                Text("Register")
+                Text("REGISTER".localized)
                     .foregroundColor(.white)
                     .font(.system(size: 40, weight: .bold, design: .rounded))
                     .offset(x: -100, y: -100)
                 
-                TextField("Email", text: $email)
+                TextField("EMAIL".localized, text: $email)
                     .foregroundColor(.white)
                     .textFieldStyle(.plain)
                     .placeholder(when: email.isEmpty) {
-                        Text("Email")
+                        Text("EMAIL".localized)
                             .foregroundColor(.white)
                             .bold()
                     }
@@ -66,12 +66,12 @@ struct RegisterView: View {
                     .foregroundColor(.white)
                 
                 
-                SecureField("Password", text: $password)
+                SecureField("PASSWORD".localized, text: $password)
                     .foregroundColor(.white)
                     .textFieldStyle(.plain)
                     .padding(.top)
                     .placeholder(when: password.isEmpty) {
-                        Text("Password")
+                        Text("PASSWORD".localized)
                             .foregroundColor(.white)
                             .bold()
                             .padding(.top)
@@ -84,7 +84,7 @@ struct RegisterView: View {
                 Button {
                     register()
                 } label: {
-                    Text("Sign up")
+                    Text("SIGN_UP".localized)
                         .bold()
                         .frame(width: 200, height: 40)
                         .background(
@@ -108,7 +108,7 @@ struct RegisterView: View {
             .onChange(of: viewModel.registerNetworkResult) { newValue in
                 switch newValue {
                 case .success(let success):
-                    snackBarMessage =  "Register Successfully"
+                    snackBarMessage =  "REGISTER_SUCCESSFULLY".localized
                     snackBarType = .success
                     showSnackBar = true
                     
