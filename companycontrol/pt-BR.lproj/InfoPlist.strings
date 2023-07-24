@@ -55,3 +55,5 @@
 "AMOUNT_EMPTY_FIELD_MSG" = "O valor deve ser maior que zero";
 "CATEGORY_EMPTY_FIELD_MSG" = "Categoria não pode ser vazia";
 "COMPANY_EMPTY_FIELD_MSG" = "Empresa não pode ser vazia";
+"SIGN_OUT_MSG" = "Tem certeza de que deseja sair da sua conta?";
+"SIGN_OUT_TITLE" = "Sair";

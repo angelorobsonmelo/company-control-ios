@@ -21,7 +21,7 @@ struct BalanceView: View {
     
     @State private var startDate = Date()
     @State private var endDate =  Date()
-        
+    
     
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -32,7 +32,7 @@ struct BalanceView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("PROFIT".localized + ":" + " \(self.viewModel.balanceViews?.total.formatToCurrency() ?? "")")
+                Text("PROFIT".localized + ":" + " \(self.viewModel.balanceViews?.profit.formatToCurrency() ?? "")")
                     .font(.headline)
                     .padding(.top, 16)
                 
@@ -55,30 +55,28 @@ struct BalanceView: View {
                 List {
                     VStack {
                         HStack {
-                            Text("TOTAL_EXPENSES".localized + ":")
+                            Text("TOTAL_SERVICES".localized + ":")
                                 .font(.headline)
                             Spacer()
-                            Text(viewModel.balanceViews?.totalExpenses.formatToCurrency() ?? "")
+                            
+                            Text(viewModel.balanceViews?.totalServices.formatToCurrency() ?? "")
+                            
                         }
                         .padding(.bottom, 10)
                         
                         HStack {
-                            Text("TOTAL_SERVICES".localized + ":")
+                            Text("TOTAL_EXPENSES".localized + ":")
                                 .foregroundColor(.secondary)
                                 .font(.body)
-                            
                             Spacer()
-                            
-                            Text(viewModel.balanceViews?.totalServices.formatToCurrency() ?? "")
+                            Text(viewModel.balanceViews?.totalExpenses.formatToCurrency() ?? "")
                                 .foregroundColor(.secondary)
                         }
-                        .padding(.bottom, 10)
-                        
                     }
                     .contentShape(Rectangle())
                 }
                 .navigationBarTitle("BALANCE".localized, displayMode: .inline)
-    
+                
             }
             
             .onAppear {

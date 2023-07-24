@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import Combine
 
 class AuthRemoteDataSourceImpl: AuthRemoteDataSource {
     
@@ -35,6 +36,18 @@ class AuthRemoteDataSourceImpl: AuthRemoteDataSource {
                 completion(.success(()))
             }
         }
+    }
+    
+    
+    func signOut() -> AnyPublisher<Void, Error> {
+        return Future<Void, Error> { promise in
+            do {
+                try self.auth.signOut()
+                promise(.success(()))
+            } catch let signOutError {
+                promise(.failure(signOutError))
+            }
+        }.eraseToAnyPublisher()
     }
     
     

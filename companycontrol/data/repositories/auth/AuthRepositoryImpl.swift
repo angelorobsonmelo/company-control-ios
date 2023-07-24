@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import Combine
 
 class AuthRepositoryImpl: AuthRepository {
+    
     
     private let remoteDataSource: AuthRemoteDataSource
     
@@ -17,6 +19,10 @@ class AuthRepositoryImpl: AuthRepository {
     
     func auth(email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void) {
         self.remoteDataSource.auth(email: email, password: password, completion: completion)
+    }
+    
+    func signOut() -> AnyPublisher<Void, Error> {
+        return remoteDataSource.signOut()
     }
     
     

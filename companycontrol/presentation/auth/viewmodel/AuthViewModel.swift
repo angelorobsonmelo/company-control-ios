@@ -6,18 +6,29 @@
 //
 
 import Foundation
+import Combine
 
 class AuthViewModel: ObservableObject {
     
     @Published var loginNetworkResult: NetworkResult<Bool> = .idle
     @Published var registerNetworkResult: NetworkResult<Bool> = .idle
+    private var cancellables: Set<AnyCancellable> = []
+    @Published var isSignOutSuccessfully = false
+
+
     
     private let authUseCase: AuthUseCase
     private let registerUseCase: RegisterUseCase
+    private let signOutUseCase: SignOutUseCase
     
-    init(authUseCase: AuthUseCase, registerUseCase: RegisterUseCase) {
+    init(
+         authUseCase: AuthUseCase,
+         registerUseCase: RegisterUseCase,
+         signOutUseCase: SignOutUseCase
+        ) {
         self.authUseCase = authUseCase
         self.registerUseCase = registerUseCase
+        self.signOutUseCase = signOutUseCase
     }
     
     func auth(email: String, password: String) {
@@ -54,6 +65,26 @@ class AuthViewModel: ObservableObject {
             }
             
         }
+    }
+    
+    func signOut() {
+        signOutUseCase.execute()
+            .subscribe(on: DispatchQueue.global())
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    self.isSignOutSuccessfully = false
+                   break
+                case .finished:
+                    self.isSignOutSuccessfully = true
+                    break
+                }
+                
+            } receiveValue: { _ in
+                
+            }
+            .store(in: &cancellables)
     }
     
 }

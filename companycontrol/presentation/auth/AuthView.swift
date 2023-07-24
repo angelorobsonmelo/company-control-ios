@@ -27,15 +27,24 @@ struct AuthView: View {
     
     
     
+    
     var body: some View {
         NavigationView {
             if userIsLoggedIn {
                 MainView()
+                    .environmentObject(viewModel)
+                    .onReceive(viewModel.$isSignOutSuccessfully) { isSignOutSuccessfully in
+                        if isSignOutSuccessfully {
+                            viewModel.isSignOutSuccessfully = false
+                            userIsLoggedIn = false
+                        }
+                    }
             } else {
                 content
             }
         }
     }
+
     
     var content: some View {
         ZStack {
@@ -127,6 +136,9 @@ struct AuthView: View {
                 } else {
                     userIsLoggedIn = false
                 }
+                
+                self.email = ""
+                self.password = ""
             }
             .onChange(of: viewModel.loginNetworkResult) { newValue in
                 switch newValue {

@@ -32,10 +32,10 @@ class BalanceViewModel: ObservableObject {
                 .map { result in
                     let totalExpenses = result.expenses.reduce(0, { $0 + $1.amount })
                     let totalServices = result.services.reduce(0, { $0 + $1.amount })
-                    let total =  totalServices - totalExpenses
+                    let profit =  totalServices - totalExpenses
                     
                     return BalanceViewData(
-                        total: total,
+                        profit: profit,
                         totalExpenses: totalExpenses,
                         totalServices: totalServices)
                 }

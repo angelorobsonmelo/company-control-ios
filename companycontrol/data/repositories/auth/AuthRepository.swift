@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import Combine
 
 protocol AuthRepository {
     
     func auth(email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void)
-
+    func signOut() -> AnyPublisher<Void, Error>
     
 }

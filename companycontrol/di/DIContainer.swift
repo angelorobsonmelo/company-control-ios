@@ -105,7 +105,8 @@ class DIContainer {
         container.register(AuthViewModel.self) { resolver in
             AuthViewModel(
                 authUseCase: resolver.resolve(AuthUseCase.self)!,
-                registerUseCase: resolver.resolve(RegisterUseCase.self)!
+                registerUseCase: resolver.resolve(RegisterUseCase.self)!,
+                signOutUseCase: resolver.resolve(SignOutUseCase.self)!
             )
         }
         
@@ -211,6 +212,10 @@ class DIContainer {
         
         container.register(RegisterUseCase.self) { resolver in
             RegisterUseCaseImpl(remoteDataSource: resolver.resolve(AuthRemoteDataSource.self)!)
+        }
+        
+        container.register(SignOutUseCase.self) { resolver in
+            SignOutUseCaseImpl(repository: resolver.resolve(AuthRepository.self)!)
         }
     }
     

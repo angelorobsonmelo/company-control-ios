@@ -6,9 +6,12 @@
 //
 
 import Foundation
+import Combine
 
 protocol AuthRemoteDataSource {
     
     func auth(email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void)
     func register(email: String, password: String, completion: @escaping (Result<Void, Error>) -> Void)
+    
+    func signOut() -> AnyPublisher<Void, Error>
 }

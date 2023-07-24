@@ -8,7 +8,7 @@
 import Foundation
 
 struct BalanceViewData {
-    let total: Double
+    let profit: Double
     let totalExpenses: Double
     let totalServices: Double
 }
