@@ -55,6 +55,8 @@ struct RegisterView: View {
                 TextField("EMAIL".localized, text: $email)
                     .foregroundColor(.white)
                     .textFieldStyle(.plain)
+                    .keyboardType(.emailAddress)
+                    .autocapitalization(.none)
                     .placeholder(when: email.isEmpty) {
                         Text("EMAIL".localized)
                             .foregroundColor(.white)
@@ -70,6 +72,7 @@ struct RegisterView: View {
                     .foregroundColor(.white)
                     .textFieldStyle(.plain)
                     .padding(.top)
+                    .autocapitalization(.none)
                     .placeholder(when: password.isEmpty) {
                         Text("PASSWORD".localized)
                             .foregroundColor(.white)

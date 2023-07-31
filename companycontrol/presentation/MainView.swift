@@ -44,6 +44,20 @@ struct MainView: View {
                             Text("BALANCE".localized)
                         }
                         .tag(4)
+                    
+                    SchedulesView()
+                        .tabItem {
+                            Image(systemName: "calendar")
+                            Text("SCHEDULES".localized)
+                        }
+                        .tag(5)
+                    
+                    BalanceView()
+                        .tabItem {
+                            Image(systemName: "calendar")
+                            Text("LOG_OUT".localized)
+                        }
+                        .tag(5)
                 }
                 .alert(isPresented: $showingDeleteConfirmation) {
                     Alert(

@@ -25,9 +25,6 @@ struct AuthView: View {
     
     @State private var navigateToRegisterView = false
     
-    
-    
-    
     var body: some View {
         NavigationView {
             if userIsLoggedIn {
@@ -58,7 +55,7 @@ struct AuthView: View {
             
             
             VStack {
-                Text("WELCOME".localized)
+                Text("LOGIN".localized)
                     .foregroundColor(.white)
                     .font(.system(size: 40, weight: .bold, design: .rounded))
                     .offset(x: -100, y: -100)
@@ -67,6 +64,7 @@ struct AuthView: View {
                     .foregroundColor(.white)
                     .textFieldStyle(.plain)
                     .autocapitalization(.none)
+                    .keyboardType(.emailAddress)
                     .placeholder(when: email.isEmpty) {
                         Text("EMAIL".localized)
                             .foregroundColor(.white)

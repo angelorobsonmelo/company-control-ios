@@ -55,6 +55,10 @@ class DIContainer {
             ServiceRemoteDataSourceImpl(db: resolver.resolve(Firestore.self)!)
         }
         
+        container.register(ScheduleRemoteDataSource.self) { resolver in
+            ScheduleRemoteDataSourceImpl(db: resolver.resolve(Firestore.self)!)
+        }
+        
         
     }
     
@@ -79,6 +83,10 @@ class DIContainer {
         container.register(ServiceRepository.self) { resolver in
             ServiceRepositoryImpl(dataSource: resolver.resolve(ServiceRemoteDataSource.self)!)
         }
+        
+        container.register(ScheduleRepository.self) { resolver in
+            ScheduleRepositoryImpl(dataSource: resolver.resolve(ScheduleRemoteDataSource.self)!)
+        }
     }
     
     fileprivate func useCasesInjections() {
@@ -88,6 +96,7 @@ class DIContainer {
         companyUseCaseInjections()
         serviceUseCasesInjections()
         balanceUseCaseInjections()
+        scheduleUseCaseInjections()
     }
     
     fileprivate func viewModelsInjections() {
@@ -146,6 +155,13 @@ class DIContainer {
             BalanceViewModel(
                 getBalanceUseCase: resolver.resolve(GetBalanceUseCase.self)! ,
                 auth: resolver.resolve(Auth.self)!)
+        }
+        
+        container.register(ScheduleViewModel.self) { resolver in
+            ScheduleViewModel(
+                auth: resolver.resolve(Auth.self)!,
+                saveScheduleUseCase: resolver.resolve(SaveScheduleUseCase.self)!
+                )
         }
     }
     
@@ -244,7 +260,14 @@ class DIContainer {
                 serviceRepository: resolver.resolve(ServiceRepository.self)!,
                 expenseRepository: resolver.resolve(ExpenseRepository.self)!)
         }
-        
+    }
+    
+    fileprivate func scheduleUseCaseInjections() {
+        container.register(SaveScheduleUseCase.self) { resolver in
+            SaveScheduleUseCaseImpl(
+                repository: resolver.resolve(ScheduleRepository.self)!
+            )
+        }
     }
     
     func resolve<T>(_ serviceType: T.Type) -> T {

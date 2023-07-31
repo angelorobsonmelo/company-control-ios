@@ -35,7 +35,7 @@
 "REGISTER" = "Registrar";
 "SELECT_CATEGORY" = "Selecione a categoria";
 "SELECT_COMPANY" = "Selecione a empresa";
-"ADD_SERVICE" = "Adicionar Servicço";
+"ADD_SERVICE" = "Adicionar Serviço";
 "NAME" = "Nome";
 "INSERT_NAME" = "Inserir Nome";
 "ADD_CATEGORY" = "Adicionar Categoria";
@@ -57,3 +57,5 @@
 "COMPANY_EMPTY_FIELD_MSG" = "Empresa não pode ser vazia";
 "SIGN_OUT_MSG" = "Tem certeza de que deseja sair da sua conta?";
 "SIGN_OUT_TITLE" = "Sair";
+"SCHEDULES" = "Agendamentos";
+

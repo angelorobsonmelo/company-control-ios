@@ -60,3 +60,4 @@
 "COMPANY_EMPTY_FIELD_MSG" = "Company can not be empty";
 "SIGN_OUT_MSG" = "Are you sure you want to log out of your account?";
 "SIGN_OUT_TITLE" = "Sign out";
+"SCHEDULES" = "Schedules";
