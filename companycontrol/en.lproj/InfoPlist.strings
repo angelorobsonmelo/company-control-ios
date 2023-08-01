@@ -61,3 +61,11 @@
 "SIGN_OUT_MSG" = "Are you sure you want to log out of your account?";
 "SIGN_OUT_TITLE" = "Sign out";
 "SCHEDULES" = "Schedules";
+"OPENED" = "Opened";
+"CONCLUDED" = "Concluded";
+"REOPEN" = "Reopen";
+"CONCLUDE" = "Conclude";
+"OPEN" = "Opened";
+"ADD_SCHEDULE" = "Add Schedule";
+"EDIT_SCHEDULE" = "Edit Schedule";
+"LOG_OUT" = "Log out";

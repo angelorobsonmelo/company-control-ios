@@ -59,7 +59,7 @@ struct AddScheduleView: View {
                     )
                 
                 Toggle(isOn: $isOn) {
-                    Text("Completed")
+                    Text("CONCLUDED".localized)
                 }
                 
                 

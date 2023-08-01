@@ -39,11 +39,11 @@ struct SchedulesView: View {
         NavigationView {
             VStack {
                 HStack {
-                    Text("Opened: \(viewModel.total)")
+                    Text("OPENED".localized + ": \(viewModel.total)")
                         .font(.headline)
                         .padding(.top, 8)
                     
-                    Text("Concluded: \(viewModel.totalConcluded)")
+                    Text("CONCLUDED".localized + ": \(viewModel.totalConcluded)")
                         .font(.headline)
                         .padding(.top, 8)
                 }
@@ -120,7 +120,7 @@ struct SchedulesView: View {
                                             print(item)
                                         } label: {
                                             Label(
-                                                item.completed ? "Reopen" : "Complete",
+                                                item.completed ? "REOPEN".localized : "CONCLUDE".localized,
                                                 systemImage: item.completed ? "arrow.counterclockwise" : "checkmark.circle"
                                             )
                                         }
@@ -208,10 +208,10 @@ struct SchedulesView: View {
     
     func getColorAndText(completed: Bool) -> (color: Color, text: String) {
         if (completed) {
-            return (Color.green, "OVERDUE".localized)
+            return (Color.green, "CONCLUDED".localized)
         }
         
-        return (Color.yellow, "OVERDUE".localized)
+        return (Color.yellow, "OPEN".localized)
     }
     
 }

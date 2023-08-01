@@ -52,32 +52,14 @@ struct MainView: View {
                         }
                         .tag(5)
                     
-                    BalanceView()
+                    LogoutView()
+                        .environmentObject(viewModel)
                         .tabItem {
-                            Image(systemName: "calendar")
+                            Image(systemName: "power")
                             Text("LOG_OUT".localized)
                         }
                         .tag(6)
                 }
-                .alert(isPresented: $showingDeleteConfirmation) {
-                    Alert(
-                        title: Text("SIGN_OUT_TITLE".localized),
-                        message: Text("SIGN_OUT_MSG".localized),
-                        primaryButton: .destructive(Text("OK".localized)) {
-                            viewModel.signOut()
-                        },
-                        secondaryButton: .cancel { }
-                    )
-                }
-//                .toolbar {
-//                    ToolbarItem(placement: .navigationBarLeading) {
-//                        Button(action: {
-//                            showingDeleteConfirmation = true
-//                        }) {
-//                            Image(systemName: "power")
-//                        }
-//                    }
-//                }
             }
     }
 

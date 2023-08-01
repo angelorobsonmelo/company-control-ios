@@ -58,4 +58,15 @@
 "SIGN_OUT_MSG" = "Tem certeza de que deseja sair da sua conta?";
 "SIGN_OUT_TITLE" = "Sair";
 "SCHEDULES" = "Agendamentos";
+"OPENED" = "Opened";
+"CONCLUDED" = "Concluídos";
+"REOPEN" = "Reabrir";
+"CONCLUDE" = "Concluir";
+"OPEN" = "Em aberto";
+"ADD_SCHEDULE" = "Adicionar Agendamento";
+"EDIT_SCHEDULE" = "Editar Agendamento";
+"LOG_OUT" = "Sair";
+
+
+
 
