@@ -57,7 +57,7 @@ struct MainView: View {
                             Image(systemName: "calendar")
                             Text("LOG_OUT".localized)
                         }
-                        .tag(5)
+                        .tag(6)
                 }
                 .alert(isPresented: $showingDeleteConfirmation) {
                     Alert(
@@ -69,15 +69,15 @@ struct MainView: View {
                         secondaryButton: .cancel { }
                     )
                 }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: {
-                            showingDeleteConfirmation = true
-                        }) {
-                            Image(systemName: "power")
-                        }
-                    }
-                }
+//                .toolbar {
+//                    ToolbarItem(placement: .navigationBarLeading) {
+//                        Button(action: {
+//                            showingDeleteConfirmation = true
+//                        }) {
+//                            Image(systemName: "power")
+//                        }
+//                    }
+//                }
             }
     }
 

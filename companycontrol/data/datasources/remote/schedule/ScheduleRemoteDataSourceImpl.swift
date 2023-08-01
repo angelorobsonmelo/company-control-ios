@@ -52,13 +52,25 @@ class ScheduleRemoteDataSourceImpl: ScheduleRemoteDataSource {
     }
     
     func getAll(userEmail: String, startDate: Date, endDate: Date) -> AnyPublisher<[ScheduleResponse], Error> {
-        let subject = PassthroughSubject<[ScheduleResponse], Error>()
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+
+        var components = calendar.dateComponents([.year, .month, .day], from: startDate)
+        let startDate = calendar.date(from: components)!
+
+        components = calendar.dateComponents([.year, .month, .day], from: Calendar.current.date(byAdding: .day, value: 1, to: endDate)!)
+        components.second = -1
+        let endDate = calendar.date(from: components)!
         
-        let ref = self.db.collection(self.collectionName).whereField("user_email", isEqualTo: userEmail)
+        let query = self.db.collection(self.collectionName)
+            .whereField("user_email", isEqualTo: userEmail)
+            .whereField("date", isGreaterThanOrEqualTo: startDate)
+            .whereField("date", isLessThanOrEqualTo: endDate)
         
-        ref.addSnapshotListener { snapshot, error in
+        query.addSnapshotListener { snapshot, error in
             if let error = error {
-                subject.send(completion: .failure(error))
+                self.subject.send(completion: .failure(error))
+                return
             }
             
             if let snapshot = snapshot {
@@ -72,7 +84,7 @@ class ScheduleRemoteDataSourceImpl: ScheduleRemoteDataSource {
                         completed: document["completed"] as? Bool ?? false
                     )
                 }
-                subject.send(companies)
+                self.subject.send(companies)
             }
         }
         

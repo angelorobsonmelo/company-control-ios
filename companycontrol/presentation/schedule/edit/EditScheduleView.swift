@@ -1,8 +1,8 @@
 //
-//  AddScheduleView.swift
+//  EditScheduleView.swift
 //  companycontrol
 //
-//  Created by Ângelo Melo on 31/07/2023.
+//  Created by Ângelo Melo on 01/08/2023.
 //
 
 import Foundation
@@ -10,15 +10,19 @@ import SwiftUI
 
 
 
-struct AddScheduleView: View {
+struct EditScheduleView: View {
     
     @Binding var showingDialog: Bool
     @EnvironmentObject var viewModel: ScheduleViewModel
+
+    var schedule: ScheduleViewData
+
+    
     let callback: () -> Void
     
     @State private var showAlertDialog = false
     @State private var isOn = false
-    
+
     @State private var showAlert = false
     @State private var alertTitle = ""
     @State private var alertMessage = ""
@@ -69,12 +73,18 @@ struct AddScheduleView: View {
                     }
                 
             }
-            
-            .navigationBarTitle("ADD_SCHEDULE".localized, displayMode: .inline)
+            .onAppear {
+                self.title = schedule.title
+                self.description = schedule.description
+                self.isOn = schedule.completed
+                self.date = schedule.date.toDate()
+            }
+            .navigationBarTitle("EDIT_SCHEDULE".localized, displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        viewModel.save(
+                        viewModel.update(
+                            id: schedule.id,
                             title: title,
                             description: description,
                             date: date,
@@ -96,12 +106,11 @@ struct AddScheduleView: View {
             }
             .onChange(of: viewModel.isSaved) { isCompanySaved in
                 if isCompanySaved {
-                    resetFields()
                     viewModel.isSaved = false // para reiniciar o ciclo
                 }
             }
             .alert(isPresented: $viewModel.showAlertDialog) {
-                Alert(
+                 Alert(
                     title: Text(viewModel.dialogMessage),
                     message: Text(""),
                     dismissButton: .default(Text("OK".localized))
@@ -109,44 +118,36 @@ struct AddScheduleView: View {
             }
             
         }
-        
+}
+
+func hideKeyboard() {
+    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+}
+
+private var placeholderView: some View {
+    if description.isEmpty {
+        return AnyView(Text("DESCRIPTION".localized)
+            .foregroundColor(.gray)
+            .padding(.top, 8)
+            .padding(.leading, 5))
+    } else {
+        return AnyView(EmptyView())
     }
+}
+
+struct DateSelectionView: View {
+    var label: String
+    @Binding var date: Date
     
-    func resetFields() {
-        self.title  = ""
-        self.description = ""
-        self.date = Date()
-        self.isOn = false
-      
-    }
-    
-    func hideKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-    }
-    
-    private var placeholderView: some View {
-        if description.isEmpty {
-            return AnyView(Text("DESCRIPTION".localized)
-                .foregroundColor(.gray)
-                .padding(.top, 8)
-                .padding(.leading, 5))
-        } else {
-            return AnyView(EmptyView())
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(label)
+            
+            DatePicker("", selection: $date, displayedComponents: .date)
+                .labelsHidden()
         }
     }
-    
-    struct DateSelectionView: View {
-        var label: String
-        @Binding var date: Date
-        
-        var body: some View {
-            VStack(alignment: .leading) {
-                Text(label)
-                
-                DatePicker("", selection: $date, displayedComponents: .date)
-                    .labelsHidden()
-            }
-        }
-    }
-    
+}
+
+
 }

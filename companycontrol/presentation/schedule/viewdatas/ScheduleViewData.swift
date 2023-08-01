@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ScheduleViewData {
+struct ScheduleViewData: Identifiable, Equatable {
     let id: String
     let title: String
     let description: String

@@ -15,7 +15,7 @@ struct SchedulesView: View {
     @State private var showingAddDialog = false
     
     @State private var showingEditDialog = false
-    @State private var selectedExpense: ScheduleViewData? = nil
+    @State private var selectedScheduleViewData: ScheduleViewData? = nil
     
     
     let calendar = Calendar.current
@@ -38,75 +38,101 @@ struct SchedulesView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Schedules: 10/12")
-                    .font(.headline)
-                    .padding(.top, 16)
+                HStack {
+                    Text("Opened: \(viewModel.total)")
+                        .font(.headline)
+                        .padding(.top, 8)
+                    
+                    Text("Concluded: \(viewModel.totalConcluded)")
+                        .font(.headline)
+                        .padding(.top, 8)
+                }
                 
                 HStack {
                     DatePicker("", selection: $startDate, displayedComponents: .date)
                         .labelsHidden()
                         .onChange(of: startDate) { newValue in
-//                            self.viewModel.getServices(startDate: startDate, endDate: endDate)
+                            self.viewModel.getAll(startDate: startDate, endDate: endDate)
                         }
                     
                     DatePicker("", selection: $endDate, displayedComponents: .date)
                         .labelsHidden()
                         .onChange(of: endDate) { newValue in
-//                            self.viewModel.getServices(startDate: startDate, endDate: endDate)
+                            self.viewModel.getAll(startDate: startDate, endDate: endDate)
                         }
                 }
                 .padding()
                 
-                
-//                List {
-//                    ForEach(viewModel.sortedDates, id: \.self) { date in
-//                        Section(header: Text(date)) {
-//                            ForEach(viewModel.groupedCosts[date]!, id: \.id) { item in
-//                                VStack {
-//                                    HStack {
-//                                        Text(item.title)
-//                                            .font(.headline)
-//                                        Spacer()
-//                                        Text(item.expenseCategory.name)
-//                                    }
-//                                    .padding(.bottom, 10)
-//
-//                                    HStack {
-//                                        Text(item.description)
-//                                            .foregroundColor(.secondary)
-//                                            .font(.body)
-//
-//                                        Spacer()
-//
-//                                        Text(item.amount.formatToCurrency())
-//                                            .foregroundColor(.secondary)
-//                                    }
-//                                    .padding(.bottom, 10)
-//
-//                                    HStack {
-////                                        Text(item.company.name)
-////                                            .foregroundColor(.secondary)
-////                                            .font(.body)
-//
-//                                        Spacer()
-//
-//                                        Text(item.company.name)
-//                                            .foregroundColor(.secondary)
-//                                    }
-//                                }
-//                                .contentShape(Rectangle())
-//                                .onTapGesture {
-//                                    showingEditDialog = true
-//                                    selectedExpense = item
-//                                    print(item.amount)
-//                                }
-//                            }
-//                            .onDelete(perform: { indexSet in
-//                                deleteCategory(at: indexSet, date: date)
-//                            })
-//                        }
-//                    }
-//                }
+                List {
+                    ForEach(viewModel.sortedDates, id: \.self) { date in
+                        Section(header: Text(date)) {
+                            ForEach(viewModel.groupedCosts[date]!, id: \.id) { item in
+                                ZStack {
+                                    let colorAndText = getColorAndText(completed: item.completed)
+
+                                    VStack(alignment: .leading) {
+                                        Text(item.title)
+                                            .font(.headline)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .padding(.leading, 45)
+
+                                        Text(item.description)
+                                            .font(.subheadline)
+                                            .foregroundColor(Color.gray)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            .padding(.leading, 45)
+                                            
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    
+                                    HStack {
+                                        Text(colorAndText.text)
+                                            .foregroundColor(Color.white)
+                                            .font(.caption2)
+                                            .bold()
+                                            .padding(4)
+                                            .frame(maxWidth: .infinity)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .background(colorAndText.color)
+                                    .offset(x: -90, y: -100)
+                                    .rotationEffect(.degrees(-45))
+                                    
+                                }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    self.showingEditDialog = true
+                                    self.selectedScheduleViewData = item
+                                }
+                                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                                       let completed = !item.completed
+                                       let color = item.completed ? Color.yellow : Color.green
+                                    
+                                        Button {
+                                            self.viewModel.update(
+                                                id: item.id,
+                                                title: item.title,
+                                                description: item.description,
+                                                date: item.date.toDate(),
+                                                completed: completed)
+                                            
+                                            print(item)
+                                        } label: {
+                                            Label(
+                                                item.completed ? "Reopen" : "Complete",
+                                                systemImage: item.completed ? "arrow.counterclockwise" : "checkmark.circle"
+                                            )
+                                        }
+                                        .tint(color)
+                                    }
+                            }
+                            .onDelete(perform: { indexSet in
+                                deleteCategory(at: indexSet, date: date)
+                            })
+                        }
+                    }
+                }
             }
             .navigationBarTitle("SCHEDULES".localized, displayMode: .inline)
             .toolbar {
@@ -120,60 +146,56 @@ struct SchedulesView: View {
             }
             
         }
-        
         .onAppear {
             self.startDate = self.calendar.dateInterval(of: .month, for: now)?.start ?? Date()
-            self.endDate = Date()
+            self.endDate = self.calendar.dateInterval(of: .month, for: now)?.end ?? Date()
             
-//            self.viewModel.getServices(startDate: startDate, endDate: endDate)
+            self.viewModel.getAll(startDate: startDate, endDate: endDate)
         }
-//        .onChange(of: viewModel.getExpensesNetworkResult, perform: { newValue in
-//            switch newValue {
-//            case .success(let items):
-//
-//                break
-//            case .error(let message):
-//
-//                break
-//            case .loading:
-//                print("Loading")
-//                break
-//            case .idle:
-//                print("Idle")
-//                break
-//            }
-//        })
         .sheet(isPresented: $showingAddDialog) {
             AddScheduleView(showingDialog: $showingAddDialog) {
-//                self.viewModel.getServices(startDate: startDate, endDate: endDate)
+                self.viewModel.getAll(startDate: startDate, endDate: endDate)
             }
             .environmentObject(viewModel)
         }
-//        .sheet(isPresented: $showingEditDialog) {
-//            EditServiceView(showingDialog: $showingEditDialog, service: self.selectedExpense!) {
-//
-//            }
-//            .environmentObject(viewModel)
-//        }
-//        .alert(isPresented: $showingDeleteConfirmation) {
-//            Alert(
-//                title: Text("DELETE".localized),
-//                message: Text("DELETE_ITEM_MSG".localized),
-//                primaryButton: .destructive(Text("DELETE".localized)) {
-//
-//                    viewModel.remove(at: itemPosition!, from: dateGroupToDelete)
-//                },
-//                secondaryButton: .cancel {
-//
-//                }
-//            )
-//        }
-//        .onChange(of: selectedExpense) { newCategory in
-//            if let newExpense = selectedExpense {
-//                self.selectedExpense = newExpense
-//                self.showingEditDialog = true
-//            }
-//        }
+        .sheet(isPresented: $showingEditDialog) {
+            EditScheduleView(showingDialog: $showingEditDialog, schedule: self.selectedScheduleViewData!) {
+
+            }
+            .environmentObject(viewModel)
+        }
+        .alert(isPresented: $showingDeleteConfirmation) {
+            Alert(
+                title: Text("DELETE".localized),
+                message: Text("DELETE_ITEM_MSG".localized),
+                primaryButton: .destructive(Text("DELETE".localized)) {
+
+                    viewModel.remove(at: itemPosition!, from: dateGroupToDelete)
+                },
+                secondaryButton: .cancel {
+
+                }
+            )
+        }
+        .actionSheet(isPresented: $showingDeleteConfirmation) {
+            ActionSheet(
+                title: Text("DELETE".localized),
+                message: Text("DELETE_ITEM_MSG".localized),
+                buttons: [
+                    .destructive(Text("DELETE".localized)) {
+                        viewModel.remove(at: itemPosition!, from: dateGroupToDelete)
+                    },
+                    .cancel()
+                ]
+            )
+        }
+        .onChange(of: selectedScheduleViewData) { newValue in
+            if let schedule = newValue {
+                self.selectedScheduleViewData = schedule
+                self.showingEditDialog = true
+            }
+        }
+
     }
     
     
@@ -182,6 +204,14 @@ struct SchedulesView: View {
         self.itemPosition = offsets.first!
         self.dateGroupToDelete = date
         
+    }
+    
+    func getColorAndText(completed: Bool) -> (color: Color, text: String) {
+        if (completed) {
+            return (Color.green, "OVERDUE".localized)
+        }
+        
+        return (Color.yellow, "OVERDUE".localized)
     }
     
 }

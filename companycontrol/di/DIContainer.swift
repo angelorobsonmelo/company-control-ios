@@ -160,7 +160,10 @@ class DIContainer {
         container.register(ScheduleViewModel.self) { resolver in
             ScheduleViewModel(
                 auth: resolver.resolve(Auth.self)!,
-                saveScheduleUseCase: resolver.resolve(SaveScheduleUseCase.self)!
+                saveScheduleUseCase: resolver.resolve(SaveScheduleUseCase.self)!,
+                getAllSchedulesUseCase: resolver.resolve(GetAllSchedulesUseCase.self)!,
+                deleteScheduleUseCase: resolver.resolve(DeleteScheduleUseCase.self)!,
+                editScheduleUseCase: resolver.resolve(EditScheduleUseCase.self)!
                 )
         }
     }
@@ -265,6 +268,24 @@ class DIContainer {
     fileprivate func scheduleUseCaseInjections() {
         container.register(SaveScheduleUseCase.self) { resolver in
             SaveScheduleUseCaseImpl(
+                repository: resolver.resolve(ScheduleRepository.self)!
+            )
+        }
+        
+        container.register(GetAllSchedulesUseCase.self) { resolver in
+            GetAllSchedulesUseCaseImpl(
+                repository: resolver.resolve(ScheduleRepository.self)!
+            )
+        }
+        
+        container.register(DeleteScheduleUseCase.self) { resolver in
+            DeleteScheduleUseCaseImpl(
+                repository: resolver.resolve(ScheduleRepository.self)!
+            )
+        }
+        
+        container.register(EditScheduleUseCase.self) { resolver in
+            EditScheduleUseCaseImpl(
                 repository: resolver.resolve(ScheduleRepository.self)!
             )
         }
