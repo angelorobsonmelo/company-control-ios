@@ -15,12 +15,18 @@ struct MainView: View {
                             Image(systemName: "creditcard.fill")
                             Text("EXPENSES".localized)
                         }
+                        .onAppear() {
+                            self.selectedTab = 0
+                        }
                         .tag(0)
 
                     ServicesView()
                         .tabItem {
                             Image(systemName: "dollarsign.circle.fill")
                             Text("SERVICES".localized)
+                        }
+                        .onAppear() {
+                            self.selectedTab = 1
                         }
                         .tag(1)
 
@@ -29,12 +35,18 @@ struct MainView: View {
                             Image(systemName: "square.stack")
                             Text("CATEGORIES".localized)
                         }
+                        .onAppear() {
+                            self.selectedTab = 2
+                        }
                         .tag(2)
 
                     CompanyView()
                         .tabItem {
                             Image(systemName: "building.columns")
                             Text("COMPANIES".localized)
+                        }
+                        .onAppear() {
+                            self.selectedTab = 3
                         }
                         .tag(3)
 
@@ -43,12 +55,18 @@ struct MainView: View {
                             Image(systemName: "chart.bar.doc.horizontal")
                             Text("BALANCE".localized)
                         }
+                        .onAppear() {
+                            self.selectedTab = 4
+                        }
                         .tag(4)
                     
                     SchedulesView()
                         .tabItem {
                             Image(systemName: "calendar")
                             Text("SCHEDULES".localized)
+                        }
+                        .onAppear() {
+                            self.selectedTab = 5
                         }
                         .tag(5)
                     
@@ -57,6 +75,9 @@ struct MainView: View {
                         .tabItem {
                             Image(systemName: "power")
                             Text("LOG_OUT".localized)
+                        }
+                        .onAppear() {
+                            self.selectedTab = 6
                         }
                         .tag(6)
                 }
